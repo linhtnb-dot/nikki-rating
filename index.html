@@ -149,6 +149,7 @@ main{padding:0 12px 24px}
 .sheet .st{display:inline-block;margin:8px 0 16px;font-size:14px;font-weight:600;padding:4px 12px;border-radius:999px;background:var(--acc-soft);color:var(--acc-deep)}
 .items{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .items.two{grid-template-columns:repeat(2,1fr)}
+.items.one{grid-template-columns:minmax(0,150px);justify-content:center}
 .item{background:linear-gradient(180deg,var(--acc-soft),#fff);border-radius:16px;padding:12px 6px 10px;border:1px solid var(--line)}
 .item img{width:60px;height:60px;object-fit:contain;margin:0 auto 6px}
 .item b{display:block;font-weight:700;font-size:18px;color:var(--acc-deep);line-height:1.1}
@@ -418,7 +419,7 @@ function openModal(key, i, from){
   document.getElementById('m-title').textContent = `Quà mốc ${vn1(m.score)}★`;
   document.getElementById('m-state').textContent = `${cfg.label} · ${when ? 'Đã mở ngày ' + fmtD(when) : 'Chưa mở'}`;
   const box = document.getElementById('m-items');
-  box.className = 'items' + (rw.length === 2 || rw.length === 4 ? ' two' : '');
+  box.className = 'items' + (rw.length === 1 ? ' one' : rw.length === 2 || rw.length === 4 ? ' two' : '');
   box.innerHTML = rw.map(r => {
     const it = CFG.items[r.item] || { name: r.item };
     return `<div class="item">${it.img ? `<img src="${esc(it.img)}" alt="">` : ''}<b>x${fmt.format(r.qty)}</b><span>${esc(it.name)}</span></div>`;

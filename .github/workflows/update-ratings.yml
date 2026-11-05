@@ -1,0 +1,29 @@
+name: Update store ratings
+
+on:
+  schedule:
+    - cron: "5 * * * *"   # phút 05 mỗi giờ (giờ UTC)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-ratings
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch ratings
+        shell: pwsh
+        run: ./scripts/fetch-ratings.ps1
+      - name: Commit data
+        run: |
+          git config user.name "rating-bot"
+          git config user.email "rating-bot@users.noreply.github.com"
+          git add data/ratings.json
+          git diff --cached --quiet || git commit -m "Update ratings $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push

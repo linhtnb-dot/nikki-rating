@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffe3ee">
+<title>Hành Trình Toả Sáng · Nikki: Ngôi Sao Thời Trang</title>
+<meta name="description" content="Theo dõi điểm đánh giá Nikki: Ngôi Sao Thời Trang trên App Store và Google Play. Mỗi mốc điểm đạt được, quà mở cho toàn server.">
+<!-- Ảnh và mô tả khi dán link vào Facebook, Zalo, Messenger. og:image và og:url cần link đầy đủ: sửa SITE_URL sau khi bật GitHub Pages -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hành Trình Toả Sáng · Nikki: Ngôi Sao Thời Trang">
+<meta property="og:description" content="Theo dõi điểm đánh giá của Nikki trên App Store và Google Play. Mỗi mốc điểm đạt được, quà mở cho toàn server.">
+<meta property="og:image" content="SITE_URL/assets/hero-bg.jpg">
+<meta property="og:url" content="SITE_URL/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/logo-pink.png">
+<link rel="preload" as="image" href="assets/hero-bg.jpg">
+<style>
+@font-face{font-family:"Beaufort";src:url(assets/fonts/beaufort-regular.otf) format("opentype");font-weight:400;font-display:swap}
+@font-face{font-family:"Beaufort";src:url(assets/fonts/beaufort-medium.otf) format("opentype");font-weight:500 600;font-display:swap}
+@font-face{font-family:"Beaufort";src:url(assets/fonts/beaufort-bold.ttf) format("truetype");font-weight:700 900;font-display:swap}
+@font-face{font-family:"Nikki Magire";src:url(assets/fonts/nikki-magire.ttf) format("truetype");font-display:swap}
+@font-face{font-family:"Nikki Golden";src:url(assets/fonts/nikki-golden.ttf) format("truetype");font-display:swap}
+@font-face{font-family:"Nikki Rush";src:url(assets/fonts/nikki-holiday-rush.ttf) format("truetype");font-display:swap}
+:root{
+  --bg:#fff4f8; --ink:#4a2a3f; --muted:#8c6a7f; --line:#f6cfe0;
+  --pink:#ec5f98; --pink-deep:#d63f7e; --pink-soft:#ffe0ec; --lilac:#8f6fea; --lilac-deep:#6f4fd6; --lilac-soft:#ece5ff;
+  --gold:#e6ad3d; --mint:#2fb889;
+  --shadow:0 14px 30px -16px rgba(214,63,126,.4);
+  --title:"Nikki Magire","Beaufort",serif; --deco:"Nikki Golden","Beaufort",serif; --num:"Nikki Rush","Beaufort",serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:"Beaufort",Georgia,serif;font-size:16px;color:var(--ink);overflow-x:hidden;
+  background:#f9dbe8 radial-gradient(circle at 20% 10%,#ffeaf2 0,transparent 40%),radial-gradient(circle at 80% 90%,#ece5ff 0,transparent 45%) fixed}
+img{max-width:100%;display:block}
+button{font:inherit;color:inherit}
+
+/* Một khung kiểu điện thoại cho mọi màn hình */
+.app{max-width:440px;margin:0 auto;min-height:100vh;background:var(--bg);box-shadow:0 0 60px -20px rgba(150,40,90,.35);overflow:hidden}
+
+/* ---------- Hero ---------- */
+.hero{position:relative}
+.hero-img{width:100%;height:185px;object-fit:cover;object-position:58% 28%}
+.hero:after{content:"";position:absolute;left:0;right:0;bottom:0;height:80px;background:linear-gradient(180deg,transparent,var(--bg))}
+.logo{position:absolute;top:10px;left:10px;width:96px;z-index:2;filter:drop-shadow(0 2px 6px rgba(255,255,255,.95))}
+.intro{position:relative;z-index:2;margin-top:-30px;padding:0 16px 4px;text-align:center}
+.chip{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--pink-deep);
+  background:#fff;border:1px solid var(--line);padding:5px 14px;border-radius:999px;box-shadow:var(--shadow)}
+.chip i{width:8px;height:8px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 4px rgba(47,184,137,.18)}
+h1{font-family:var(--title);font-weight:400;font-size:32px;line-height:1.08;margin:8px 0 4px;color:var(--pink-deep);text-shadow:0 2px 0 #fff}
+.sub{font-size:14px;line-height:1.5;margin:0 0 10px;color:var(--muted)}
+.cd-row{display:flex;align-items:center;justify-content:center;gap:8px}
+.cd-label{font-family:var(--deco);font-size:15px;color:var(--pink-deep);white-space:nowrap}
+.countdown{display:flex;gap:5px}
+.cd{width:46px;padding:5px 0 4px;text-align:center;border-radius:11px;background:#fff;box-shadow:var(--shadow),inset 0 0 0 1px var(--line)}
+.cd b{display:block;font-family:var(--num);font-weight:400;font-size:19px;line-height:1;color:var(--pink-deep)}
+.cd span{font-size:10px;color:var(--muted)}
+
+/* ---------- Progress ---------- */
+main{padding:0 12px 24px}
+.sec-title{text-align:center;margin:10px 0 8px}
+.sec-title h2{font-family:var(--title);font-weight:400;font-size:24px;margin:0;color:var(--pink-deep);display:inline-flex;align-items:center;gap:10px}
+.sec-title h2:before,.sec-title h2:after{content:"✦";font-size:.5em;color:#c7b3f7}
+.sec-title p{margin:2px 0 0;color:var(--muted);font-size:12px}
+.notice{margin:0 0 14px;text-align:center;font-size:14px;color:var(--muted);background:#fff;border:1px dashed var(--line);border-radius:12px;padding:8px 12px}
+
+.tabs{display:flex;gap:6px;margin:0 0 10px;padding:5px;background:#fff;border:1px solid var(--line);border-radius:999px;box-shadow:var(--shadow)}
+.tab{flex:1;border:0;background:transparent;cursor:pointer;padding:8px 6px;border-radius:999px;font-size:15px;font-weight:700;color:var(--muted);
+  display:flex;align-items:baseline;justify-content:center;gap:6px;transition:background .2s,color .2s;-webkit-tap-highlight-color:transparent}
+.tab small{font-size:14px;font-weight:600;opacity:.9}
+.tab[aria-selected="true"]{color:#fff;background:var(--acc)}
+.tab.ios{--acc:var(--pink)} .tab.android{--acc:var(--lilac)}
+
+.panel{--acc:var(--pink);--acc-deep:var(--pink-deep);--acc-soft:var(--pink-soft);
+  position:relative;background:linear-gradient(180deg,#fff 0%,#fff9fc 100%);border-radius:22px;padding:16px 14px 18px;box-shadow:var(--shadow);border:1.5px solid var(--line)}
+.panel.android{--acc:var(--lilac);--acc-deep:var(--lilac-deep);--acc-soft:var(--lilac-soft)}
+.panel:before{content:"";position:absolute;inset:5px;border-radius:18px;border:1px dashed var(--acc-soft);pointer-events:none}
+.panel[hidden]{display:none}
+.score-row{display:flex;align-items:center;gap:14px;padding:0 4px}
+.score{font-family:var(--num);font-size:58px;line-height:.85;color:var(--acc-deep)}
+.store-name{font-family:var(--deco);font-size:22px;color:var(--acc-deep);line-height:1;margin-bottom:6px}
+.stars{position:relative;display:inline-block;font-size:19px;letter-spacing:2px;line-height:1;color:#f1dbe5;font-family:Arial,sans-serif}
+.stars span{position:absolute;inset:0 auto 0 0;overflow:hidden;white-space:nowrap;color:var(--gold)}
+.count{font-size:14px;color:var(--muted);margin-top:5px}
+.next{margin-top:12px;background:var(--acc-soft);border-radius:14px;padding:12px 14px;font-size:15px;line-height:1.5}
+.next b{color:var(--acc-deep)}
+.next small{display:block;color:var(--muted);font-size:14px}
+.err{font-size:14px;color:#c0392b;margin-top:8px}
+
+/* Mốc thưởng nằm ngang */
+.carousel{position:relative;margin:8px -6px 0}
+.track-wrap{overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%)}
+.track-wrap::-webkit-scrollbar{display:none}
+.track{position:relative;padding:58px 40px 0}
+.car-btn{position:absolute;top:70px;z-index:3;width:30px;height:30px;border-radius:50%;border:0;background:#fff;color:var(--acc-deep);font-size:18px;line-height:1;cursor:pointer;
+  box-shadow:0 4px 12px -4px rgba(0,0,0,.3),0 0 0 1px var(--line);display:grid;place-items:center;transition:opacity .2s;-webkit-tap-highlight-color:transparent}
+.car-btn.prev{left:0}.car-btn.next{right:0}
+.car-btn[disabled]{opacity:0;pointer-events:none}
+.dots{display:flex;justify-content:center;gap:6px;margin:2px 0 8px}
+.dots i{width:6px;height:6px;border-radius:3px;background:#ecd3df;transition:width .2s,background .2s}
+.dots i.on{width:16px;background:var(--acc)}
+.rail{position:absolute;left:40px;right:40px;top:58px;height:10px;margin-top:24px;border-radius:999px;background:#f7e8ef;box-shadow:inset 0 1px 3px rgba(0,0,0,.08)}
+.rail .fill{position:absolute;inset:0 auto 0 0;border-radius:999px;background:linear-gradient(90deg,var(--acc-soft),var(--acc));transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.now{position:absolute;top:-54px;transform:translateX(-50%);font-size:12px;font-weight:700;color:#fff;background:var(--acc-deep);padding:4px 9px;border-radius:9px;white-space:nowrap;z-index:2}
+.now:after{content:"";position:absolute;left:var(--ax,50%);bottom:-5px;transform:translateX(-50%);border:5px solid transparent;border-bottom:0;border-top-color:var(--acc-deep)}
+.nodes{position:relative;height:120px}
+.node{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;width:70px;scroll-snap-align:center;
+  border:0;background:none;cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent}
+.gift{position:relative;width:58px;height:58px;border-radius:50%;background:#fff;display:grid;place-items:center;
+  box-shadow:0 0 0 3px #f1dbe5,0 8px 16px -8px rgba(0,0,0,.25);transition:transform .2s,box-shadow .2s}
+.gift img{width:68%;height:68%;object-fit:contain;filter:grayscale(.55) opacity(.75)}
+.gift .more{position:absolute;right:-6px;bottom:-2px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--acc-deep);color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center;border:2px solid #fff}
+.node:active .gift{transform:scale(.94)}
+.node:focus-visible{outline:none}
+.node:focus-visible .gift{box-shadow:0 0 0 3px var(--acc),0 0 0 6px var(--acc-soft)}
+.node.done .gift{box-shadow:0 0 0 3px var(--acc),0 0 18px -2px var(--acc)}
+.node.done .gift img,.node.cur .gift img{filter:none}
+.node.cur .gift{box-shadow:0 0 0 3px var(--acc),0 0 0 6px var(--acc-soft)}
+.node.cur .gift:after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--acc);animation:ring 1.8s ease-out infinite}
+@keyframes ring{from{transform:scale(1);opacity:.7}to{transform:scale(1.28);opacity:0}}
+.ms-score{font-weight:700;font-size:16px;line-height:1;color:var(--muted)}
+.node.done .ms-score,.node.cur .ms-score{color:var(--acc-deep)}
+.ms-state{font-size:11px;font-weight:600;padding:2px 7px;border-radius:999px;background:#f7eef3;color:var(--muted);white-space:nowrap}
+.node.done .ms-state{background:#dff6ec;color:#1f8a66}
+.node.cur .ms-state{background:var(--acc);color:#fff}
+.hint{text-align:center;font-size:14px;color:var(--muted);margin:0}
+
+.spark{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
+.spark svg{width:100%;height:70px;display:block}
+.spark .cap{font-size:13px;color:var(--muted);display:flex;justify-content:space-between}
+.cta{text-align:center;margin-top:16px}
+.cta p{margin:0 0 8px;font-size:14px;color:var(--muted)}
+.badge{display:inline-block;border-radius:10px;box-shadow:0 8px 18px -8px rgba(0,0,0,.45)}
+.badge:active{transform:scale(.97)}
+.badge img{width:160px;height:auto}
+
+/* Popup quà */
+.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(74,42,63,.45);opacity:0;pointer-events:none;transition:opacity .2s}
+.modal.open{opacity:1;pointer-events:auto}
+.sheet{--acc:var(--pink);--acc-deep:var(--pink-deep);--acc-soft:var(--pink-soft);
+  position:relative;width:100%;max-width:400px;max-height:calc(100vh - 32px);overflow-y:auto;background:#fff;border-radius:24px;padding:26px 16px 20px;text-align:center;
+  box-shadow:0 20px 50px -12px rgba(0,0,0,.4);transform:scale(.94);transition:transform .2s ease;user-select:none;-webkit-user-select:none}
+.sheet.android{--acc:var(--lilac);--acc-deep:var(--lilac-deep);--acc-soft:var(--lilac-soft)}
+.modal.open .sheet{transform:none}
+.sheet:before{content:"";position:absolute;inset:6px;border-radius:19px;border:1px dashed var(--acc-soft);pointer-events:none}
+.sheet h3{font-family:var(--title);font-weight:400;font-size:30px;color:var(--acc-deep);margin:4px 0 0}
+.sheet .st{display:inline-block;margin:8px 0 16px;font-size:14px;font-weight:600;padding:4px 12px;border-radius:999px;background:var(--acc-soft);color:var(--acc-deep)}
+.items{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.items.two{grid-template-columns:repeat(2,1fr)}
+.item{background:linear-gradient(180deg,var(--acc-soft),#fff);border-radius:16px;padding:12px 6px 10px;border:1px solid var(--line)}
+.item img{width:60px;height:60px;object-fit:contain;margin:0 auto 6px}
+.item b{display:block;font-weight:700;font-size:18px;color:var(--acc-deep);line-height:1.1}
+.item span{font-size:13px;line-height:1.3;display:block}
+.sheet .note{font-size:13px;color:var(--muted);margin:14px 0 0}
+.close{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;border:0;background:var(--acc-soft);color:var(--acc-deep);font-size:20px;line-height:1;cursor:pointer;z-index:1;-webkit-tap-highlight-color:transparent}
+.close:focus{outline:none}
+.close:focus-visible{box-shadow:0 0 0 3px var(--acc)}
+
+footer{margin-top:28px;background:#4a2a12;color:#fff;text-align:center;padding:24px 16px 28px}
+footer img{width:150px;height:auto;margin:0 auto 12px}
+footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
+
+@media (max-width:359px){
+  h1{font-size:28px}
+  .cd{width:40px}.cd b{font-size:16px}
+  .score{font-size:54px}
+  .track{padding-left:36px;padding-right:36px}.rail{left:36px;right:36px}
+  .node{width:62px}.gift{width:52px;height:52px}
+  .items{grid-template-columns:repeat(2,1fr)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <section class="hero">
+    <img class="hero-img" src="assets/hero-bg.jpg" alt="" width="1200" height="675">
+    <img class="logo" src="assets/logo-pink.png" alt="Nikki: Ngôi Sao Thời Trang">
+  </section>
+  <div class="intro">
+    <span class="chip"><i></i><span id="period">Đang cập nhật</span></span>
+    <h1 id="title">Hành Trình Toả Sáng</h1>
+    <p class="sub" id="subtitle"></p>
+    <div class="cd-row"><div class="cd-label" id="cdlabel"></div><div class="countdown" id="countdown"></div></div>
+  </div>
+
+  <main>
+    <div class="sec-title" id="progress">
+      <p id="updated">Đang tải số liệu…</p>
+    </div>
+    <div class="notice" id="sample" hidden>Đang hiển thị số liệu mẫu.</div>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div id="panels"></div>
+  </main>
+
+  <footer>
+    <img src="assets/vnggames-logo.png" alt="VNGGames" width="184" height="40">
+    <p>Công ty Cổ phần Tập đoàn VNG. Z06 Đường số 13, Phường Tân Thuận, Thành phố Hồ Chí Minh, Việt Nam.</p>
+    <p>Giấy phép cung cấp dịch vụ trò chơi điện tử G1 trên mạng số: 251/GP-BTTTT do Bộ Thông tin và Truyền thông cấp ngày 22/06/2015.</p>
+    <p>Quyết định phát hành trò chơi điện tử G1 trên mạng số: 322/QĐ-PTTH&amp;TTĐT do Cục Phát thanh Truyền hình và Thông tin Điện tử cấp ngày 17/07/2025.</p>
+  </footer>
+</div>
+
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="m-title" id="sheet">
+    <button class="close" id="m-close" aria-label="Đóng">×</button>
+    <h3 id="m-title"></h3>
+    <span class="st" id="m-state"></span>
+    <div class="items" id="m-items"></div>
+    <p class="note">Phần thưởng gửi tới toàn server khi điểm store chạm mốc.</p>
+  </div>
+</div>
+
+<script>
+const REFRESH_MS = 5 * 60 * 1000;
+const KEYS = ['ios', 'android'];
+let CFG = null, DATA = null, ACTIVE = null;
+const fmt = new Intl.NumberFormat('vi-VN');
+const fmtDT = d => new Date(d).toLocaleString('vi-VN', {hour:'2-digit', minute:'2-digit', day:'2-digit', month:'2-digit', year:'numeric'});
+const fmtD = d => new Date(d).toLocaleDateString('vi-VN', {day:'2-digit', month:'2-digit', year:'numeric'});
+const key1 = x => Number(x).toFixed(1);
+const vn1 = x => key1(x).replace('.', ',');
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// Tab mặc định: tab người xem chọn lần trước, nếu không thì theo thiết bị
+function defaultTab(){
+  try { const t = localStorage.getItem('rc-tab'); if (KEYS.includes(t)) return t; } catch (e) {}
+  return /android/i.test(navigator.userAgent) ? 'android' : 'ios';
+}
+
+async function load(){
+  const bust = '?t=' + Date.now();
+  const [c, d] = await Promise.all([
+    fetch('config.json' + bust).then(r => r.json()),
+    fetch('data/ratings.json' + bust).then(r => r.json())
+  ]);
+  CFG = c; DATA = d; render();
+}
+
+function fiveStarsNeeded(avg, n, m){
+  const t = m - 0.05;
+  return avg >= t ? 0 : Math.ceil((t - avg) * n / (5 - t));
+}
+
+function render(){
+  document.getElementById('title').textContent = CFG.campaign.name;
+  document.getElementById('subtitle').textContent = CFG.campaign.subtitle || '';
+  document.getElementById('period').textContent = `${fmtD(CFG.campaign.start)} – ${fmtD(CFG.campaign.end)}`;
+  document.getElementById('sample').hidden = !DATA.sample;
+  document.getElementById('updated').textContent = DATA.updatedAt ? `Cập nhật lần cuối ${fmtDT(DATA.updatedAt)}` : 'Chưa có số liệu';
+  if (!ACTIVE) ACTIVE = defaultTab();
+
+  const tabs = document.getElementById('tabs'), panels = document.getElementById('panels');
+  tabs.innerHTML = ''; panels.innerHTML = '';
+  for (const key of KEYS) {
+    const cfg = CFG.stores[key]; if (!cfg) continue;
+    const s = DATA.stores[key] || {};
+    const b = document.createElement('button');
+    b.className = 'tab ' + key; b.setAttribute('role', 'tab'); b.id = 'tab-' + key;
+    b.setAttribute('aria-controls', 'panel-' + key);
+    b.setAttribute('aria-selected', key === ACTIVE);
+    b.innerHTML = `${esc(cfg.label)}<small>${s.display != null ? vn1(s.display) + '★' : ''}</small>`;
+    b.onclick = () => select(key);
+    tabs.appendChild(b);
+    panels.appendChild(panel(key, cfg, s, (DATA.achieved || {})[key] || {}));
+  }
+  tick();
+  centerVisible();
+}
+
+function select(key){
+  ACTIVE = key;
+  try { localStorage.setItem('rc-tab', key); } catch (e) {}
+  for (const k of KEYS) {
+    const t = document.getElementById('tab-' + k), p = document.getElementById('panel-' + k);
+    if (t) t.setAttribute('aria-selected', k === key);
+    if (p) p.hidden = k !== key;
+  }
+  centerVisible();
+}
+
+function panel(key, cfg, s, ach){
+  const ms = [...cfg.milestones].sort((a, b) => a.score - b.score);
+  const disp = s.display;
+  const nextIdx = ms.findIndex(m => !ach[key1(m.score)]);
+  const next = ms[nextIdx];
+  const el = document.createElement('section');
+  el.className = 'panel ' + key; el.id = 'panel-' + key; el.setAttribute('role', 'tabpanel');
+  el.setAttribute('aria-labelledby', 'tab-' + key);
+  el.hidden = key !== ACTIVE;
+
+  // Các mốc cách đều: điểm khởi đầu ở 0%, mốc i ở (i+1)/n
+  const n = ms.length, at = i => (i + 1) / n * 100;
+  let fill = 0;
+  if (disp != null) {
+    const pts = [cfg.baseline, ...ms.map(m => m.score)];
+    for (let i = 0; i < n; i++) {
+      const a = pts[i], b = pts[i + 1];
+      if (disp >= b) { fill = at(i); continue; }
+      if (disp > a) fill = (i ? at(i - 1) : 0) + (disp - a) / (b - a) * (100 / n);
+      break;
+    }
+  }
+
+  let nextHtml;
+  if (!next) nextHtml = `<div class="next"><b>Đã chạm tất cả các mốc!</b><small>Cảm ơn các Stylist đã đồng hành cùng Nikki.</small></div>`;
+  else {
+    const need = s.score != null && s.count ? fiveStarsNeeded(s.score, s.count, next.score) : null;
+    const line = need == null ? '' : `Ước tính: Cần thêm khoảng <b>${fmt.format(need)}</b> lượt đánh giá 5★`;
+    nextHtml = `<div class="next">Mốc tiếp theo: <b>${vn1(next.score)}★</b>${line ? `<small>${line}</small>` : ''}</div>`;
+  }
+
+  const nodes = ms.map((m, i) => {
+    const k = key1(m.score), when = ach[k];
+    const cls = when ? 'done' : (i === nextIdx ? 'cur' : '');
+    const st = when ? 'Đã mở' : (cls === 'cur' ? 'Sắp tới' : 'Chưa mở');
+    const first = CFG.items[(m.rewards || [])[0]?.item] || {};
+    const extra = (m.rewards || []).length - 1;
+    return `<button class="node ${cls}" style="left:${at(i)}%" data-store="${key}" data-i="${i}" aria-label="Xem quà mốc ${vn1(m.score)} sao">
+      <span class="gift">${first.img ? `<img src="${esc(first.img)}" alt="">` : ''}${extra > 0 ? `<span class="more">+${extra}</span>` : ''}</span>
+      <span class="ms-score">${vn1(m.score)}★</span><span class="ms-state">${st}</span></button>`;
+  }).join('');
+
+  const ax = fill < 12 ? 18 : fill > 88 ? 82 : 50;
+  const starPct = disp != null ? disp / 5 * 100 : 0;
+  const badge = key === 'ios' ? 'assets/badge-appstore.png' : 'assets/badge-googleplay.png';
+
+  el.innerHTML = `
+    <div class="score-row">
+      <div class="score">${disp != null ? vn1(disp) : '—'}</div>
+      <div><div class="store-name">${esc(cfg.label)}</div>
+        <div class="stars">★★★★★<span style="width:${starPct}%">★★★★★</span></div>
+        <div class="count">${s.count ? fmt.format(s.count) + ' lượt đánh giá' : ''}</div></div>
+    </div>
+    ${nextHtml}
+    ${s.error ? `<div class="err">Lần cập nhật gần nhất bị lỗi, đang hiện số cũ.</div>` : ''}
+    <div class="carousel">
+      <button class="car-btn prev" aria-label="Mốc trước">‹</button>
+      <div class="track-wrap"><div class="track" style="width:${Math.max(100, n / PER_VIEW * 100)}%">
+        <div class="rail"><div class="fill" style="width:${fill}%"></div>
+          ${disp != null ? `<div class="now" style="left:${fill}%;transform:translateX(-${ax}%);--ax:${ax}%">Hiện tại ${vn1(disp)}</div>` : ''}</div>
+        <div class="nodes">${nodes}</div>
+      </div></div>
+      <button class="car-btn next" aria-label="Mốc sau">›</button>
+    </div>
+    ${n > PER_VIEW ? `<div class="dots">${'<i></i>'.repeat(Math.ceil(n / PER_VIEW))}</div>` : ''}
+    <p class="hint">${n > PER_VIEW ? 'Vuốt ngang để xem thêm mốc · ' : ''}Chạm vào mốc để xem quà</p>
+    ${spark(key)}
+    <div class="cta"><p>Xem đánh giá trên ${esc(cfg.label)}</p>
+      <a class="badge" href="${esc(cfg.url)}" target="_blank" rel="noopener"><img src="${badge}" alt="Mở ${esc(cfg.label)}" width="160" height="50"></a></div>`;
+  el.querySelectorAll('.node').forEach(b => b.onclick = () => openModal(b.dataset.store, +b.dataset.i, b));
+  setupCarousel(el);
+  return el;
+}
+
+// ---------- Carousel mốc thưởng ----------
+const PER_VIEW = 4.4;
+function setupCarousel(el){
+  const wrap = el.querySelector('.track-wrap'), prev = el.querySelector('.car-btn.prev'), next = el.querySelector('.car-btn.next');
+  const dots = [...el.querySelectorAll('.dots i')];
+  const update = () => {
+    const max = wrap.scrollWidth - wrap.clientWidth;
+    prev.disabled = wrap.scrollLeft <= 4;
+    next.disabled = wrap.scrollLeft >= max - 4;
+    if (dots.length) {
+      const page = max > 0 ? Math.round(wrap.scrollLeft / max * (dots.length - 1)) : 0;
+      dots.forEach((d, i) => d.classList.toggle('on', i === page));
+    }
+  };
+  const step = dir => {
+    const from = wrap.scrollLeft, to = from + dir * wrap.clientWidth * 0.75;
+    wrap.scrollTo({ left: to, behavior: 'smooth' });
+    // Trình duyệt không chạy hiệu ứng cuộn mượt thì nhảy thẳng tới vị trí mới
+    setTimeout(() => { if (Math.abs(wrap.scrollLeft - from) < 2) wrap.scrollLeft = to; }, 350);
+  };
+  prev.onclick = () => step(-1);
+  next.onclick = () => step(1);
+  wrap.addEventListener('scroll', update, { passive: true });
+  el._center = () => {
+    // Đưa mốc đang hướng tới vào giữa khung
+    const cur = el.querySelector('.node.cur') || [...el.querySelectorAll('.node.done')].pop() || el.querySelector('.node');
+    if (cur) {
+      const x = cur.offsetLeft + cur.parentElement.offsetLeft - wrap.clientWidth / 2;
+      wrap.scrollLeft = x < wrap.clientWidth * 0.25 ? 0 : x; // mốc nằm sẵn trong khung đầu thì giữ ở đầu
+    }
+    update();
+  };
+}
+function centerVisible(){
+  requestAnimationFrame(() => document.querySelectorAll('.panel:not([hidden])').forEach(p => p._center && p._center()));
+}
+
+function spark(key){
+  const pts = (DATA.history || []).filter(h => h[key] != null);
+  if (pts.length < 2) return `<div class="spark"><div class="cap"><span>Biểu đồ điểm theo thời gian sẽ hiện sau vài lần cập nhật.</span></div></div>`;
+  const W = 400, H = 70, t0 = new Date(pts[0].t), t1 = new Date(pts[pts.length - 1].t);
+  const vs = pts.map(p => p[key]);
+  const ylo = Math.min(...vs) - 0.05, yhi = Math.max(...vs) + 0.05;
+  const x = t => (new Date(t) - t0) / Math.max(1, t1 - t0) * W;
+  const y = v => H - 6 - (v - ylo) / (yhi - ylo) * (H - 12);
+  const d = pts.map((p, i) => `${i ? 'L' : 'M'}${x(p.t).toFixed(1)},${y(p[key]).toFixed(1)}`).join('');
+  return `<div class="spark"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Điểm trung bình theo thời gian">
+    <path d="${d} L${W},${H} L0,${H} Z" fill="var(--acc-soft)" opacity=".7"/>
+    <path d="${d}" fill="none" stroke="var(--acc)" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg>
+    <div class="cap"><span>${fmtD(t0)}</span><span>Điểm trung bình</span><span>${fmtD(t1)}</span></div></div>`;
+}
+
+// ---------- Popup quà ----------
+const modal = document.getElementById('modal'), sheet = document.getElementById('sheet');
+let lastFocus = null;
+function openModal(key, i, from){
+  const cfg = CFG.stores[key], m = [...cfg.milestones].sort((a, b) => a.score - b.score)[i];
+  const when = ((DATA.achieved || {})[key] || {})[key1(m.score)];
+  const rw = m.rewards || [];
+  sheet.className = 'sheet ' + key;
+  document.getElementById('m-title').textContent = `Quà mốc ${vn1(m.score)}★`;
+  document.getElementById('m-state').textContent = `${cfg.label} · ${when ? 'Đã mở ngày ' + fmtD(when) : 'Chưa mở'}`;
+  const box = document.getElementById('m-items');
+  box.className = 'items' + (rw.length === 2 || rw.length === 4 ? ' two' : '');
+  box.innerHTML = rw.map(r => {
+    const it = CFG.items[r.item] || { name: r.item };
+    return `<div class="item">${it.img ? `<img src="${esc(it.img)}" alt="">` : ''}<b>x${fmt.format(r.qty)}</b><span>${esc(it.name)}</span></div>`;
+  }).join('');
+  lastFocus = from;
+  modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('m-close').focus();
+}
+function closeModal(){
+  modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+  if (lastFocus && document.contains(lastFocus)) lastFocus.focus();
+}
+document.getElementById('m-close').onclick = closeModal;
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
+
+function tick(){
+  if (!CFG) return;
+  const now = Date.now(), st = new Date(CFG.campaign.start), en = new Date(CFG.campaign.end);
+  let target, label;
+  if (now < en) { target = en; label = 'Kết thúc sau'; }
+  else { target = null; label = 'Sự kiện đã kết thúc'; }
+  document.getElementById('cdlabel').textContent = label;
+  const box = document.getElementById('countdown');
+  if (!target) { box.innerHTML = ''; return; }
+  const s = Math.max(0, Math.floor((target - now) / 1000));
+  const parts = [[Math.floor(s / 86400), 'ngày'], [Math.floor(s % 86400 / 3600), 'giờ'], [Math.floor(s % 3600 / 60), 'phút'], [s % 60, 'giây']];
+  box.innerHTML = parts.map(([v, u]) => `<div class="cd"><b>${String(v).padStart(2, '0')}</b><span>${u}</span></div>`).join('');
+}
+
+load().catch(e => { document.getElementById('updated').textContent = 'Chưa tải được số liệu, vui lòng thử lại sau ít phút.'; console.error(e); });
+setInterval(tick, 1000);
+setInterval(() => load().catch(console.error), REFRESH_MS);
+</script>
+</body>
+</html>

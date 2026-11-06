@@ -9,6 +9,21 @@
     "confirmRuns": 2,
     "note": "Mốc được chốt khi điểm hiển thị trên store (làm tròn 1 chữ số) >= mốc trong confirmRuns lần cập nhật liên tiếp, trong thời gian chiến dịch. Mỗi mốc chốt mở bậc quà kế tiếp chưa mở. Cùng một lần cập nhật: iOS trước Android, mốc thấp trước."
   },
+  "planning": {
+    "note": "Mốc chọn sao cho công sức tăng đều: % người chơi của OS đó cần vote 5 sao (MAU ~150K, giả định Android 75% / iOS 25%; số 5 sao tính theo điểm và số lượt ngày 06/11/2026; Android là ước tính tối đa vì Google ưu tiên đánh giá mới).",
+    "effort": {
+      "android:3.3": "4.8K lượt · 4%",
+      "ios:3.8": "2.0K lượt · 5%",
+      "ios:3.9": "5.0K lượt · 13%",
+      "android:3.4": "21K lượt · 19%",
+      "ios:4.0": "8.6K lượt · 23%",
+      "ios:4.1": "12.8K lượt · 34%",
+      "android:3.5": "39K lượt · 35%",
+      "ios:4.2": "18.1K lượt · 48%",
+      "android:3.6": "60K lượt · 53%",
+      "ios:4.3": "24.8K lượt · 65%"
+    }
+  },
   "items": {
     "kim-cuong": { "name": "Kim Cương", "img": "assets/rewards/kim-cuong.png" },
     "vang": { "name": "Vàng", "img": "assets/rewards/vang.png" },
@@ -24,42 +39,30 @@
       "country": "vn",
       "url": "https://apps.apple.com/vn/app/id1051206681?see-all=reviews",
       "baseline": 3.7,
-      "finish": 4.5,
-      "milestones": [3.8, 3.9, 4.0, 4.2, 4.4, 4.5]
+      "milestones": [3.8, 3.9, 4.0, 4.1, 4.2, 4.3]
     },
     "android": {
       "label": "Google Play",
       "package": "com.vng.ngoisaothoitrang",
       "url": "https://play.google.com/store/apps/details?id=com.vng.ngoisaothoitrang&hl=vi",
       "baseline": 3.2,
-      "finish": 4.2,
-      "milestones": [3.3, 3.4, 3.5, 3.7, 3.9, 4.2]
+      "milestones": [3.3, 3.4, 3.5, 3.6]
     }
   },
   "tiers": [
-    { "tier": 1, "name": "Quà bậc 1 (điền sau)", "rewards": [] },
-    { "tier": 2, "name": "Quà bậc 2 (điền sau)", "rewards": [] },
-    { "tier": 3, "name": "Quà bậc 3 (điền sau)", "rewards": [] },
-    { "tier": 4, "name": "Quà bậc 4 (điền sau)", "rewards": [] },
-    { "tier": 5, "name": "Quà bậc 5 (điền sau)", "rewards": [] },
-    { "tier": 6, "name": "Quà bậc 6 (điền sau)", "rewards": [] },
-    { "tier": 7, "name": "Quà bậc 7 (điền sau)", "rewards": [] },
-    { "tier": 8, "name": "Quà bậc 8 (điền sau)", "rewards": [] },
-    { "tier": 9, "name": "Quà bậc 9 (điền sau)", "rewards": [] },
-    { "tier": 10, "name": "Quà bậc 10 (điền sau)", "rewards": [] },
-    { "tier": 11, "name": "Quà bậc 11 (điền sau)", "rewards": [] },
-    { "tier": 12, "name": "Quà bậc 12 (điền sau)", "rewards": [] }
+    { "tier": 1, "name": "Quà bậc 1", "rewards": [{ "item": "vang", "qty": 20000 }] },
+    { "tier": 2, "name": "Quà bậc 2", "rewards": [{ "item": "vang", "qty": 30000 }] },
+    { "tier": 3, "name": "Quà bậc 3", "rewards": [{ "item": "tien-hoi", "qty": 100 }, { "item": "vang", "qty": 20000 }] },
+    { "tier": 4, "name": "Quà bậc 4", "rewards": [{ "item": "tien-hoi", "qty": 200 }] },
+    { "tier": 5, "name": "Quà bậc 5", "rewards": [{ "item": "ve-lau-mo", "qty": 1 }, { "item": "vang", "qty": 30000 }] },
+    { "tier": 6, "name": "Quà bậc 6", "rewards": [{ "item": "ve-lau-mo", "qty": 2 }] },
+    { "tier": 7, "name": "Quà bậc 7", "rewards": [{ "item": "xu-sao", "qty": 3 }, { "item": "tien-hoi", "qty": 200 }] },
+    { "tier": 8, "name": "Quà bậc 8", "rewards": [{ "item": "ve-reset", "qty": 1 }] },
+    { "tier": 9, "name": "Quà bậc 9", "rewards": [{ "item": "xu-sao", "qty": 5 }, { "item": "ve-lau-mo", "qty": 2 }] },
+    { "tier": 10, "name": "Quà bậc 10 · Toả Sáng", "rewards": [{ "item": "kim-cuong", "qty": 100 }, { "item": "ve-reset", "qty": 1 }] }
   ],
   "expectedOrder": [
-    "ios:3.8", "android:3.3", "ios:3.9", "ios:4.0", "android:3.4", "ios:4.2",
-    "android:3.5", "ios:4.4", "android:3.7", "ios:4.5", "android:3.9", "android:4.2"
-  ],
-  "finale": {
-    "name": "Đích Toả Sáng",
-    "rewards": [
-      { "item": "kim-cuong", "qty": 100 },
-      { "item": "ve-reset", "qty": 1 },
-      { "item": "xu-sao", "qty": 5 }
-    ]
-  }
+    "android:3.3", "ios:3.8", "ios:3.9", "android:3.4", "ios:4.0",
+    "ios:4.1", "android:3.5", "ios:4.2", "android:3.6", "ios:4.3"
+  ]
 }

@@ -175,8 +175,11 @@ foreach ($n in $newly) {
 }
 
 # ---------- Đích Toả Sáng ----------
-$iosFin = Key1 $cfg.stores.ios.finish; $andFin = Key1 $cfg.stores.android.finish
-if (-not $finale.reachedAt -and $confirmed.ios.Contains($iosFin) -and $confirmed.android.Contains($andFin)) {
+# Chỉ chạy khi config còn khai báo finish cho cả hai OS (thang 1 line hiện tại không dùng khối này)
+$hasFinish = ($null -ne $cfg.stores.ios.finish) -and ($null -ne $cfg.stores.android.finish)
+$iosFin = if ($hasFinish) { Key1 $cfg.stores.ios.finish } else { $null }
+$andFin = if ($hasFinish) { Key1 $cfg.stores.android.finish } else { $null }
+if ($hasFinish -and -not $finale.reachedAt -and $confirmed.ios.Contains($iosFin) -and $confirmed.android.Contains($andFin)) {
     $finale = [ordered]@{ reachedAt = $now; iosAt = Iso $confirmed.ios[$iosFin].at; androidAt = Iso $confirmed.android[$andFin].at }
     [void]$log.Add([ordered]@{ t = $now; event = 'finale'; detail = "iOS $iosFin và Android $andFin đều đã chốt" })
     "  >> đạt Đích Toả Sáng"

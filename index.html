@@ -203,6 +203,29 @@ main{padding:0 12px 24px}
 .gift .fin{position:absolute;top:-8px;right:-10px;font-size:9px;font-weight:700;letter-spacing:.03em;padding:2px 5px;border-radius:7px;background:var(--gold);color:#fff;border:1.5px solid #fff}
 .node.pend .gift{box-shadow:0 0 0 3px var(--acc),0 0 0 6px var(--acc-soft)}
 .node.pend .ms-state{background:var(--acc-soft);color:var(--acc-deep)}
+/* Thang quà 1 line */
+.block.ladder{--acc:var(--gold);--acc-deep:#b7801a;--acc-soft:#fff3d9;padding:14px 12px 12px}
+.ladder .lsum{margin:0 0 4px;padding:0;border:0;box-shadow:none;background:none}
+.ladder .nodes{height:118px}
+.ladder .track{padding-top:14px}
+.ladder .rail{top:14px}
+.ladder .car-btn{top:28px}
+.chart{margin-top:12px;border-top:1px dashed var(--line);padding-top:8px}
+.chart summary{cursor:pointer;font-size:13px;color:var(--muted);text-align:center;list-style:none}
+.chart summary::-webkit-details-marker{display:none}
+.chart summary:after{content:" ▾"}
+.chart[open] summary:after{content:" ▴"}
+.chart .spark{border-top:0;margin-top:6px;padding-top:0}
+.ladder .node{width:74px}
+.ms-os{font-size:11px;line-height:1.25;color:var(--muted);text-align:center;max-width:70px}
+.node.done .ms-os{color:#1f8a66;font-weight:600}
+/* Chip mốc của từng store */
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:12px 0 2px}
+.chip-ms{border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 10px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.chip-ms.done{background:var(--acc);border-color:var(--acc);color:#fff}
+.chip-ms.pend{border-color:var(--acc);color:var(--acc-deep);background:var(--acc-soft)}
+.chip-ms.cur{border-color:var(--acc);color:var(--acc-deep);box-shadow:0 0 0 3px var(--acc-soft)}
+.chip-ms:focus-visible{outline:none;box-shadow:0 0 0 3px var(--acc)}
 .sheet.gold{--acc:var(--gold);--acc-deep:#b7801a;--acc-soft:#fff3d9}
 .sheet .empty{font-size:14px;color:var(--muted);margin:0;padding:10px 0}
 
@@ -239,11 +262,10 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
       <p id="updated">Đang tải số liệu…</p>
     </div>
     <div class="notice" id="sample" hidden>Đang hiển thị số liệu mẫu.</div>
-    <section class="lsum" id="lsum" aria-live="polite"></section>
     <div class="tabs" role="tablist" id="tabs"></div>
     <div id="panels"></div>
-    <section class="block" id="ladder"></section>
-    <section class="block" id="finale"></section>
+    <section class="block ladder" id="ladder"></section>
+    <section class="block" id="finale" hidden></section>
   </main>
 
   <footer>
@@ -317,7 +339,6 @@ function render(){
     tabs.appendChild(b);
     panels.appendChild(panel(key, cfg, s));
   }
-  renderSummary();
   renderLadder();
   renderFinale();
   tick();
@@ -359,34 +380,45 @@ function renderSummary(){
   const now = Date.now(), st = new Date(CFG.campaign.start);
   const note = now < st ? `Mốc bắt đầu được chốt từ ${fmtD(st)}, khi điểm giữ ở mức đó qua ${needRuns()} lần cập nhật liên tiếp.`
                         : `Mốc được chốt khi điểm giữ ở mức đó qua ${needRuns()} lần cập nhật liên tiếp.`;
-  document.getElementById('lsum').innerHTML = `
+  return `
+    <div class="lsum">
     <div class="lsum-top"><span class="lsum-title">Thang quà toàn server</span><span class="lsum-count"><b>${opened}</b>/${total}</span></div>
-    <div class="lbar"><i style="width:${total ? opened / total * 100 : 0}%"></i></div>
-    <p>Đã mở <b>${opened}/${total}</b> bậc quà. ${esc(hint)}</p>
-    <p class="muted">${esc(note)}</p>`;
+    <p>${esc(hint)}</p>
+    <p class="muted">${esc(note)}</p></div>`;
 }
 
+// Một line duy nhất: các bậc quà theo thứ tự mở, mỗi mốc chốt (iOS hoặc Android) đẩy line tiến 1 bậc
 function renderLadder(){
   const total = tierTotal(), opened = DATA.tiers || [];
-  const rows = [];
+  const at = i => (i + 1) / total * 100;
+  const fill = opened.length ? at(opened.length - 1) : 0;
+  const nodes = [];
   for (let n = 1; n <= total; n++) {
     const t = tierCfg(n), o = opened.find(x => +x.tier === n);
     const cls = o ? 'done' : (n === opened.length + 1 ? 'cur' : '');
-    let sub;
-    if (o) sub = `Mở ${fmtDT(o.openedAt)} · nhờ ${OS_NAME[o.os] || o.os} chạm ${vn1(o.milestone)}★`;
-    else {
-      const exp = (CFG.expectedOrder || [])[n - 1];
-      sub = exp ? `Dự kiến: ${OS_NAME[exp.split(':')[0]] || ''} ${vn1(exp.split(':')[1])}★` : '';
-    }
-    rows.push(`<button class="tier ${cls}" data-tier="${n}" aria-label="Xem quà bậc ${n}">
-      <span class="tn">${n}</span><span class="tb"><b>${esc(t.name)}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</span>
-      <span class="ts">${o ? 'Đã mở' : cls === 'cur' ? 'Kế tiếp' : 'Chưa mở'}</span></button>`);
+    const first = (CFG.items || {})[((t.rewards || [])[0] || {}).item] || {};
+    const extra = (t.rewards || []).length - 1;
+    let os;
+    if (o) os = `✓ ${OS_NAME[o.os] || o.os} ${vn1(o.milestone)}`;
+    else { const exp = (CFG.expectedOrder || [])[n - 1]; os = exp ? `${OS_NAME[exp.split(':')[0]] || ''} ${vn1(exp.split(':')[1])}` : ''; }
+    nodes.push(`<button class="node ${cls}" style="left:${at(n - 1)}%" data-tier="${n}" aria-label="Xem quà bậc ${n}">
+      <span class="gift">${first.img ? `<img src="${esc(first.img)}" alt="">` : `<span class="sc">${n}</span>`}${extra > 0 ? `<span class="more">+${extra}</span>` : ''}</span>
+      <span class="ms-score">Bậc ${n}</span><span class="ms-os">${esc(os)}</span></button>`);
   }
   const el = document.getElementById('ladder');
-  el.innerHTML = `<h3>Thang quà ${total} bậc</h3>
-    <p class="lead">Mỗi mốc được chốt ở App Store hoặc Google Play mở bậc kế tiếp. Thứ tự dự kiến chỉ để tham khảo.</p>
-    <div class="tiers">${rows.join('')}</div>`;
-  el.querySelectorAll('.tier').forEach(b => b.onclick = () => {
+  el.innerHTML = `${renderSummary()}
+    <div class="carousel">
+      <button class="car-btn prev" aria-label="Bậc trước">‹</button>
+      <div class="track-wrap"><div class="track" style="width:${Math.max(100, total / PER_VIEW * 100)}%">
+        <div class="rail"><div class="fill" style="width:${fill}%"></div></div>
+        <div class="nodes">${nodes.join('')}</div>
+      </div></div>
+      <button class="car-btn next" aria-label="Bậc sau">›</button>
+    </div>
+    ${total > PER_VIEW ? `<div class="dots">${'<i></i>'.repeat(Math.ceil(total / PER_VIEW))}</div>` : ''}
+    <p class="hint">Dòng chữ dưới mỗi bậc là mốc dự kiến mở bậc đó, chỉ để tham khảo · Chạm để xem quà</p>`;
+  setupCarousel(el);
+  el.querySelectorAll('.node').forEach(b => b.onclick = () => {
     const n = +b.dataset.tier, t = tierCfg(n), o = opened.find(x => +x.tier === n);
     openModal({ acc: 'gold', title: `Quà bậc ${n}`, state: o ? `Đã mở ${fmtDT(o.openedAt)} · nhờ ${OS_NAME[o.os]} chạm ${vn1(o.milestone)}★` : 'Chưa mở',
       rewards: t.rewards, empty: t.name, note: 'Quà gửi tới toàn server khi bậc được mở.', from: b });
@@ -394,6 +426,9 @@ function renderLadder(){
 }
 
 function renderFinale(){
+  const box = document.getElementById('finale');
+  box.hidden = !CFG.finale;            // thang 1 line: không còn khối đích riêng
+  if (!CFG.finale) { box.innerHTML = ''; return; }
   const f = CFG.finale || { name: 'Đích Toả Sáng', rewards: [] }, reached = DATA.finale && DATA.finale.reachedAt;
   const row = key => {
     const c = CFG.stores[key], s = DATA.stores[key] || {}, fin = Number(c.finish), done = !!confirmedOf(key)[key1(fin)];
@@ -439,7 +474,7 @@ function panel(key, cfg, s){
   }
 
   let nextHtml;
-  if (next == null) nextHtml = `<div class="next"><b>Đã về đích ${vn1(fin)}★</b><small>Tất cả mốc của ${OS_NAME[key]} đã được chốt.</small></div>`;
+  if (next == null) nextHtml = `<div class="next"><b>Đã chốt hết mốc của ${esc(cfg.label)}</b><small>Thang quà vẫn tiếp tục mở nhờ mốc của store còn lại.</small></div>`;
   else {
     const need = s.score != null && s.count ? fiveStarsNeeded(s.score, s.count, next) : null;
     const p = stk[key1(next)];
@@ -449,13 +484,12 @@ function panel(key, cfg, s){
     nextHtml = `<div class="next">Mốc tiếp theo: <b>${vn1(next)}★</b>${lines.map(l => `<small>${l}</small>`).join('')}</div>`;
   }
 
-  const nodes = ms.map((m, i) => {
+  // Mốc của store này: chip nhỏ (thang quà chung là line duy nhất, nằm bên dưới)
+  const chips = ms.map((m, i) => {
     const k = key1(m), c = conf[k], p = stk[k];
     const cls = c ? 'done' : p ? 'pend' : (i === nextIdx ? 'cur' : '');
     const st = c ? 'Đã chốt' : p ? `Xác nhận ${p.hits}/${needRuns()}` : (cls === 'cur' ? 'Sắp tới' : 'Chưa chốt');
-    return `<button class="node ${cls}" style="left:${at(i)}%" data-store="${key}" data-k="${k}" aria-label="Mốc ${vn1(m)} sao: ${st}">
-      <span class="gift"><span class="sc">${c ? '✓' : vn1(m)}</span>${Math.abs(m - fin) < 1e-9 ? '<span class="fin">ĐÍCH</span>' : ''}</span>
-      <span class="ms-score">${vn1(m)}★</span><span class="ms-state">${st}</span></button>`;
+    return `<button class="chip-ms ${cls}" data-store="${key}" data-k="${k}" aria-label="Mốc ${vn1(m)} sao: ${st}">${c ? '✓ ' : ''}${vn1(m)}★</button>`;
   }).join('');
 
   const ax = fill < 12 ? 18 : fill > 88 ? 82 : 50;
@@ -471,22 +505,12 @@ function panel(key, cfg, s){
     </div>
     ${nextHtml}
     ${s.error ? `<div class="err">Lần cập nhật gần nhất bị lỗi, đang hiện số cũ.</div>` : ''}
-    <div class="carousel">
-      <button class="car-btn prev" aria-label="Mốc trước">‹</button>
-      <div class="track-wrap"><div class="track" style="width:${Math.max(100, n / PER_VIEW * 100)}%">
-        <div class="rail"><div class="fill" style="width:${fill}%"></div>
-          ${disp != null ? `<div class="now" style="left:${fill}%;transform:translateX(-${ax}%);--ax:${ax}%">Hiện tại ${vn1(disp)}</div>` : ''}</div>
-        <div class="nodes">${nodes}</div>
-      </div></div>
-      <button class="car-btn next" aria-label="Mốc sau">›</button>
-    </div>
-    ${n > PER_VIEW ? `<div class="dots">${'<i></i>'.repeat(Math.ceil(n / PER_VIEW))}</div>` : ''}
-    <p class="hint">${n > PER_VIEW ? 'Vuốt ngang để xem thêm mốc · ' : ''}Chạm vào mốc để xem chi tiết</p>
-    ${spark(key)}
+    <div class="chips">${chips}</div>
+    <p class="hint">Mốc của ${esc(cfg.label)} · mỗi mốc chốt mở 1 bậc trong thang quà bên dưới</p>
     <div class="cta"><p>Xem đánh giá trên ${esc(cfg.label)}</p>
-      <a class="badge" href="${esc(cfg.url)}" target="_blank" rel="noopener"><img src="${badge}" alt="Mở ${esc(cfg.label)}" width="160" height="50"></a></div>`;
-  el.querySelectorAll('.node').forEach(b => b.onclick = () => openMilestone(b.dataset.store, b.dataset.k, b));
-  setupCarousel(el);
+      <a class="badge" href="${esc(cfg.url)}" target="_blank" rel="noopener"><img src="${badge}" alt="Mở ${esc(cfg.label)}" width="160" height="50"></a></div>
+    <details class="chart"><summary>Biểu đồ điểm theo thời gian</summary>${spark(key)}</details>`;
+  el.querySelectorAll('.chip-ms').forEach(b => b.onclick = () => openMilestone(b.dataset.store, b.dataset.k, b));
   return el;
 }
 
@@ -541,7 +565,7 @@ function setupCarousel(el){
   };
 }
 function centerVisible(){
-  requestAnimationFrame(() => document.querySelectorAll('.panel:not([hidden])').forEach(p => p._center && p._center()));
+  requestAnimationFrame(() => document.querySelectorAll('#ladder').forEach(p => p._center && p._center()));
 }
 
 function spark(key){

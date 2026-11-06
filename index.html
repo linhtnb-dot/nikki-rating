@@ -99,6 +99,10 @@ main{padding:0 12px 24px}
 .car-btn.prev{left:0}.car-btn.next{right:0}
 .car-btn{box-sizing:border-box;padding:0;min-width:30px;flex:none;aspect-ratio:1;-webkit-appearance:none;appearance:none}
 .car-btn svg{display:block}
+.car-btn:focus{outline:none}
+.car-btn:focus-visible{box-shadow:0 4px 12px -4px rgba(0,0,0,.3),0 0 0 2px var(--acc)}
+.carousel .car-btn.prev,.carousel .car-btn.next{margin:0;padding:0;background:#fff;border-radius:50%;font-size:0}
+.carousel .car-btn.prev{left:2px}.carousel .car-btn.next{right:2px}
 .car-btn[disabled]{opacity:0;pointer-events:none}
 .dots{display:flex;justify-content:center;gap:6px;margin:2px 0 8px}
 .dots i{width:6px;height:6px;border-radius:3px;background:#ecd3df;transition:width .2s,background .2s}
@@ -546,7 +550,8 @@ function setupCarousel(el){
     const from = wrap.scrollLeft, to = from + dir * wrap.clientWidth * 0.75;
     wrap.scrollTo({ left: to, behavior: 'smooth' });
     // Trình duyệt không chạy hiệu ứng cuộn mượt thì nhảy thẳng tới vị trí mới
-    setTimeout(() => { if (Math.abs(wrap.scrollLeft - from) < 2) wrap.scrollLeft = to; }, 350);
+    setTimeout(() => { if (Math.abs(wrap.scrollLeft - from) < 2) wrap.scrollLeft = to; update(); }, 350);
+    setTimeout(update, 700);
   };
   prev.onclick = () => step(-1);
   next.onclick = () => step(1);

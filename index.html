@@ -9,7 +9,7 @@
 <!-- Ảnh và mô tả khi dán link vào Facebook, Zalo, Messenger. og:image và og:url cần link đầy đủ: sửa https://linhtnb-dot.github.io/nikki-rating sau khi bật GitHub Pages -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Hành Trình Toả Sáng · Nikki: Ngôi Sao Thời Trang">
-<meta property="og:description" content="Theo dõi điểm đánh giá của Nikki trên App Store và Google Play. Mỗi mốc điểm đạt được, quà mở cho toàn server.">
+<meta property="og:description" content="Theo dõi điểm đánh giá của Ngôi Sao Thời Trang trên App Store và Google Play. Mỗi mốc điểm đạt được, quà mở cho toàn server.">
 <meta property="og:image" content="https://linhtnb-dot.github.io/nikki-rating/assets/hero-bg.jpg">
 <meta property="og:url" content="https://linhtnb-dot.github.io/nikki-rating/">
 <meta name="twitter:card" content="summary_large_image">
@@ -206,6 +206,7 @@ main{padding:0 12px 24px}
 /* Thang quà 1 line */
 .block.ladder{--acc:var(--gold);--acc-deep:#b7801a;--acc-soft:#fff3d9;padding:14px 12px 12px}
 .ladder .lsum{margin:0 0 4px;padding:0;border:0;box-shadow:none;background:none}
+.ladder .lsum-title{font-size:17px;white-space:nowrap}
 .ladder .nodes{height:118px}
 .ladder .track{padding-top:14px}
 .ladder .rail{top:14px}
@@ -382,9 +383,7 @@ function renderSummary(){
                         : `Mốc được chốt khi điểm giữ ở mức đó qua ${needRuns()} lần cập nhật liên tiếp.`;
   return `
     <div class="lsum">
-    <div class="lsum-top"><span class="lsum-title">Thang quà toàn server</span><span class="lsum-count"><b>${opened}</b>/${total}</span></div>
-    <p>${esc(hint)}</p>
-    <p class="muted">${esc(note)}</p></div>`;
+    <div class="lsum-top"><span class="lsum-title">Mốc thưởng Hành Trình Toả Sáng</span><span class="lsum-count"><b>${opened}</b>/${total}</span></div></div>`;
 }
 
 // Một line duy nhất: các bậc quà theo thứ tự mở, mỗi mốc chốt (iOS hoặc Android) đẩy line tiến 1 bậc
@@ -416,7 +415,7 @@ function renderLadder(){
       <button class="car-btn next" aria-label="Mốc sau">›</button>
     </div>
     ${total > PER_VIEW ? `<div class="dots">${'<i></i>'.repeat(Math.ceil(total / PER_VIEW))}</div>` : ''}
-    <p class="hint">Dưới mỗi mốc là điểm dự kiến mở mốc đó (chỉ để tham khảo) · Chạm để xem quà</p>`;
+    <p class="hint">Chạm để xem quà</p>`;
   setupCarousel(el);
   el.querySelectorAll('.node').forEach(b => b.onclick = () => {
     const n = +b.dataset.tier, t = tierCfg(n), o = opened.find(x => +x.tier === n);
@@ -506,8 +505,7 @@ function panel(key, cfg, s){
     ${nextHtml}
     ${s.error ? `<div class="err">Lần cập nhật gần nhất bị lỗi, đang hiện số cũ.</div>` : ''}
     <div class="cta"><p>Xem đánh giá trên ${esc(cfg.label)}</p>
-      <a class="badge" href="${esc(cfg.url)}" target="_blank" rel="noopener"><img src="${badge}" alt="Mở ${esc(cfg.label)}" width="160" height="50"></a></div>
-    <details class="chart"><summary>Biểu đồ điểm theo thời gian</summary>${spark(key)}</details>`;
+      <a class="badge" href="${esc(cfg.url)}" target="_blank" rel="noopener"><img src="${badge}" alt="Mở ${esc(cfg.label)}" width="160" height="50"></a></div>`;
   return el;
 }
 

@@ -362,7 +362,7 @@ const confirmedOf = key => ((DATA.confirmed || {})[key]) || {};
 const streakOf = key => ((DATA.streak || {})[key]) || {};
 const msList = key => [...(CFG.stores[key].milestones || [])].map(Number).sort((a, b) => a - b);
 const tierTotal = () => (CFG.tiers || []).length;
-const tierCfg = n => (CFG.tiers || []).find(t => +t.tier === n) || { tier: n, name: `Quà bậc ${n} (điền sau)`, rewards: [] };
+const tierCfg = n => (CFG.tiers || []).find(t => +t.tier === n) || { tier: n, name: `Quà mốc ${n}`, rewards: [] };
 const tierOf = (key, k) => (DATA.tiers || []).find(t => t.os === key && key1(t.milestone) === k);
 const nextOpen = key => msList(key).find(m => !confirmedOf(key)[key1(m)]);   // mốc chưa chốt thấp nhất
 const needRuns = () => (DATA.rule && DATA.rule.confirmRuns) || (CFG.rule && CFG.rule.confirmRuns) || 2;
@@ -371,11 +371,11 @@ function renderSummary(){
   const total = tierTotal(), opened = (DATA.tiers || []).length;
   const n = opened + 1;
   let hint;
-  if (opened >= total) hint = `Đã mở đủ ${total} bậc quà.`;
+  if (opened >= total) hint = `Đã mở đủ ${total} mốc quà.`;
   else {
     const parts = KEYS.map(k => { const m = nextOpen(k); return m == null ? null : `${OS_NAME[k]} chạm ${vn1(m)}★`; }).filter(Boolean);
-    hint = parts.length === 2 ? `Bậc ${n} mở khi ${parts[0]} hoặc ${parts[1]}, bên nào tới trước.`
-         : parts.length === 1 ? `Bậc ${n} mở khi ${parts[0]}.` : '';
+    hint = parts.length === 2 ? `Mốc ${n} mở khi ${parts[0]} hoặc ${parts[1]}, bên nào tới trước.`
+         : parts.length === 1 ? `Mốc ${n} mở khi ${parts[0]}.` : '';
   }
   const now = Date.now(), st = new Date(CFG.campaign.start);
   const note = now < st ? `Mốc bắt đầu được chốt từ ${fmtD(st)}, khi điểm giữ ở mức đó qua ${needRuns()} lần cập nhật liên tiếp.`
@@ -401,27 +401,27 @@ function renderLadder(){
     let os;
     if (o) os = `✓ ${OS_NAME[o.os] || o.os} ${vn1(o.milestone)}`;
     else { const exp = (CFG.expectedOrder || [])[n - 1]; os = exp ? `${OS_NAME[exp.split(':')[0]] || ''} ${vn1(exp.split(':')[1])}` : ''; }
-    nodes.push(`<button class="node ${cls}" style="left:${at(n - 1)}%" data-tier="${n}" aria-label="Xem quà bậc ${n}">
+    nodes.push(`<button class="node ${cls}" style="left:${at(n - 1)}%" data-tier="${n}" aria-label="Xem quà mốc ${n}">
       <span class="gift">${first.img ? `<img src="${esc(first.img)}" alt="">` : `<span class="sc">${n}</span>`}${extra > 0 ? `<span class="more">+${extra}</span>` : ''}</span>
-      <span class="ms-score">Bậc ${n}</span><span class="ms-os">${esc(os)}</span></button>`);
+      <span class="ms-score">Mốc ${n}</span><span class="ms-os">${esc(os)}</span></button>`);
   }
   const el = document.getElementById('ladder');
   el.innerHTML = `${renderSummary()}
     <div class="carousel">
-      <button class="car-btn prev" aria-label="Bậc trước">‹</button>
+      <button class="car-btn prev" aria-label="Mốc trước">‹</button>
       <div class="track-wrap"><div class="track" style="width:${Math.max(100, total / PER_VIEW * 100)}%">
         <div class="rail"><div class="fill" style="width:${fill}%"></div></div>
         <div class="nodes">${nodes.join('')}</div>
       </div></div>
-      <button class="car-btn next" aria-label="Bậc sau">›</button>
+      <button class="car-btn next" aria-label="Mốc sau">›</button>
     </div>
     ${total > PER_VIEW ? `<div class="dots">${'<i></i>'.repeat(Math.ceil(total / PER_VIEW))}</div>` : ''}
-    <p class="hint">Dòng chữ dưới mỗi bậc là mốc dự kiến mở bậc đó, chỉ để tham khảo · Chạm để xem quà</p>`;
+    <p class="hint">Dưới mỗi mốc là điểm dự kiến mở mốc đó (chỉ để tham khảo) · Chạm để xem quà</p>`;
   setupCarousel(el);
   el.querySelectorAll('.node').forEach(b => b.onclick = () => {
     const n = +b.dataset.tier, t = tierCfg(n), o = opened.find(x => +x.tier === n);
-    openModal({ acc: 'gold', title: `Quà bậc ${n}`, state: o ? `Đã mở ${fmtDT(o.openedAt)} · nhờ ${OS_NAME[o.os]} chạm ${vn1(o.milestone)}★` : 'Chưa mở',
-      rewards: t.rewards, empty: t.name, note: 'Quà gửi tới toàn server khi bậc được mở.', from: b });
+    openModal({ acc: 'gold', title: `Quà mốc ${n}`, state: o ? `Đã mở ${fmtDT(o.openedAt)} · nhờ ${OS_NAME[o.os]} chạm ${vn1(o.milestone)}★` : 'Chưa mở',
+      rewards: t.rewards, empty: t.name, note: 'Quà gửi tới toàn server khi mốc được mở.', from: b });
   });
 }
 
@@ -481,7 +481,7 @@ function panel(key, cfg, s){
     const lines = [];
     if (p) lines.push(`Đang xác nhận: ${p.hits}/${needRuns()} lần cập nhật`);
     if (need) lines.push(`Ước tính: Cần thêm khoảng <b>${fmt.format(need)}</b> lượt đánh giá 5★`);
-    nextHtml = `<div class="next">Mốc tiếp theo: <b>${vn1(next)}★</b>${lines.map(l => `<small>${l}</small>`).join('')}</div>`;
+    nextHtml = `<div class="next">Điểm cần đạt tiếp theo: <b>${vn1(next)}★</b>${lines.map(l => `<small>${l}</small>`).join('')}</div>`;
   }
 
   // Mốc của store này: chip nhỏ (thang quà chung là line duy nhất, nằm bên dưới)
@@ -505,12 +505,9 @@ function panel(key, cfg, s){
     </div>
     ${nextHtml}
     ${s.error ? `<div class="err">Lần cập nhật gần nhất bị lỗi, đang hiện số cũ.</div>` : ''}
-    <div class="chips">${chips}</div>
-    <p class="hint">Mốc của ${esc(cfg.label)} · mỗi mốc chốt mở 1 bậc trong thang quà bên dưới</p>
     <div class="cta"><p>Xem đánh giá trên ${esc(cfg.label)}</p>
       <a class="badge" href="${esc(cfg.url)}" target="_blank" rel="noopener"><img src="${badge}" alt="Mở ${esc(cfg.label)}" width="160" height="50"></a></div>
     <details class="chart"><summary>Biểu đồ điểm theo thời gian</summary>${spark(key)}</details>`;
-  el.querySelectorAll('.chip-ms').forEach(b => b.onclick = () => openMilestone(b.dataset.store, b.dataset.k, b));
   return el;
 }
 

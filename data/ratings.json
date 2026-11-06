@@ -1,13 +1,20 @@
 {
+  "version": 2,
   "sample": false,
-  "updatedAt": "2026-11-06T03:52:28Z",
+  "updatedAt": "2026-11-06T04:33:02Z",
+  "rule": {
+    "confirmRuns": 2,
+    "campaignStart": "2026-11-09T17:00:00+00:00",
+    "campaignEnd": "2026-12-31T16:59:59+00:00",
+    "inWindow": false
+  },
   "stores": {
     "ios": {
-      "score": 3.6708,
+      "score": 3.6707,
       "display": 3.7,
       "count": 32149,
       "exact": true,
-      "fetchedAt": "2026-11-06T03:52:28Z",
+      "fetchedAt": "2026-11-06T04:33:02Z",
       "error": null
     },
     "android": {
@@ -22,11 +29,30 @@
         "1": 100402
       },
       "exact": false,
-      "fetchedAt": "2026-11-06T03:52:28Z",
+      "fetchedAt": "2026-11-06T04:33:02Z",
       "error": null
     }
   },
-  "achieved": {
+  "confirmed": {
+    "ios": {},
+    "android": {}
+  },
+  "streak": {
+    "ios": {},
+    "android": {}
+  },
+  "tiers": [],
+  "finale": {
+    "reachedAt": null
+  },
+  "log": [
+    {
+      "t": "2026-11-06T04:33:02Z",
+      "event": "migrate",
+      "detail": "Chuyển sang rule 12 bậc. Giữ nguyên dữ liệu cũ ở legacyAchieved; 0 mốc nằm trong thời gian chiến dịch được chuyển thành mốc đã chốt."
+    }
+  ],
+  "legacyAchieved": {
     "ios": {},
     "android": {}
   },
@@ -169,6 +195,15 @@
     {
       "t": "2026-11-06T03:52:28Z",
       "ios": 3.6708,
+      "iosDisplay": 3.7,
+      "iosCount": 32149,
+      "android": 3.2177,
+      "androidDisplay": 3.2,
+      "androidCount": 261333
+    },
+    {
+      "t": "2026-11-06T04:33:02Z",
+      "ios": 3.6707,
       "iosDisplay": 3.7,
       "iosCount": 32149,
       "android": 3.2177,

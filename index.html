@@ -97,6 +97,8 @@ main{padding:0 12px 24px}
 .car-btn{position:absolute;top:70px;z-index:3;width:30px;height:30px;border-radius:50%;border:0;background:#fff;color:var(--acc-deep);font-size:18px;line-height:1;cursor:pointer;
   box-shadow:0 4px 12px -4px rgba(0,0,0,.3),0 0 0 1px var(--line);display:grid;place-items:center;transition:opacity .2s;-webkit-tap-highlight-color:transparent}
 .car-btn.prev{left:0}.car-btn.next{right:0}
+.car-btn{box-sizing:border-box;padding:0;min-width:30px;flex:none;aspect-ratio:1;-webkit-appearance:none;appearance:none}
+.car-btn svg{display:block}
 .car-btn[disabled]{opacity:0;pointer-events:none}
 .dots{display:flex;justify-content:center;gap:6px;margin:2px 0 8px}
 .dots i{width:6px;height:6px;border-radius:3px;background:#ecd3df;transition:width .2s,background .2s}
@@ -407,12 +409,12 @@ function renderLadder(){
   const el = document.getElementById('ladder');
   el.innerHTML = `${renderSummary()}
     <div class="carousel">
-      <button class="car-btn prev" aria-label="Mốc trước">‹</button>
+      <button class="car-btn prev" aria-label="Mốc trước"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div class="track-wrap"><div class="track" style="width:${Math.max(100, total / PER_VIEW * 100)}%">
         <div class="rail"><div class="fill" style="width:${fill}%"></div></div>
         <div class="nodes">${nodes.join('')}</div>
       </div></div>
-      <button class="car-btn next" aria-label="Mốc sau">›</button>
+      <button class="car-btn next" aria-label="Mốc sau"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
     ${total > PER_VIEW ? `<div class="dots">${'<i></i>'.repeat(Math.ceil(total / PER_VIEW))}</div>` : ''}
     <p class="hint">Chạm để xem quà</p>`;

@@ -4,7 +4,8 @@
 # Chạy: powershell -ExecutionPolicy Bypass -File scripts\fetch-ratings.ps1
 #
 # Rule (cấu hình trong config.json):
-# - Mốc được chốt khi điểm HIỂN THỊ (làm tròn 1 chữ số) >= mốc trong rule.confirmRuns lần cập nhật liên tiếp,
+# - Mốc được chốt khi điểm CHÍNH XÁC (score, không làm tròn) >= đúng số mốc, ví dụ >= 3.80, trong rule.confirmRuns lần cập nhật liên tiếp,
+#   (iOS: averageUserRating của Apple; Android: điểm chính xác Google nhúng trong trang Play, dự phòng = trung bình theo số lượt từng mức sao)
 #   chỉ tính các lần cập nhật nằm trong thời gian chiến dịch. Lần lấy điểm bị lỗi không tính và không làm đứt chuỗi.
 # - Đã chốt thì không thu hồi.
 # - Mỗi mốc chốt mở bậc quà kế tiếp chưa mở (tối đa số bậc trong config.tiers).
@@ -68,9 +69,14 @@ function Get-Android {
     $count = 0; $sum = 0
     foreach ($k in $hist.Keys) { $count += $hist[$k]; $sum += [int]$k * $hist[$k] }
     $mean = if ($count) { $sum / $count } else { $display }
+    # Điểm chính xác Google nhúng trong dữ liệu trang: ["3,2",3.217741]
+    $pm = [regex]::Match($h, '\[\["(\d[,\.]\d)",(\d\.\d+)\]')
+    $precise = if ($pm.Success -and [math]::Abs((ToDouble $pm.Groups[1].Value) - $display) -lt 0.051) { ToDouble $pm.Groups[2].Value } else { $null }
+    $score = if ($null -ne $precise) { $precise } else { $mean }
     [ordered]@{
-        score = [math]::Round($mean, 4); display = $display; count = $count; histogram = $hist
-        exact = $false; fetchedAt = $now; error = $null
+        score = [math]::Round($score, 4); display = $display; count = $count; histogram = $hist
+        exact = ($null -ne $precise); source = $(if ($null -ne $precise) { 'google-precise' } else { 'histogram-mean' })
+        fetchedAt = $now; error = $null
     }
 }
 
@@ -136,7 +142,7 @@ foreach ($key in 'ios', 'android') {
     $s = $stores[$key]
     if (-not $inWindow) { $streak[$key] = [ordered]@{}; continue }        # ngoài chiến dịch: không tính
     if ($s.error -or $null -eq $s.display) { continue }                   # lấy điểm lỗi: không tính, không đứt chuỗi
-    $disp = [double]$s.display
+    $disp = if ($null -ne $s.score) { [double]$s.score } else { [double]$s.display }   # điểm chính xác
     foreach ($ms in ($cfg.stores.$key.milestones | Sort-Object { [double]$_ })) {
         $k = Key1 $ms
         if ($confirmed[$key].Contains($k)) { continue }
@@ -145,10 +151,10 @@ foreach ($key in 'ios', 'android') {
             $hits = if ($prev) { [int]$prev.hits + 1 } else { 1 }
             $since = if ($prev) { Iso $prev.since } else { $now }
             if ($hits -ge $needRuns) {
-                $confirmed[$key][$k] = [ordered]@{ at = $now; firstSeenAt = $since; display = $disp; runs = $hits; source = 'rule'; openedTier = $null }
+                $confirmed[$key][$k] = [ordered]@{ at = $now; firstSeenAt = $since; score = $disp; runs = $hits; source = 'rule'; openedTier = $null }
                 $streak[$key].Remove($k)
                 [void]$newly.Add(@{ os = $key; k = $k })
-                [void]$log.Add([ordered]@{ t = $now; event = 'confirm'; os = $key; milestone = $k; display = $disp; firstSeenAt = $since; runs = $hits })
+                [void]$log.Add([ordered]@{ t = $now; event = 'confirm'; os = $key; milestone = $k; score = $disp; firstSeenAt = $since; runs = $hits })
                 "  >> $key chốt mốc $k"
             } else {
                 $streak[$key][$k] = [ordered]@{ hits = $hits; since = $since; lastAt = $now }

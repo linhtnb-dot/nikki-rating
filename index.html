@@ -72,6 +72,10 @@ button{font:inherit;color:inherit}
 .ms-lb{font-size:10.5px;line-height:1.2;color:var(--muted);max-width:66px;text-align:center}
 .ms-i.on .ms-lb{color:var(--pink-deep);font-weight:700}
 .ms-i:focus-visible{outline:none}.ms-i:focus-visible .ms-dot{box-shadow:0 0 0 3px var(--pink)}
+.mnote{margin:-4px 0 10px;font-size:12px;line-height:1.4;color:var(--muted)}
+.mnote:before{content:"";display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Crect x=%275%27 y=%2711%27 width=%2714%27 height=%2710%27 rx=%272.5%27/%3E%3Cpath d=%27M8 11V8a4 4 0 0 1 8 0v3%27 fill=%27none%27 stroke=%27black%27 stroke-width=%272.4%27/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Crect x=%275%27 y=%2711%27 width=%2714%27 height=%2710%27 rx=%272.5%27/%3E%3Cpath d=%27M8 11V8a4 4 0 0 1 8 0v3%27 fill=%27none%27 stroke=%27black%27 stroke-width=%272.4%27/%3E%3C/svg%3E") center/contain no-repeat}
+.mnote:empty{display:none}
+.ms-i.sel .ms-dot{box-shadow:0 0 0 3px var(--pink-soft),0 0 0 5px var(--pink)}
 .block.missions{border-color:var(--line)}
 .missions h3{color:var(--pink-deep)}
 .mlist{display:grid;gap:8px;margin-top:8px}
@@ -307,6 +311,7 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
   <div class="intro">
     <div class="sys"><img src="assets/loading.gif" alt="" width="1000" height="1000"><span id="sysname">Nhiệm vụ hệ thống của Mumu</span></div>
     <div class="mstep" id="mstep" aria-label="Chuỗi nhiệm vụ"></div>
+    <p class="mnote" id="mnote" aria-live="polite"></p>
     <span class="chip"><i></i><span id="period">Đang cập nhật</span></span>
     <h1 id="title">Hành Trình Toả Sáng</h1>
     <p class="sub" id="subtitle"></p>
@@ -322,7 +327,6 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
     <div id="panels"></div>
     <section class="block ladder" id="ladder"></section>
     <section class="block" id="finale" hidden></section>
-    <section class="block missions" id="missions"></section>
   </main>
 
   <footer>
@@ -482,53 +486,50 @@ function renderLadder(){
 }
 
 // ---------- Chuỗi nhiệm vụ hệ thống của Mumu ----------
-// Nhiệm vụ đang chạy: status "active". Nhiệm vụ sau mở khoá theo số mốc quà Hành Trình Toả Sáng đã mở (unlock.type "tiers")
-// hoặc theo ngày (unlock.type "date"). Khi đủ điều kiện, thẻ hiện "Sắp mở" (nội dung nhiệm vụ do team công bố sau).
+// Mở tuần tự: nhiệm vụ sau chỉ mở khi nhiệm vụ ngay trước đã hoàn thành.
+// Hoàn thành = status "done" trong config; riêng Hành Trình Toả Sáng tự hoàn thành khi đã mở đủ các mốc quà.
+// Nhiệm vụ chưa mở luôn hiện "???"; chỉ có dòng ghi chú cho biết cần hoàn thành nhiệm vụ nào.
 const LOCK_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5" fill="currentColor"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>';
-function missionState(m){
-  if (m.status === 'active') return { cls: 'on', tag: 'Đang diễn ra', p: 100 };
-  const u = m.unlock || {}, opened = (DATA.tiers || []).length;
-  if (u.type === 'tiers') {
-    const need = +u.count || 0, ok = opened >= need;
-    return { cls: ok ? 'open' : 'locked', tag: ok ? 'Sắp mở' : 'Đang khoá', p: need ? Math.min(100, opened / need * 100) : 0,
-      cond: ok ? 'Đã đủ điều kiện, chờ Mumu công bố' : `Mở khi Hành Trình Toả Sáng đạt Mốc ${need} · ${opened}/${need}` };
-  }
-  if (u.type === 'date') {
-    const at = new Date(u.at), ok = Date.now() >= at;
-    return { cls: ok ? 'open' : 'locked', tag: ok ? 'Sắp mở' : 'Đang khoá', p: ok ? 100 : 0,
-      cond: ok ? 'Đã đủ điều kiện, chờ Mumu công bố' : `Mở từ ${fmtD(at)}` };
-  }
-  return { cls: 'locked', tag: 'Đang khoá', p: 0, cond: u.text || 'Sắp công bố' };
+const CHECK_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function missionDone(m){
+  if (m.status === 'done') return true;
+  if (m.id === 'toa-sang') return tierTotal() > 0 && (DATA.tiers || []).length >= tierTotal();
+  return false;
 }
-function renderMissions(){
+function missionStates(){
   const ms = CFG.missions || [];
-  const step = document.getElementById('mstep'), box = document.getElementById('missions');
-  if (!ms.length) { step.innerHTML = ''; box.hidden = true; return; }
-  box.hidden = false;
-  if (CFG.system && CFG.system.name) document.getElementById('sysname').textContent = CFG.system.name;
-  const show = (m, st) => (m.hidden && st.cls === 'locked') ? '???' : m.name;
-  step.innerHTML = ms.map((m, i) => {
-    const st = missionState(m);
-    return `<button class="ms-i ${st.cls}" data-i="${i}" aria-label="Nhiệm vụ ${i + 1}: ${esc(show(m, st))} · ${st.tag}">
-      <span class="ms-dot">${st.cls === 'locked' ? LOCK_SVG : i + 1}</span><span class="ms-lb">${esc(m.short || show(m, st))}</span></button>`;
-  }).join('');
-  box.innerHTML = `<h3>${esc((CFG.system && CFG.system.listTitle) || 'Chuỗi nhiệm vụ của Mumu')}</h3>
-    <p class="lead">${esc((CFG.system && CFG.system.listLead) || 'Hoàn thành nhiệm vụ trước để mở khoá nhiệm vụ tiếp theo.')}</p>
-    <div class="mlist">${ms.map((m, i) => {
-      const st = missionState(m), hid = m.hidden && st.cls === 'locked';
-      return `<div class="mcard ${st.cls}" id="mission-${i}">
-        <span class="mi">${st.cls === 'locked' ? LOCK_SVG : i + 1}</span>
-        <div style="flex:1;min-width:0"><b>${esc(hid ? '???' : m.name)}<span class="tag">${st.tag}</span></b>
-          <p>${esc(hid ? (m.teaser || 'Mumu đang chuẩn bị một bất ngờ…') : (m.desc || m.teaser || ''))}</p>
-          ${st.cond ? `<div class="cond"><span>${esc(st.cond)}</span>${st.cls === 'locked' ? `<i style="--p:${st.p}%"></i>` : ''}</div>` : ''}</div></div>`;
-    }).join('')}</div>`;
-  step.querySelectorAll('.ms-i').forEach(b => b.onclick = () => {
-    const i = +b.dataset.i, m = ms[i];
-    const target = m.status === 'active' ? document.getElementById('tabs') : document.getElementById('mission-' + i);
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  let prevDone = true;
+  return ms.map((m, i) => {
+    const done = missionDone(m), open = done || (prevDone && (m.status === 'active' || i === 0));
+    const st = done ? 'done' : open ? 'on' : 'locked';
+    prevDone = done;
+    return { m, i, st, label: st === 'locked' ? '???' : (m.short || m.name), name: st === 'locked' ? '???' : m.name };
   });
 }
-
+function missionNote(list, i){
+  const s = list[i]; if (!s) return '';
+  if (s.st === 'done') return `Nhiệm vụ ${i + 1} · ${s.m.name} · Đã hoàn thành`;
+  if (s.st === 'on') return `Nhiệm vụ ${i + 1} · ${s.m.name} · Đang diễn ra`;
+  const p = list[i - 1];
+  const prevName = p ? (p.st === 'locked' ? `Nhiệm vụ ${i}` : `Nhiệm vụ ${i}: ${p.m.name}`) : '';
+  return `Nhiệm vụ ${i + 1} · Mở khoá khi hoàn thành ${prevName}`;
+}
+function renderMissions(){
+  const step = document.getElementById('mstep'), note = document.getElementById('mnote');
+  const list = missionStates();
+  if (!list.length) { step.innerHTML = ''; note.textContent = ''; return; }
+  if (CFG.system && CFG.system.name) document.getElementById('sysname').textContent = CFG.system.name;
+  step.innerHTML = list.map(s => `<button class="ms-i ${s.st === 'locked' ? 'locked' : s.st === 'done' ? 'open' : 'on'}" data-i="${s.i}" aria-label="${esc(missionNote(list, s.i))}">
+      <span class="ms-dot">${s.st === 'locked' ? LOCK_SVG : s.st === 'done' ? CHECK_SVG : s.i + 1}</span><span class="ms-lb">${esc(s.label)}</span></button>`).join('');
+  const firstLocked = list.find(s => s.st === 'locked');
+  note.textContent = firstLocked ? missionNote(list, firstLocked.i) : '';
+  step.querySelectorAll('.ms-i').forEach(b => b.onclick = () => {
+    const i = +b.dataset.i, s = list[i];
+    step.querySelectorAll('.ms-i').forEach(x => x.classList.toggle('sel', x === b));
+    note.textContent = missionNote(list, i);
+    if (s.st === 'on' && s.m.id === 'toa-sang') document.getElementById('tabs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}
 function renderFinale(){
   const box = document.getElementById('finale');
   box.hidden = !CFG.finale;            // thang 1 line: không còn khối đích riêng

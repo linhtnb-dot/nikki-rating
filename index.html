@@ -556,7 +556,7 @@ function missionNote(list, i){
     const o = (DATA.tiers || []).find(x => +x.tier === s.n);
     return `${missionHead(s)} · Đã hoàn thành${o ? ` · ${OS_NAME[o.os] || o.os} ${vn1(o.milestone)}★` : ''}`;
   }
-  if (s.st === 'on') { const t = nextTarget(); return `${missionHead(s)} · Đang làm${t ? `: ${t}` : ''}`; }
+  if (s.st === 'on') return missionHead(s);
   return `Nhiệm vụ ${s.n} · Mở khoá khi hoàn thành Nhiệm vụ ${s.n - 1}`;
 }
 function renderMissions(){

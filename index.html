@@ -58,8 +58,11 @@ button{font:inherit;color:inherit}
 .app-icon{width:42px;height:42px;border-radius:11px;box-shadow:0 3px 10px -3px rgba(120,30,70,.45),0 0 0 2px #fff}
 .logo{width:92px;filter:drop-shadow(0 2px 6px rgba(255,255,255,.95))}
 /* Chuỗi nhiệm vụ hệ thống của Mumu */
-.sys{display:inline-flex;align-items:center;gap:6px;margin-bottom:6px;font-family:var(--deco);font-size:16px;color:#b7801a;background:#fffaf0;border:1px solid #f6e2b8;border-radius:999px;padding:2px 12px 2px 4px;box-shadow:var(--shadow)}
-.sys img{width:30px;height:30px;object-fit:contain}
+.sys{display:inline-flex;align-items:center;justify-content:center;gap:8px;margin:0 auto 10px;font-family:var(--deco);font-size:17px;line-height:1;color:#b7801a;
+  background:linear-gradient(180deg,#fffdf6,#fff4dc);border:1.5px solid #f3d998;border-radius:999px;padding:4px 6px;box-shadow:0 8px 18px -10px rgba(183,128,26,.55),inset 0 0 0 2px #fff}
+.sys span{padding:0 2px;white-space:nowrap}
+.sys img{width:34px;height:34px;object-fit:contain;flex:none}
+.sys img.flip{transform:scaleX(-1)}
 .mstep{display:flex;justify-content:center;align-items:flex-start;gap:0;margin:2px auto 10px;max-width:340px}
 .ms-i{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;border:0;background:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .ms-i:before{content:"";position:absolute;top:14px;left:-50%;width:100%;height:2px;background:#ecd3df;z-index:0}
@@ -78,9 +81,16 @@ button{font:inherit;color:inherit}
 .mnote.active:before{-webkit-mask:none;mask:none;border-radius:50%;width:8px;height:8px;background:var(--pink)}
 .curms{margin:8px 0 -4px;font-family:var(--deco);font-size:16px;color:#b7801a}
 .curms:empty{display:none}
-.mstep{overflow-x:auto;scrollbar-width:none;justify-content:flex-start;max-width:none;padding:2px 2px 0}
+.mwrap{position:relative;display:flex;align-items:flex-start;justify-content:center;gap:4px;margin:0 auto 6px}
+.mstep{overflow-x:auto;scrollbar-width:none;justify-content:flex-start;width:max-content;max-width:100%;margin:0;padding:2px 2px 0;scroll-behavior:smooth;scroll-snap-type:x proximity}
+.mbtn{flex:none;width:24px;height:24px;margin-top:4px;border-radius:50%;border:0;padding:0;background:#fff;color:var(--pink-deep);display:grid;place-items:center;cursor:pointer;
+  box-shadow:0 3px 8px -3px rgba(0,0,0,.3),0 0 0 1px var(--line);-webkit-tap-highlight-color:transparent}
+.mbtn svg{width:12px;height:12px;display:block}
+.mbtn[disabled]{opacity:.3;cursor:default}
+.mbtn[hidden]{display:none}
+.mbtn:focus{outline:none}.mbtn:focus-visible{box-shadow:0 0 0 2px var(--pink)}
 .mstep::-webkit-scrollbar{display:none}
-.ms-i{flex:0 0 34px;min-width:34px}
+.ms-i{flex:0 0 38px;min-width:38px;scroll-snap-align:center}
 .mstep .ms-i:before{left:-50%;width:100%}
 .ms-i.sel .ms-dot{box-shadow:0 0 0 3px var(--pink-soft),0 0 0 5px var(--pink)}
 .block.missions{border-color:var(--line)}
@@ -316,8 +326,12 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
     <div class="brand"><img class="app-icon" src="assets/app-icon.webp" alt="Biểu tượng ứng dụng Ngôi Sao Thời Trang" width="1080" height="1080"><img class="logo" src="assets/logo-pink.png" alt="Nikki: Ngôi Sao Thời Trang"></div>
   </section>
   <div class="intro">
-    <div class="sys"><img src="assets/loading.gif" alt="" width="1000" height="1000"><span id="sysname">Nhiệm vụ hệ thống của Mumu</span></div>
-    <div class="mstep" id="mstep" aria-label="Chuỗi nhiệm vụ"></div>
+    <div class="sys"><img src="assets/loading.gif" alt="" width="1000" height="1000"><span id="sysname">Nhiệm vụ hệ thống của Mumu</span><img class="flip" src="assets/loading.gif" alt="" width="1000" height="1000"></div>
+    <div class="mwrap">
+      <button class="mbtn" id="mprev" aria-label="Nhiệm vụ trước" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="mstep" id="mstep" aria-label="Chuỗi nhiệm vụ"></div>
+      <button class="mbtn" id="mnext" aria-label="Nhiệm vụ sau" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
     <p class="mnote" id="mnote" aria-live="polite"></p>
     <span class="chip"><i></i><span id="period">Đang cập nhật</span></span>
     <div class="curms" id="curms"></div>
@@ -539,8 +553,23 @@ function renderMissions(){
     note.classList.toggle('active', s.st !== 'locked');
     if (s.st !== 'locked') { const node = document.querySelector(`#ladder .node[data-tier="${s.n}"]`); if (node) node.click(); }
   });
-  // giữ nhiệm vụ đang làm trong khung nhìn của thanh chuỗi
-  requestAnimationFrame(() => { const el = step.querySelector('.ms-i.on'); if (el) step.scrollLeft = el.offsetLeft - step.clientWidth / 2 + el.clientWidth / 2; });
+  // Carousel: hiện nút khi chuỗi dài hơn khung, đưa nhiệm vụ đang làm vào giữa
+  const prev = document.getElementById('mprev'), next = document.getElementById('mnext');
+  const sync = () => {
+    const over = step.scrollWidth > step.clientWidth + 2;
+    prev.hidden = next.hidden = !over;
+    prev.disabled = step.scrollLeft <= 2;
+    next.disabled = step.scrollLeft >= step.scrollWidth - step.clientWidth - 2;
+  };
+  const go = d => { const to = step.scrollLeft + d * step.clientWidth * 0.6; step.scrollTo({ left: to, behavior: 'smooth' });
+    setTimeout(() => { if (Math.abs(step.scrollLeft - to) > 4 && step.scrollLeft !== Math.max(0, Math.min(to, step.scrollWidth - step.clientWidth))) step.scrollLeft = to; sync(); }, 350); };
+  prev.onclick = () => go(-1); next.onclick = () => go(1);
+  step.onscroll = sync;
+  requestAnimationFrame(() => {
+    const el = step.querySelector('.ms-i.on');
+    if (el) { const sb = step.style.scrollBehavior; step.style.scrollBehavior = 'auto'; step.scrollLeft = (el.offsetLeft - step.offsetLeft) - step.clientWidth / 2 + el.clientWidth / 2; step.style.scrollBehavior = sb; }
+    sync();
+  });
 }
 function renderFinale(){
   const box = document.getElementById('finale');

@@ -25,7 +25,7 @@
       "ios:4.4": "32.000 lượt",
       "android:4.0": "168.000 lượt",
       "ios:4.5": "44.000 lượt",
-      "android:4.2": "332.000 lượt"
+      "android:4.3": "332.000 lượt"
     }
   },
   "items": {
@@ -50,23 +50,23 @@
       "package": "com.vng.ngoisaothoitrang",
       "url": "https://play.google.com/store/apps/details?id=com.vng.ngoisaothoitrang&hl=vi",
       "baseline": 3.2,
-      "milestones": [3.3, 3.5, 3.7, 4.0, 4.2]
+      "milestones": [3.3, 3.5, 3.7, 4.0, 4.3]
     }
   },
   "tiers": [
-    { "tier": 1, "name": "Quà mốc 1", "rewards": [{ "item": "vang", "qty": 10000 }, { "item": "tim", "qty": 10 }] },
-    { "tier": 2, "name": "Quà mốc 2", "rewards": [{ "item": "vang", "qty": 15000 }, { "item": "tim", "qty": 30 }, { "item": "the-cong-chua", "qty": 1 }] },
-    { "tier": 3, "name": "Quà mốc 3", "rewards": [{ "item": "kim-cuong", "qty": 20 }, { "item": "tim", "qty": 20 }, { "item": "vang", "qty": 20000 }] },
-    { "tier": 4, "name": "Quà mốc 4", "rewards": [{ "item": "kim-cuong", "qty": 50 }, { "item": "ve-phong-mo", "qty": 2 }, { "item": "tim", "qty": 40 }] },
-    { "tier": 5, "name": "Quà mốc 5", "rewards": [{ "item": "kim-cuong", "qty": 40 }, { "item": "vang", "qty": 20000 }, { "item": "tim", "qty": 30 }, { "item": "tien-hoi", "qty": 100 }] },
-    { "tier": 6, "name": "Quà mốc 6", "rewards": [{ "item": "kim-cuong", "qty": 80 }, { "item": "ve-phong-mo", "qty": 3 }, { "item": "tien-hoi", "qty": 150 }] },
-    { "tier": 7, "name": "Quà mốc 7", "rewards": [{ "item": "kim-cuong", "qty": 60 }, { "item": "vang", "qty": 60000 }, { "item": "tim", "qty": 40 }] },
-    { "tier": 8, "name": "Quà mốc 8", "rewards": [{ "item": "kim-cuong", "qty": 100 }, { "item": "the-cong-chua", "qty": 3 }, { "item": "tim", "qty": 60 }] },
-    { "tier": 9, "name": "Quà mốc 9", "rewards": [{ "item": "kim-cuong", "qty": 150 }, { "item": "ve-phong-mo", "qty": 2 }, { "item": "vang", "qty": 80000 }] },
-    { "tier": 10, "name": "Quà mốc 10", "rewards": [{ "item": "kim-cuong", "qty": 200 }, { "item": "the-cong-chua", "qty": 2 }, { "item": "vang", "qty": 80000 }] }
+    { "tier": 1, "name": "Quà mốc 1", "rewards": [{ "item": "tim", "qty": 10 }, { "item": "vang", "qty": 5000 }] },
+    { "tier": 2, "name": "Quà mốc 2", "rewards": [{ "item": "the-cong-chua", "qty": 2 }, { "item": "vang", "qty": 10000 }] },
+    { "tier": 3, "name": "Quà mốc 3", "rewards": [{ "item": "tim", "qty": 20 }, { "item": "vang", "qty": 20000 }] },
+    { "tier": 4, "name": "Quà mốc 4", "rewards": [{ "item": "ve-phong-mo", "qty": 2 }, { "item": "tim", "qty": 40 }] },
+    { "tier": 5, "name": "Quà mốc 5", "rewards": [{ "item": "tien-hoi", "qty": 100 }, { "item": "tim", "qty": 30 }, { "item": "vang", "qty": 20000 }] },
+    { "tier": 6, "name": "Quà mốc 6", "rewards": [{ "item": "ve-phong-mo", "qty": 3 }, { "item": "tien-hoi", "qty": 150 }] },
+    { "tier": 7, "name": "Quà mốc 7", "rewards": [{ "item": "tim", "qty": 40 }, { "item": "vang", "qty": 30000 }] },
+    { "tier": 8, "name": "Quà mốc 8", "rewards": [{ "item": "kim-cuong", "qty": 10 }, { "item": "the-cong-chua", "qty": 3 }, { "item": "tim", "qty": 60 }, { "item": "vang", "qty": 30000 }] },
+    { "tier": 9, "name": "Quà mốc 9", "rewards": [{ "item": "kim-cuong", "qty": 20 }, { "item": "ve-phong-mo", "qty": 2 }, { "item": "vang", "qty": 50000 }] },
+    { "tier": 10, "name": "Quà mốc 10", "rewards": [{ "item": "kim-cuong", "qty": 20 }, { "item": "the-cong-chua", "qty": 3 }, { "item": "vang", "qty": 50000 }] }
   ],
   "expectedOrder": [
     "ios:3.8", "android:3.3", "ios:4.0", "android:3.5", "ios:4.2",
-    "android:3.7", "ios:4.4", "android:4.0", "ios:4.5", "android:4.2"
+    "android:3.7", "ios:4.4", "android:4.0", "ios:4.5", "android:4.3"
   ]
 }

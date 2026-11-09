@@ -116,7 +116,7 @@ button{font:inherit;color:inherit}
   background:#fff;border:1px solid var(--line);padding:5px 14px;border-radius:999px;box-shadow:var(--shadow)}
 .chip i{width:8px;height:8px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 4px rgba(47,184,137,.18)}
 h1{font-family:var(--title);font-weight:400;font-size:32px;line-height:1.08;margin:8px 0 4px;color:var(--pink-deep);text-shadow:0 2px 0 #fff}
-.sub{font-size:14px;line-height:1.5;margin:0 0 10px;color:var(--muted)}
+.sub{font-size:14px;line-height:1.5;margin:8px 0 10px;color:var(--muted)}
 .cd-row{display:flex;align-items:center;justify-content:center;gap:8px}
 .cd-label{font-family:var(--deco);font-size:15px;color:var(--pink-deep);white-space:nowrap}
 .countdown{display:flex;gap:5px}
@@ -333,9 +333,9 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
       <button class="mbtn" id="mnext" aria-label="Nhiệm vụ sau" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
     <p class="mnote" id="mnote" aria-live="polite"></p>
-    <span class="chip"><i></i><span id="period">Đang cập nhật</span></span>
     <div class="curms" id="curms"></div>
     <h1 id="title">Hành Trình Toả Sáng</h1>
+    <span class="chip"><i></i><span id="period">Đang cập nhật</span></span>
     <p class="sub" id="subtitle"></p>
     <div class="cd-row"><div class="cd-label" id="cdlabel"></div><div class="countdown" id="countdown"></div></div>
   </div>
@@ -502,7 +502,7 @@ function renderLadder(){
   setupCarousel(el);
   el.querySelectorAll('.node').forEach(b => b.onclick = () => {
     const n = +b.dataset.tier, t = tierCfg(n), o = opened.find(x => +x.tier === n);
-    openModal({ acc: 'gold', title: `Quà mốc ${n}`, state: o ? `Đã mở ${fmtDT(o.openedAt)} · nhờ ${OS_NAME[o.os]} chạm ${vn1(o.milestone)}★` : 'Chưa mở',
+    openModal({ acc: 'gold', title: `Quà mốc ${n}`, state: o ? `Đã mở ${fmtDT(o.openedAt)} · ${OS_NAME[o.os]} ${vn1(o.milestone)}★` : 'Chưa mở',
       rewards: t.rewards, empty: t.name, note: 'Quà gửi tới toàn server khi mốc được mở.', from: b });
   });
 }
@@ -530,7 +530,7 @@ function missionNote(list, i){
   const s = list[i]; if (!s) return '';
   if (s.st === 'done') {
     const o = (DATA.tiers || []).find(x => +x.tier === s.n);
-    return `${missionHead(s)} · Đã hoàn thành${o ? ` nhờ ${OS_NAME[o.os] || o.os} ${vn1(o.milestone)}★` : ''}`;
+    return `${missionHead(s)} · Đã hoàn thành${o ? ` · ${OS_NAME[o.os] || o.os} ${vn1(o.milestone)}★` : ''}`;
   }
   if (s.st === 'on') { const t = nextTarget(); return `${missionHead(s)} · Đang làm${t ? `: ${t}` : ''}`; }
   return `Nhiệm vụ ${s.n} · Mở khoá khi hoàn thành Nhiệm vụ ${s.n - 1}`;
@@ -620,7 +620,7 @@ function panel(key, cfg, s){
   }
 
   let nextHtml;
-  if (next == null) nextHtml = `<div class="next"><b>Đã chốt hết mốc của ${esc(cfg.label)}</b><small>Thang quà vẫn tiếp tục mở nhờ mốc của store còn lại.</small></div>`;
+  if (next == null) nextHtml = `<div class="next"><b>Đã chốt hết mốc của ${esc(cfg.label)}</b><small>Các mốc tiếp theo sẽ mở theo điểm của store còn lại.</small></div>`;
   else {
     const need = s.score != null && s.count ? fiveStarsNeeded(s.score, s.count, next) : null;
     const p = stk[key1(next)];

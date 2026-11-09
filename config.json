@@ -7,15 +7,8 @@
   },
   "system": {
     "name": "Nhiệm vụ hệ thống của Mumu",
-    "note": "Nhiệm vụ mở tuần tự: xong nhiệm vụ trước mới mở nhiệm vụ sau. Nhiệm vụ chưa mở hiện ???. Khi công bố nhiệm vụ mới: điền name/short, đặt nhiệm vụ trước status done (Hành Trình Toả Sáng tự done khi mở đủ 10 mốc) và nhiệm vụ mới status active. Không ghi tên thật của nhiệm vụ chưa công bố ở đây vì file này ai cũng xem được."
+    "note": "Mỗi mốc của Hành Trình Toả Sáng là một nhiệm vụ: Nhiệm vụ n = Mốc n, mở tuần tự theo dữ liệu chốt mốc. Muốn đặt tên riêng cho nhiệm vụ, thêm \"mission\": \"Tên\" vào mốc tương ứng trong tiers; tên chỉ hiện khi nhiệm vụ đã mở (nhưng file này ai cũng xem được)."
   },
-  "missions": [
-    { "id": "toa-sang", "name": "Hành Trình Toả Sáng", "short": "Toả Sáng", "status": "active" },
-    { "id": "nv2", "name": "Nhiệm vụ 2", "short": "NV2" },
-    { "id": "nv3", "name": "Nhiệm vụ 3", "short": "NV3" },
-    { "id": "nv4", "name": "Nhiệm vụ 4", "short": "NV4" },
-    { "id": "nv5", "name": "Nhiệm vụ 5", "short": "NV5" }
-  ],
   "rule": {
     "confirmRuns": 2,
     "note": "Mốc được chốt khi điểm hiển thị trên store (làm tròn 1 chữ số) >= mốc trong confirmRuns lần cập nhật liên tiếp, trong thời gian chiến dịch. Mỗi mốc chốt mở bậc quà kế tiếp chưa mở. Cùng một lần cập nhật: iOS trước Android, mốc thấp trước."

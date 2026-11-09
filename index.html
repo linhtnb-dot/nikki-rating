@@ -75,6 +75,13 @@ button{font:inherit;color:inherit}
 .mnote{margin:-4px 0 10px;font-size:12px;line-height:1.4;color:var(--muted)}
 .mnote:before{content:"";display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Crect x=%275%27 y=%2711%27 width=%2714%27 height=%2710%27 rx=%272.5%27/%3E%3Cpath d=%27M8 11V8a4 4 0 0 1 8 0v3%27 fill=%27none%27 stroke=%27black%27 stroke-width=%272.4%27/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Crect x=%275%27 y=%2711%27 width=%2714%27 height=%2710%27 rx=%272.5%27/%3E%3Cpath d=%27M8 11V8a4 4 0 0 1 8 0v3%27 fill=%27none%27 stroke=%27black%27 stroke-width=%272.4%27/%3E%3C/svg%3E") center/contain no-repeat}
 .mnote:empty{display:none}
+.mnote.active:before{-webkit-mask:none;mask:none;border-radius:50%;width:8px;height:8px;background:var(--pink)}
+.curms{margin:8px 0 -4px;font-family:var(--deco);font-size:16px;color:#b7801a}
+.curms:empty{display:none}
+.mstep{overflow-x:auto;scrollbar-width:none;justify-content:flex-start;max-width:none;padding:2px 2px 0}
+.mstep::-webkit-scrollbar{display:none}
+.ms-i{flex:0 0 34px;min-width:34px}
+.mstep .ms-i:before{left:-50%;width:100%}
 .ms-i.sel .ms-dot{box-shadow:0 0 0 3px var(--pink-soft),0 0 0 5px var(--pink)}
 .block.missions{border-color:var(--line)}
 .missions h3{color:var(--pink-deep)}
@@ -313,6 +320,7 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
     <div class="mstep" id="mstep" aria-label="Chuỗi nhiệm vụ"></div>
     <p class="mnote" id="mnote" aria-live="polite"></p>
     <span class="chip"><i></i><span id="period">Đang cập nhật</span></span>
+    <div class="curms" id="curms"></div>
     <h1 id="title">Hành Trình Toả Sáng</h1>
     <p class="sub" id="subtitle"></p>
     <div class="cd-row"><div class="cd-label" id="cdlabel"></div><div class="countdown" id="countdown"></div></div>
@@ -486,49 +494,53 @@ function renderLadder(){
 }
 
 // ---------- Chuỗi nhiệm vụ hệ thống của Mumu ----------
-// Mở tuần tự: nhiệm vụ sau chỉ mở khi nhiệm vụ ngay trước đã hoàn thành.
-// Hoàn thành = status "done" trong config; riêng Hành Trình Toả Sáng tự hoàn thành khi đã mở đủ các mốc quà.
-// Nhiệm vụ chưa mở luôn hiện "???"; chỉ có dòng ghi chú cho biết cần hoàn thành nhiệm vụ nào.
+// Mỗi mốc của Hành Trình Toả Sáng là một nhiệm vụ: Nhiệm vụ n = Mốc n.
+// Đã mở mốc -> hoàn thành; mốc kế tiếp -> đang làm; các mốc sau -> khoá, hiện ???, mở khi hoàn thành nhiệm vụ trước.
+// Tên riêng cho từng nhiệm vụ (tuỳ chọn): tiers[n].mission trong config, chỉ hiện khi nhiệm vụ đã mở.
 const LOCK_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5" fill="currentColor"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>';
 const CHECK_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-function missionDone(m){
-  if (m.status === 'done') return true;
-  if (m.id === 'toa-sang') return tierTotal() > 0 && (DATA.tiers || []).length >= tierTotal();
-  return false;
-}
+const JOURNEY = () => CFG.campaign.name || 'Hành Trình Toả Sáng';
 function missionStates(){
-  const ms = CFG.missions || [];
-  let prevDone = true;
-  return ms.map((m, i) => {
-    const done = missionDone(m), open = done || (prevDone && (m.status === 'active' || i === 0));
-    const st = done ? 'done' : open ? 'on' : 'locked';
-    prevDone = done;
-    return { m, i, st, label: st === 'locked' ? '???' : (m.short || m.name), name: st === 'locked' ? '???' : m.name };
+  const total = tierTotal(), opened = (DATA.tiers || []).length;
+  return Array.from({ length: total }, (_, k) => {
+    const n = k + 1, st = n <= opened ? 'done' : n === opened + 1 ? 'on' : 'locked';
+    return { n, st, title: tierCfg(n).mission || '' };
   });
 }
+function nextTarget(){
+  const parts = KEYS.map(k => { const m = nextOpen(k); return m == null ? null : `${OS_NAME[k]} ${vn1(m)}★`; }).filter(Boolean);
+  return parts.length ? `đạt ${parts.join(' hoặc ')}` : '';
+}
+function missionHead(s){ return `Nhiệm vụ ${s.n} · ${JOURNEY()} · Mốc ${s.n}${s.title ? ` · ${s.title}` : ''}`; }
 function missionNote(list, i){
   const s = list[i]; if (!s) return '';
-  if (s.st === 'done') return `Nhiệm vụ ${i + 1} · ${s.m.name} · Đã hoàn thành`;
-  if (s.st === 'on') return `Nhiệm vụ ${i + 1} · ${s.m.name} · Đang diễn ra`;
-  const p = list[i - 1];
-  const prevName = p ? (p.st === 'locked' ? `Nhiệm vụ ${i}` : `Nhiệm vụ ${i}: ${p.m.name}`) : '';
-  return `Nhiệm vụ ${i + 1} · Mở khoá khi hoàn thành ${prevName}`;
+  if (s.st === 'done') {
+    const o = (DATA.tiers || []).find(x => +x.tier === s.n);
+    return `${missionHead(s)} · Đã hoàn thành${o ? ` nhờ ${OS_NAME[o.os] || o.os} ${vn1(o.milestone)}★` : ''}`;
+  }
+  if (s.st === 'on') { const t = nextTarget(); return `${missionHead(s)} · Đang làm${t ? `: ${t}` : ''}`; }
+  return `Nhiệm vụ ${s.n} · Mở khoá khi hoàn thành Nhiệm vụ ${s.n - 1}`;
 }
 function renderMissions(){
-  const step = document.getElementById('mstep'), note = document.getElementById('mnote');
+  const step = document.getElementById('mstep'), note = document.getElementById('mnote'), cur = document.getElementById('curms');
   const list = missionStates();
-  if (!list.length) { step.innerHTML = ''; note.textContent = ''; return; }
   if (CFG.system && CFG.system.name) document.getElementById('sysname').textContent = CFG.system.name;
-  step.innerHTML = list.map(s => `<button class="ms-i ${s.st === 'locked' ? 'locked' : s.st === 'done' ? 'open' : 'on'}" data-i="${s.i}" aria-label="${esc(missionNote(list, s.i))}">
-      <span class="ms-dot">${s.st === 'locked' ? LOCK_SVG : s.st === 'done' ? CHECK_SVG : s.i + 1}</span><span class="ms-lb">${esc(s.label)}</span></button>`).join('');
-  const firstLocked = list.find(s => s.st === 'locked');
-  note.textContent = firstLocked ? missionNote(list, firstLocked.i) : '';
+  if (!list.length) { step.innerHTML = ''; note.textContent = ''; return; }
+  const on = list.find(s => s.st === 'on');
+  cur.textContent = on ? `Nhiệm vụ ${on.n} · Mốc ${on.n}${on.title ? ` · ${on.title}` : ''}` : `Đã hoàn thành ${list.length} nhiệm vụ`;
+  step.innerHTML = list.map((s, i) => `<button class="ms-i ${s.st === 'locked' ? 'locked' : s.st === 'done' ? 'open' : 'on'}" data-i="${i}" aria-label="${esc(missionNote(list, i))}">
+      <span class="ms-dot">${s.st === 'locked' ? LOCK_SVG : s.st === 'done' ? CHECK_SVG : s.n}</span><span class="ms-lb">${s.st === 'locked' ? '???' : 'NV' + s.n}</span></button>`).join('');
+  note.textContent = on ? missionNote(list, list.indexOf(on)) : '';
+  note.classList.toggle('active', !!on);
   step.querySelectorAll('.ms-i').forEach(b => b.onclick = () => {
     const i = +b.dataset.i, s = list[i];
     step.querySelectorAll('.ms-i').forEach(x => x.classList.toggle('sel', x === b));
     note.textContent = missionNote(list, i);
-    if (s.st === 'on' && s.m.id === 'toa-sang') document.getElementById('tabs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    note.classList.toggle('active', s.st !== 'locked');
+    if (s.st !== 'locked') { const node = document.querySelector(`#ladder .node[data-tier="${s.n}"]`); if (node) node.click(); }
   });
+  // giữ nhiệm vụ đang làm trong khung nhìn của thanh chuỗi
+  requestAnimationFrame(() => { const el = step.querySelector('.ms-i.on'); if (el) step.scrollLeft = el.offsetLeft - step.clientWidth / 2 + el.clientWidth / 2; });
 }
 function renderFinale(){
   const box = document.getElementById('finale');

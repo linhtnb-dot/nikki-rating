@@ -54,7 +54,42 @@ button{font:inherit;color:inherit}
 .hero{position:relative}
 .hero-img{width:100%;height:185px;object-fit:cover;object-position:58% 28%}
 .hero:after{content:"";position:absolute;left:0;right:0;bottom:0;height:80px;background:linear-gradient(180deg,transparent,var(--bg))}
-.logo{position:absolute;top:10px;left:10px;width:96px;z-index:2;filter:drop-shadow(0 2px 6px rgba(255,255,255,.95))}
+.brand{position:absolute;top:10px;left:10px;z-index:2;display:flex;align-items:center;gap:6px}
+.app-icon{width:42px;height:42px;border-radius:11px;box-shadow:0 3px 10px -3px rgba(120,30,70,.45),0 0 0 2px #fff}
+.logo{width:92px;filter:drop-shadow(0 2px 6px rgba(255,255,255,.95))}
+/* Chuỗi nhiệm vụ hệ thống của Mumu */
+.sys{display:inline-flex;align-items:center;gap:6px;margin-bottom:6px;font-family:var(--deco);font-size:16px;color:#b7801a;background:#fffaf0;border:1px solid #f6e2b8;border-radius:999px;padding:2px 12px 2px 4px;box-shadow:var(--shadow)}
+.sys img{width:30px;height:30px;object-fit:contain}
+.mstep{display:flex;justify-content:center;align-items:flex-start;gap:0;margin:2px auto 10px;max-width:340px}
+.ms-i{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;border:0;background:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ms-i:before{content:"";position:absolute;top:14px;left:-50%;width:100%;height:2px;background:#ecd3df;z-index:0}
+.ms-i:first-child:before{display:none}
+.ms-i.on:before,.ms-i.open:before{background:var(--pink)}
+.ms-dot{position:relative;z-index:1;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;background:#f3e6ec;color:var(--muted);border:2px solid #fff;box-shadow:0 2px 6px -2px rgba(0,0,0,.2)}
+.ms-i.on .ms-dot{background:var(--pink);color:#fff;box-shadow:0 0 0 3px var(--pink-soft)}
+.ms-i.open .ms-dot{background:#fff;color:var(--pink-deep);box-shadow:0 0 0 2px var(--pink)}
+.ms-dot svg{width:13px;height:13px}
+.ms-lb{font-size:10.5px;line-height:1.2;color:var(--muted);max-width:66px;text-align:center}
+.ms-i.on .ms-lb{color:var(--pink-deep);font-weight:700}
+.ms-i:focus-visible{outline:none}.ms-i:focus-visible .ms-dot{box-shadow:0 0 0 3px var(--pink)}
+.block.missions{border-color:var(--line)}
+.missions h3{color:var(--pink-deep)}
+.mlist{display:grid;gap:8px;margin-top:8px}
+.mcard{display:flex;gap:12px;align-items:flex-start;padding:12px;border-radius:16px;border:1px solid #f1e0e8;background:#fffafc}
+.mcard .mi{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:700;background:#f3e6ec;color:var(--muted)}
+.mcard .mi svg{width:16px;height:16px}
+.mcard b{display:block;font-size:15px;line-height:1.3}
+.mcard p{margin:2px 0 0;font-size:13px;line-height:1.45;color:var(--muted)}
+.mcard .cond{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px;font-weight:600;color:var(--pink-deep)}
+.mcard .cond i{flex:1;height:6px;border-radius:999px;background:#f3e6ec;overflow:hidden;position:relative}
+.mcard .cond i:after{content:"";position:absolute;inset:0 auto 0 0;width:var(--p,0%);background:linear-gradient(90deg,var(--pink-soft),var(--pink));border-radius:999px}
+.mcard.on{border-color:var(--pink);background:#fff;box-shadow:0 0 0 3px var(--pink-soft)}
+.mcard.on .mi{background:var(--pink);color:#fff}
+.mcard.open .mi{background:#fff;color:var(--pink-deep);box-shadow:inset 0 0 0 2px var(--pink)}
+.mcard.locked b{color:#9c8592}
+.mcard .tag{display:inline-block;margin-left:6px;font-size:11px;font-weight:700;padding:1px 8px;border-radius:999px;background:#f3e6ec;color:var(--muted);vertical-align:2px}
+.mcard.on .tag{background:var(--pink);color:#fff}
+.mcard.open .tag{background:#dff6ec;color:#1f8a66}
 .intro{position:relative;z-index:2;margin-top:-30px;padding:0 16px 4px;text-align:center}
 .chip{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--pink-deep);
   background:#fff;border:1px solid var(--line);padding:5px 14px;border-radius:999px;box-shadow:var(--shadow)}
@@ -267,9 +302,11 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
 <div class="app">
   <section class="hero">
     <img class="hero-img" src="assets/hero-bg.jpg" alt="" width="1200" height="675">
-    <img class="logo" src="assets/logo-pink.png" alt="Nikki: Ngôi Sao Thời Trang">
+    <div class="brand"><img class="app-icon" src="assets/app-icon.webp" alt="Biểu tượng ứng dụng Ngôi Sao Thời Trang" width="1080" height="1080"><img class="logo" src="assets/logo-pink.png" alt="Nikki: Ngôi Sao Thời Trang"></div>
   </section>
   <div class="intro">
+    <div class="sys"><img src="assets/loading.gif" alt="" width="1000" height="1000"><span id="sysname">Nhiệm vụ hệ thống của Mumu</span></div>
+    <div class="mstep" id="mstep" aria-label="Chuỗi nhiệm vụ"></div>
     <span class="chip"><i></i><span id="period">Đang cập nhật</span></span>
     <h1 id="title">Hành Trình Toả Sáng</h1>
     <p class="sub" id="subtitle"></p>
@@ -285,6 +322,7 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
     <div id="panels"></div>
     <section class="block ladder" id="ladder"></section>
     <section class="block" id="finale" hidden></section>
+    <section class="block missions" id="missions"></section>
   </main>
 
   <footer>
@@ -360,6 +398,7 @@ function render(){
   }
   renderLadder();
   renderFinale();
+  renderMissions();
   tick();
   centerVisible();
 }
@@ -439,6 +478,54 @@ function renderLadder(){
     const n = +b.dataset.tier, t = tierCfg(n), o = opened.find(x => +x.tier === n);
     openModal({ acc: 'gold', title: `Quà mốc ${n}`, state: o ? `Đã mở ${fmtDT(o.openedAt)} · nhờ ${OS_NAME[o.os]} chạm ${vn1(o.milestone)}★` : 'Chưa mở',
       rewards: t.rewards, empty: t.name, note: 'Quà gửi tới toàn server khi mốc được mở.', from: b });
+  });
+}
+
+// ---------- Chuỗi nhiệm vụ hệ thống của Mumu ----------
+// Nhiệm vụ đang chạy: status "active". Nhiệm vụ sau mở khoá theo số mốc quà Hành Trình Toả Sáng đã mở (unlock.type "tiers")
+// hoặc theo ngày (unlock.type "date"). Khi đủ điều kiện, thẻ hiện "Sắp mở" (nội dung nhiệm vụ do team công bố sau).
+const LOCK_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5" fill="currentColor"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>';
+function missionState(m){
+  if (m.status === 'active') return { cls: 'on', tag: 'Đang diễn ra', p: 100 };
+  const u = m.unlock || {}, opened = (DATA.tiers || []).length;
+  if (u.type === 'tiers') {
+    const need = +u.count || 0, ok = opened >= need;
+    return { cls: ok ? 'open' : 'locked', tag: ok ? 'Sắp mở' : 'Đang khoá', p: need ? Math.min(100, opened / need * 100) : 0,
+      cond: ok ? 'Đã đủ điều kiện, chờ Mumu công bố' : `Mở khi Hành Trình Toả Sáng đạt Mốc ${need} · ${opened}/${need}` };
+  }
+  if (u.type === 'date') {
+    const at = new Date(u.at), ok = Date.now() >= at;
+    return { cls: ok ? 'open' : 'locked', tag: ok ? 'Sắp mở' : 'Đang khoá', p: ok ? 100 : 0,
+      cond: ok ? 'Đã đủ điều kiện, chờ Mumu công bố' : `Mở từ ${fmtD(at)}` };
+  }
+  return { cls: 'locked', tag: 'Đang khoá', p: 0, cond: u.text || 'Sắp công bố' };
+}
+function renderMissions(){
+  const ms = CFG.missions || [];
+  const step = document.getElementById('mstep'), box = document.getElementById('missions');
+  if (!ms.length) { step.innerHTML = ''; box.hidden = true; return; }
+  box.hidden = false;
+  if (CFG.system && CFG.system.name) document.getElementById('sysname').textContent = CFG.system.name;
+  const show = (m, st) => (m.hidden && st.cls === 'locked') ? '???' : m.name;
+  step.innerHTML = ms.map((m, i) => {
+    const st = missionState(m);
+    return `<button class="ms-i ${st.cls}" data-i="${i}" aria-label="Nhiệm vụ ${i + 1}: ${esc(show(m, st))} · ${st.tag}">
+      <span class="ms-dot">${st.cls === 'locked' ? LOCK_SVG : i + 1}</span><span class="ms-lb">${esc(m.short || show(m, st))}</span></button>`;
+  }).join('');
+  box.innerHTML = `<h3>${esc((CFG.system && CFG.system.listTitle) || 'Chuỗi nhiệm vụ của Mumu')}</h3>
+    <p class="lead">${esc((CFG.system && CFG.system.listLead) || 'Hoàn thành nhiệm vụ trước để mở khoá nhiệm vụ tiếp theo.')}</p>
+    <div class="mlist">${ms.map((m, i) => {
+      const st = missionState(m), hid = m.hidden && st.cls === 'locked';
+      return `<div class="mcard ${st.cls}" id="mission-${i}">
+        <span class="mi">${st.cls === 'locked' ? LOCK_SVG : i + 1}</span>
+        <div style="flex:1;min-width:0"><b>${esc(hid ? '???' : m.name)}<span class="tag">${st.tag}</span></b>
+          <p>${esc(hid ? (m.teaser || 'Mumu đang chuẩn bị một bất ngờ…') : (m.desc || m.teaser || ''))}</p>
+          ${st.cond ? `<div class="cond"><span>${esc(st.cond)}</span>${st.cls === 'locked' ? `<i style="--p:${st.p}%"></i>` : ''}</div>` : ''}</div></div>`;
+    }).join('')}</div>`;
+  step.querySelectorAll('.ms-i').forEach(b => b.onclick = () => {
+    const i = +b.dataset.i, m = ms[i];
+    const target = m.status === 'active' ? document.getElementById('tabs') : document.getElementById('mission-' + i);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 }
 

@@ -5,6 +5,23 @@
     "start": "2026-11-10T00:00:00+07:00",
     "end": "2026-12-31T23:59:59+07:00"
   },
+  "system": {
+    "name": "Nhiệm vụ hệ thống của Mumu",
+    "listTitle": "Chuỗi nhiệm vụ của Mumu",
+    "listLead": "Hành Trình Toả Sáng là nhiệm vụ đầu tiên. Mỗi mốc quà mở thêm sẽ giúp mở khoá nhiệm vụ tiếp theo."
+  },
+  "missions": [
+    { "id": "toa-sang", "name": "Hành Trình Toả Sáng", "short": "Toả Sáng", "status": "active",
+      "desc": "Cùng đưa điểm App Store và Google Play lên từng mốc. Mỗi mốc được chốt mở một phần quà cho toàn server, 10 mốc kéo dài đến hết 31/12." },
+    { "id": "tu-do-ky-uc", "name": "Tủ Đồ Ký Ức", "short": "Tủ Đồ", "unlock": { "type": "tiers", "count": 2 },
+      "desc": "Mumu mở lại những bộ đồ đầu tiên của các Stylist. Cùng khoe lại outfit kỷ niệm để nhận quà nhỏ." },
+    { "id": "mumu-tim-ban", "name": "Mumu Đi Tìm Bạn Cũ", "short": "Tìm Bạn", "unlock": { "type": "tiers", "count": 4 },
+      "desc": "Gọi những Stylist lâu không gặp quay về Ngôi Sao Thời Trang, cả server cùng nhận quà khi đủ người." },
+    { "id": "bi-mat-1", "name": "Sân Khấu Mumu", "short": "???", "hidden": true, "unlock": { "type": "tiers", "count": 6 },
+      "teaser": "Mumu đang chuẩn bị một sân khấu bất ngờ…" },
+    { "id": "bi-mat-2", "name": "Ngôi Sao Cuối Cùng", "short": "???", "hidden": true, "unlock": { "type": "tiers", "count": 8 },
+      "teaser": "Nhiệm vụ cuối của Mumu, chỉ mở khi Hành Trình Toả Sáng gần về đích." }
+  ],
   "rule": {
     "confirmRuns": 2,
     "note": "Mốc được chốt khi điểm hiển thị trên store (làm tròn 1 chữ số) >= mốc trong confirmRuns lần cập nhật liên tiếp, trong thời gian chiến dịch. Mỗi mốc chốt mở bậc quà kế tiếp chưa mở. Cùng một lần cập nhật: iOS trước Android, mốc thấp trước."

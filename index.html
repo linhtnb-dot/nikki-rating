@@ -153,7 +153,26 @@ main{padding:0 12px 24px}
 .next{margin-top:12px;background:var(--acc-soft);border-radius:14px;padding:12px 14px;font-size:15px;line-height:1.5}
 .next b{color:var(--acc-deep)}
 .next small{display:block;color:var(--muted);font-size:14px}
-.pbar{margin:8px 0 6px}
+/* Nhiệm vụ: dòng yêu cầu iOS + AND dưới mỗi nút */
+.ms-os.req{display:flex;flex-direction:column;gap:1px;max-width:74px}
+.ms-os.req span{display:block;white-space:nowrap}
+.ms-os.req span.ok{color:#1f8a66;font-weight:700}
+.ladder .nodes{height:136px}
+.ladder .node{width:82px}
+.ladder .ms-score{font-size:13px;white-space:nowrap}
+/* Biểu đồ live + Mumu leo núi */
+.climb{margin:10px 0 6px;background:#fff;border-radius:14px;padding:8px 10px 8px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.04)}
+.climb-head,.climb-foot{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted)}
+.climb-head b,.climb-foot b{color:var(--acc-deep)}
+.live{display:inline-flex;align-items:center;gap:5px;font-weight:700;font-size:11px;letter-spacing:.06em;color:#e0457b}
+.live i{width:7px;height:7px;border-radius:50%;background:#e0457b;animation:livepulse 1.6s ease-out infinite}
+@keyframes livepulse{0%{box-shadow:0 0 0 0 rgba(224,69,123,.6)}100%{box-shadow:0 0 0 8px rgba(224,69,123,0)}}
+.climb-box{position:relative;margin:4px 0 2px;aspect-ratio:320/150}
+.climb-box svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.climb .mumu{position:absolute;width:64px;height:64px;object-fit:contain;transform:translate(-50%,-78%) scaleX(-1) rotate(-14deg);pointer-events:none;filter:drop-shadow(0 3px 4px rgba(0,0,0,.18))}
+.climb .pulse{position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 0 var(--acc);animation:dotpulse 1.8s ease-out infinite}
+@keyframes dotpulse{0%{box-shadow:0 0 0 0 rgba(143,111,234,.55)}100%{box-shadow:0 0 0 12px rgba(143,111,234,0)}}
+.climb.done .mumu{transform:translate(-50%,-80%) scaleX(-1)}.pbar{margin:8px 0 6px}
 .pbar-top{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--muted)}
 .pbar-top b{color:var(--acc-deep);font-size:14px}
 .pbar-track{position:relative;height:10px;margin:4px 0 3px;border-radius:999px;background:#fff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
@@ -333,13 +352,6 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
     <div class="brand"><img class="app-icon" src="assets/app-icon.webp" alt="Biểu tượng ứng dụng Ngôi Sao Thời Trang" width="1080" height="1080"><img class="logo" src="assets/logo-pink.png" alt="Nikki: Ngôi Sao Thời Trang"></div>
   </section>
   <div class="intro">
-    <div class="sys"><img src="assets/loading.gif" alt="" width="1000" height="1000"><span id="sysname">Nhiệm vụ hệ thống của Mumu</span><img class="flip" src="assets/loading.gif" alt="" width="1000" height="1000"></div>
-    <div class="mwrap">
-      <button class="mbtn" id="mprev" aria-label="Nhiệm vụ trước" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      <div class="mstep" id="mstep" aria-label="Chuỗi nhiệm vụ"></div>
-      <button class="mbtn" id="mnext" aria-label="Nhiệm vụ sau" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
-    <p class="mnote" id="mnote" aria-live="polite"></p>
     <div class="curms" id="curms"></div>
     <h1 id="title">Hành Trình Toả Sáng</h1>
     <span class="chip"><i></i><span id="period">Đang cập nhật</span></span>
@@ -472,30 +484,32 @@ const tierOf = (key, k) => (DATA.tiers || []).find(t => t.os === key && key1(t.m
 const nextOpen = key => msList(key).find(m => !confirmedOf(key)[key1(m)]);   // mốc chưa chốt thấp nhất
 const needRuns = () => (DATA.rule && DATA.rule.confirmRuns) || (CFG.rule && CFG.rule.confirmRuns) || 2;
 
+// ---------- Nhiệm vụ: mỗi nhiệm vụ cần CẢ iOS và Android đạt mốc (rule ở scripts/fetch-ratings.ps1) ----------
+const OS_SHORT = { ios: 'iOS', android: 'AND' };
+const curTier = () => Math.min(tierTotal(), (DATA.tiers || []).length + 1);
+const osDone = (key, n) => { const v = tierCfg(n)[key]; return v != null && !!confirmedOf(key)[key1(v)]; };
+// Chặng của 1 store trong nhiệm vụ n: từ mốc của nhiệm vụ trước (hoặc progressFrom / khoảng cách 2 mốc đầu) tới mốc của nhiệm vụ n
+function missionLeg(key, n){
+  const cfg = CFG.stores[key], s = (DATA.stores || {})[key] || {}, to = Number(tierCfg(n)[key]);
+  if (!isFinite(to)) return null;
+  let from;
+  if (n > 1) from = Number(tierCfg(n - 1)[key]);
+  else if (cfg.progressFrom != null) from = +cfg.progressFrom;
+  else { const t2 = Number((tierCfg(2) || {})[key]); from = to - (isFinite(t2) ? t2 - to : 0.1); }
+  const done = osDone(key, n);
+  const frac = done ? 1 : s.score == null ? 0 : Math.max(0, Math.min(1, (s.score - from) / (to - from)));
+  return { from, to, frac, done, score: s.score };
+}
 function renderSummary(){
   const total = tierTotal(), opened = (DATA.tiers || []).length;
-  const n = opened + 1;
-  let hint;
-  if (opened >= total) hint = `Đã mở đủ ${total} mốc quà.`;
-  else {
-    const parts = KEYS.map(k => { const m = nextOpen(k); return m == null ? null : `${OS_NAME[k]} chạm ${vn1(m)}★`; }).filter(Boolean);
-    hint = parts.length === 2 ? `Mốc ${n} mở khi ${parts[0]} hoặc ${parts[1]}, bên nào tới trước.`
-         : parts.length === 1 ? `Mốc ${n} mở khi ${parts[0]}.` : '';
-  }
-  const now = Date.now(), st = new Date(CFG.campaign.start);
-  const note = now < st ? `Mốc bắt đầu được chốt từ ${fmtD(st)}, khi điểm giữ ở mức đó qua ${needRuns()} lần cập nhật liên tiếp.`
-                        : `Mốc được chốt khi điểm giữ ở mức đó qua ${needRuns()} lần cập nhật liên tiếp.`;
-  return `
-    <div class="lsum">
-    <div class="lsum-top"><span class="lsum-title">Mốc thưởng Hành Trình Toả Sáng</span><span class="lsum-count"><b>${opened}</b>/${total}</span></div></div>`;
+  return `<div class="lsum"><div class="lsum-top"><span class="lsum-title">Nhiệm vụ Hành Trình Toả Sáng</span><span class="lsum-count"><b>${opened}</b>/${total}</span></div></div>`;
 }
-
-// Một line duy nhất: các bậc quà theo thứ tự mở, mỗi mốc chốt (iOS hoặc Android) đẩy line tiến 1 bậc
 function renderLadder(){
   const total = tierTotal(), opened = DATA.tiers || [];
   const at = i => (i + 1) / total * 100;
-  // Line nhích dần: phần đã mở + tiến độ của store đang gần mốc kế tiếp nhất
-  const near = Math.max(0, ...KEYS.map(k => (storeProgress(k) || { frac: 0 }).frac));
+  // Line nhích dần theo tiến độ trung bình của 2 store trong nhiệm vụ đang làm
+  const cur = curTier(), legs = KEYS.map(k => missionLeg(k, cur)).filter(Boolean);
+  const near = opened.length >= total || !legs.length ? 0 : legs.reduce((a, l) => a + l.frac, 0) / legs.length;
   const base = opened.length ? at(opened.length - 1) : 0;
   const fill = opened.length >= total ? 100 : Math.min(100, base + near * (100 / total));
   const nodes = [];
@@ -504,96 +518,82 @@ function renderLadder(){
     const cls = o ? 'done' : (n === opened.length + 1 ? 'cur' : '');
     const first = (CFG.items || {})[((t.rewards || [])[0] || {}).item] || {};
     const extra = (t.rewards || []).length - 1;
-    let os;
-    if (o) os = `✓ ${OS_NAME[o.os] || o.os} ${vn1(o.milestone)}`;
-    else { const exp = (CFG.expectedOrder || [])[n - 1]; os = exp ? `${OS_NAME[exp.split(':')[0]] || ''} ${vn1(exp.split(':')[1])}` : ''; }
-    nodes.push(`<button class="node ${cls}" style="left:${at(n - 1)}%" data-tier="${n}" aria-label="Xem quà mốc ${n}">
+    const req = KEYS.map(k => t[k] == null ? '' : `<span class="${osDone(k, n) ? 'ok' : ''}">${OS_SHORT[k]} ${vn1(t[k])}${osDone(k, n) ? ' ✓' : ''}</span>`).join('');
+    nodes.push(`<button class="node ${cls}" style="left:${at(n - 1)}%" data-tier="${n}" aria-label="Xem quà nhiệm vụ ${n}">
       <span class="gift">${first.img ? `<img src="${esc(first.img)}" alt="">` : `<span class="sc">${n}</span>`}${extra > 0 ? `<span class="more">+${extra}</span>` : ''}</span>
-      <span class="ms-score">Mốc ${n}</span><span class="ms-os">${esc(os)}</span></button>`);
+      <span class="ms-score">Nhiệm vụ ${n}</span><span class="ms-os req">${req}</span></button>`);
   }
   const el = document.getElementById('ladder');
   el.innerHTML = `${renderSummary()}
     <div class="carousel">
-      <button class="car-btn prev" aria-label="Mốc trước"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="car-btn prev" aria-label="Nhiệm vụ trước"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div class="track-wrap"><div class="track" style="width:${Math.max(100, total / PER_VIEW * 100)}%">
         <div class="rail"><div class="fill" style="width:${fill}%"></div></div>
         <div class="nodes">${nodes.join('')}</div>
       </div></div>
-      <button class="car-btn next" aria-label="Mốc sau"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="car-btn next" aria-label="Nhiệm vụ sau"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
     ${total > PER_VIEW ? `<div class="dots">${'<i></i>'.repeat(Math.ceil(total / PER_VIEW))}</div>` : ''}
-    <p class="hint">Chạm để xem quà</p>`;
+    <p class="hint">Mỗi nhiệm vụ cần cả iOS và Android đạt mốc · Chạm để xem quà</p>`;
   setupCarousel(el);
   el.querySelectorAll('.node').forEach(b => b.onclick = () => {
     const n = +b.dataset.tier, t = tierCfg(n), o = opened.find(x => +x.tier === n);
-    openModal({ acc: 'gold', title: `Quà mốc ${n}`, state: o ? `Đã mở ${fmtDT(o.openedAt)} · ${OS_NAME[o.os]} ${vn1(o.milestone)}★` : 'Chưa mở',
-      rewards: t.rewards, empty: t.name, note: 'Quà gửi tới toàn server khi mốc được mở.', from: b });
+    const req = KEYS.filter(k => t[k] != null).map(k => `${OS_NAME[k]} ${vn2(t[k])}★${osDone(k, n) ? ' ✓' : ''}`).join(' + ');
+    openModal({ acc: 'gold', title: `Nhiệm vụ ${n}`, state: o ? `Hoàn thành ${fmtDT(o.openedAt)} · ${req}` : `Cần đạt: ${req}`,
+      rewards: t.rewards, empty: t.name, note: 'Cả server nhận quà khi cả iOS và Android cùng đạt mốc của nhiệm vụ.', from: b });
   });
 }
 
-// ---------- Chuỗi nhiệm vụ hệ thống của Mumu ----------
-// Mỗi mốc của Hành Trình Toả Sáng là một nhiệm vụ: Nhiệm vụ n = Mốc n.
-// Đã mở mốc -> hoàn thành; mốc kế tiếp -> đang làm; các mốc sau -> khoá, hiện ???, mở khi hoàn thành nhiệm vụ trước.
-// Tên riêng cho từng nhiệm vụ (tuỳ chọn): tiers[n].mission trong config, chỉ hiện khi nhiệm vụ đã mở.
-const LOCK_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5" fill="currentColor"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>';
-const CHECK_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const JOURNEY = () => CFG.campaign.name || 'Hành Trình Toả Sáng';
-function missionStates(){
-  const total = tierTotal(), opened = (DATA.tiers || []).length;
-  return Array.from({ length: total }, (_, k) => {
-    const n = k + 1, st = n <= opened ? 'done' : n === opened + 1 ? 'on' : 'locked';
-    return { n, st, title: tierCfg(n).mission || '' };
-  });
-}
-function nextTarget(){
-  const parts = KEYS.map(k => { const m = nextOpen(k); return m == null ? null : `${OS_NAME[k]} ${vn1(m)}★`; }).filter(Boolean);
-  return parts.length ? `đạt ${parts.join(' hoặc ')}` : '';
-}
-function missionHead(s){ return `Nhiệm vụ ${s.n} · ${JOURNEY()} · Mốc ${s.n}${s.title ? ` · ${s.title}` : ''}`; }
-function missionNote(list, i){
-  const s = list[i]; if (!s) return '';
-  if (s.st === 'done') {
-    const o = (DATA.tiers || []).find(x => +x.tier === s.n);
-    return `${missionHead(s)} · Đã hoàn thành${o ? ` · ${OS_NAME[o.os] || o.os} ${vn1(o.milestone)}★` : ''}`;
-  }
-  if (s.st === 'on') return missionHead(s);
-  return `Nhiệm vụ ${s.n} · Mở khoá khi hoàn thành Nhiệm vụ ${s.n - 1}`;
-}
+// Dòng "Nhiệm vụ n" phía trên tiêu đề
 function renderMissions(){
-  const step = document.getElementById('mstep'), note = document.getElementById('mnote'), cur = document.getElementById('curms');
-  const list = missionStates();
-  if (CFG.system && CFG.system.name) document.getElementById('sysname').textContent = CFG.system.name;
-  if (!list.length) { step.innerHTML = ''; note.textContent = ''; return; }
-  const on = list.find(s => s.st === 'on');
-  cur.textContent = on ? `Nhiệm vụ ${on.n} · Mốc ${on.n}${on.title ? ` · ${on.title}` : ''}` : `Đã hoàn thành ${list.length} nhiệm vụ`;
-  step.innerHTML = list.map((s, i) => `<button class="ms-i ${s.st === 'locked' ? 'locked' : s.st === 'done' ? 'open' : 'on'}" data-i="${i}" aria-label="${esc(missionNote(list, i))}">
-      <span class="ms-dot">${s.st === 'locked' ? LOCK_SVG : s.st === 'done' ? CHECK_SVG : s.n}</span><span class="ms-lb">${s.st === 'locked' ? '???' : 'NV' + s.n}</span></button>`).join('');
-  note.textContent = on ? missionNote(list, list.indexOf(on)) : '';
-  note.classList.toggle('active', !!on);
-  step.querySelectorAll('.ms-i').forEach(b => b.onclick = () => {
-    const i = +b.dataset.i, s = list[i];
-    step.querySelectorAll('.ms-i').forEach(x => x.classList.toggle('sel', x === b));
-    note.textContent = missionNote(list, i);
-    note.classList.toggle('active', s.st !== 'locked');
-    if (s.st !== 'locked') { const node = document.querySelector(`#ladder .node[data-tier="${s.n}"]`); if (node) node.click(); }
-  });
-  // Carousel: hiện nút khi chuỗi dài hơn khung, đưa nhiệm vụ đang làm vào giữa
-  const prev = document.getElementById('mprev'), next = document.getElementById('mnext');
-  const sync = () => {
-    const over = step.scrollWidth > step.clientWidth + 2;
-    prev.hidden = next.hidden = !over;
-    prev.disabled = step.scrollLeft <= 2;
-    next.disabled = step.scrollLeft >= step.scrollWidth - step.clientWidth - 2;
-  };
-  const go = d => { const to = step.scrollLeft + d * step.clientWidth * 0.6; step.scrollTo({ left: to, behavior: 'smooth' });
-    setTimeout(() => { if (Math.abs(step.scrollLeft - to) > 4 && step.scrollLeft !== Math.max(0, Math.min(to, step.scrollWidth - step.clientWidth))) step.scrollLeft = to; sync(); }, 350); };
-  prev.onclick = () => go(-1); next.onclick = () => go(1);
-  step.onscroll = sync;
-  requestAnimationFrame(() => {
-    const el = step.querySelector('.ms-i.on');
-    if (el) { const sb = step.style.scrollBehavior; step.style.scrollBehavior = 'auto'; step.scrollLeft = (el.offsetLeft - step.offsetLeft) - step.clientWidth / 2 + el.clientWidth / 2; step.style.scrollBehavior = sb; }
-    sync();
-  });
+  const el = document.getElementById('curms'), total = tierTotal(), opened = (DATA.tiers || []).length;
+  if (!total) { el.textContent = ''; return; }
+  if (opened >= total) { el.textContent = `Đã hoàn thành ${total} nhiệm vụ`; return; }
+  const t = tierCfg(opened + 1);
+  el.textContent = `Nhiệm vụ ${opened + 1} · ${KEYS.filter(k => t[k] != null).map(k => `${OS_NAME[k]} ${vn1(t[k])}★`).join(' + ')}`;
+}
+
+// ---------- Biểu đồ live + Mumu leo núi (điểm chính xác theo thời gian, đỉnh = mốc của nhiệm vụ đang làm) ----------
+function climbChart(key){
+  const n = curTier(), leg = missionLeg(key, n);
+  if (!leg || leg.score == null) return '';
+  const W = 320, H = 150, top = 26, bot = 14, sx = W - 34;
+  const range = leg.to - leg.from, lo = leg.from - range * 0.08, hi = leg.to + range * 0.06;
+  const y = v => top + (1 - (Math.max(lo, Math.min(hi, v)) - lo) / (hi - lo)) * (H - top - bot);
+  // Bỏ các điểm cũ chỉ có điểm làm tròn (vd 3.2 đúng) khi đã có điểm chính xác, tránh răng cưa giả
+  let pts = (DATA.history || []).map(h => ({ t: +new Date(h.t), v: h[key] })).filter(p => p.v != null);
+  const fine = pts.filter(p => Math.abs(p.v * 10 - Math.round(p.v * 10)) > 1e-6);
+  if (fine.length >= 2) pts = fine;
+  pts = pts.slice(-72);
+  if (!pts.length || pts[pts.length - 1].v !== leg.score) pts.push({ t: Date.now(), v: leg.score });
+  if (pts.length < 2) pts.unshift({ t: pts[0].t - 3600e3, v: pts[0].v });
+  const endX = leg.done ? sx : Math.max(60, Math.min(sx - 40, 60 + leg.frac * (sx - 100)));
+  const t0 = pts[0].t, t1 = pts[pts.length - 1].t;
+  const x = tt => 8 + (tt - t0) / Math.max(1, t1 - t0) * (endX - 8);
+  const line = pts.map((p, i) => `${i ? 'L' : 'M'}${x(p.t).toFixed(1)},${y(p.v).toFixed(1)}`).join('');
+  const cx = endX, cy = y(leg.score), py = y(leg.to);
+  const mid = (cx + sx) / 2;
+  const left = (cx / W * 100).toFixed(2), topPct = (cy / H * 100).toFixed(2);
+  const remain = Math.max(0, leg.to - leg.score);
+  return `<div class="climb ${leg.done ? 'done' : ''}">
+    <div class="climb-head"><span class="live"><i></i>LIVE</span><span>Nhiệm vụ ${n} · đỉnh <b>${vn2(leg.to)}★</b></span></div>
+    <div class="climb-box">
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Điểm ${OS_NAME[key]} theo thời gian, đang leo tới ${vn2(leg.to)} sao">
+        <defs><linearGradient id="mt-${key}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--acc)" stop-opacity=".45"/><stop offset="1" stop-color="var(--acc)" stop-opacity=".04"/></linearGradient></defs>
+        <path d="M0,${H} L${W * .55},${py + 26} L${W * .8},${py + 8} L${W},${H} Z" fill="var(--acc-soft)" opacity=".7"/>
+        <path d="M${mid - 40},${H} L${sx},${py} L${W},${py + 30} L${W},${H} Z" fill="var(--acc-soft)"/>
+        <line x1="0" x2="${W}" y1="${py}" y2="${py}" stroke="var(--acc)" stroke-dasharray="3 4" stroke-width="1" opacity=".55"/>
+        <path d="${line} L${cx},${H} L8,${H} Z" fill="url(#mt-${key})"/>
+        <path d="${line}" fill="none" stroke="var(--acc)" stroke-width="2.4" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+        ${leg.done ? '' : `<path d="M${cx},${cy} Q${mid},${(cy + py) / 2 + 6} ${sx},${py}" fill="none" stroke="var(--acc)" stroke-width="1.6" stroke-dasharray="2 5" stroke-linecap="round" opacity=".8" vector-effect="non-scaling-stroke"/>`}
+        <g transform="translate(${sx},${py})"><line x1="0" y1="0" x2="0" y2="-22" stroke="var(--acc-deep)" stroke-width="1.6"/><path d="M0,-22 L16,-17 L0,-12 Z" fill="var(--gold)"/><circle r="3.5" fill="var(--acc-deep)"/></g>
+      </svg>
+      <span class="pulse" style="left:${left}%;top:${topPct}%"></span>
+      <img class="mumu" src="assets/loading.gif" alt="" style="left:${left}%;top:${topPct}%">
+    </div>
+    <div class="climb-foot"><span>Hiện tại <b>${vn3(leg.score)}</b></span>
+      <span>${leg.done ? `Đã lên đỉnh ${vn2(leg.to)}★` : `Còn ${vn3(remain)} · ${Math.floor(leg.frac * 100)}% chặng`}</span></div>
+  </div>`;
 }
 function renderFinale(){
   const box = document.getElementById('finale');
@@ -644,18 +644,19 @@ function panel(key, cfg, s){
   }
 
   let nextHtml;
-  if (next == null) nextHtml = `<div class="next"><b>Đã chốt hết mốc của ${esc(cfg.label)}</b><small>Các mốc tiếp theo sẽ mở theo điểm của store còn lại.</small></div>`;
+  const cn = curTier(), leg = missionLeg(key, cn), allDone = (DATA.tiers || []).length >= tierTotal();
+  if (allDone || !leg) nextHtml = `<div class="next"><b>Đã hoàn thành tất cả nhiệm vụ</b><small>Cảm ơn các Stylist đã đồng hành.</small></div>`;
   else {
-    const need = s.score != null && s.count ? fiveStarsNeeded(s.score, s.count, next) : null;
-    const p = stk[key1(next)];
+    const other = KEYS.find(k => k !== key), ot = tierCfg(cn)[other];
     const lines = [];
-    if (p) lines.push(`Đang xác nhận: ${p.hits}/${needRuns()} lần cập nhật`);
-    if (need) lines.push(`Ước tính: Cần thêm khoảng <b>${fmt.format(need)}</b> lượt đánh giá 5★`);
-    const pr = storeProgress(key);
-    const bar = pr ? `<div class="pbar"><div class="pbar-top"><span>${vn2(pr.from)}</span><span>Hiện tại <b>${vn3(s.score)}</b></span><span>${vn2(pr.to)}★</span></div>
-      <div class="pbar-track"><i style="width:${(pr.frac * 100).toFixed(1)}%"></i></div>
-      <div class="pbar-pct">Đã đi được ${Math.floor(pr.frac * 100)}% chặng tới ${vn2(pr.to)}★</div></div>` : '';
-    nextHtml = `<div class="next">Điểm cần đạt tiếp theo: <b>${vn2(next)}★</b>${bar}${lines.map(l => `<small>${l}</small>`).join('')}</div>`;
+    if (leg.done) lines.push(`${OS_NAME[key]} đã đạt mốc · chờ ${OS_NAME[other]} đạt ${vn2(ot)}★ để hoàn thành Nhiệm vụ ${cn}`);
+    else {
+      const need = s.score != null && s.count ? fiveStarsNeeded(s.score, s.count, leg.to) : null;
+      const p = stk[key1(leg.to)];
+      if (p) lines.push(`Đang xác nhận: ${p.hits}/${needRuns()} lần cập nhật`);
+      if (need) lines.push(`Ước tính: Cần thêm khoảng <b>${fmt.format(need)}</b> lượt đánh giá 5★`);
+    }
+    nextHtml = `<div class="next">Nhiệm vụ ${cn} · ${esc(cfg.label)} cần đạt: <b>${vn2(leg.to)}★</b>${climbChart(key)}${lines.map(l => `<small>${l}</small>`).join('')}</div>`;
   }
 
   // Mốc của store này: chip nhỏ (thang quà chung là line duy nhất, nằm bên dưới)
@@ -702,7 +703,7 @@ function openMilestone(key, k, from){
 }
 
 // ---------- Carousel mốc thưởng ----------
-const PER_VIEW = 4.4;
+const PER_VIEW = 3.5;
 function setupCarousel(el){
   const wrap = el.querySelector('.track-wrap'), prev = el.querySelector('.car-btn.prev'), next = el.querySelector('.car-btn.next');
   const dots = [...el.querySelectorAll('.dots i')];

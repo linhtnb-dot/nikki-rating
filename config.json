@@ -7,11 +7,11 @@
   },
   "system": {
     "name": "Nhiệm vụ hệ thống của Mumu",
-    "note": "Mỗi mốc của Hành Trình Toả Sáng là một nhiệm vụ: Nhiệm vụ n = Mốc n, mở tuần tự theo dữ liệu chốt mốc. Muốn đặt tên riêng cho nhiệm vụ, thêm \"mission\": \"Tên\" vào mốc tương ứng trong tiers; tên chỉ hiện khi nhiệm vụ đã mở (nhưng file này ai cũng xem được)."
+    "note": "Mỗi nhiệm vụ (tiers) cần CẢ iOS đạt tiers[n].ios VÀ Android đạt tiers[n].android; xong thì cả server nhận quà của nhiệm vụ đó. Nhiệm vụ mở lần lượt."
   },
   "rule": {
     "confirmRuns": 2,
-    "note": "Mốc được chốt khi điểm hiển thị trên store (làm tròn 1 chữ số) >= mốc trong confirmRuns lần cập nhật liên tiếp, trong thời gian chiến dịch. Mỗi mốc chốt mở bậc quà kế tiếp chưa mở. Cùng một lần cập nhật: iOS trước Android, mốc thấp trước."
+    "note": "Mốc của từng store được chốt khi điểm chính xác >= đúng số mốc trong confirmRuns lần cập nhật liên tiếp, trong thời gian chiến dịch. Nhiệm vụ hoàn thành khi cả mốc iOS và mốc Android của nó đã chốt."
   },
   "planning": {
     "note": "Bảng mốc do team chốt ngày 06/11/2026. Số lượt cần thêm là ước tính của team, chỉ để tham khảo.",
@@ -54,19 +54,10 @@
     }
   },
   "tiers": [
-    { "tier": 1, "name": "Quà mốc 1", "rewards": [{ "item": "tim", "qty": 10 }, { "item": "vang", "qty": 1000 }] },
-    { "tier": 2, "name": "Quà mốc 2", "rewards": [{ "item": "the-cong-chua", "qty": 1 }, { "item": "vang", "qty": 2000 }] },
-    { "tier": 3, "name": "Quà mốc 3", "rewards": [{ "item": "tim", "qty": 20 }, { "item": "vang", "qty": 3000 }] },
-    { "tier": 4, "name": "Quà mốc 4", "rewards": [{ "item": "tien-hoi", "qty": 50 }, { "item": "vang", "qty": 5000 }] },
-    { "tier": 5, "name": "Quà mốc 5", "rewards": [{ "item": "tim", "qty": 40 }, { "item": "vang", "qty": 5000 }] },
-    { "tier": 6, "name": "Quà mốc 6", "rewards": [{ "item": "tien-hoi", "qty": 100 }, { "item": "vang", "qty": 10000 }] },
-    { "tier": 7, "name": "Quà mốc 7", "rewards": [{ "item": "the-cong-chua", "qty": 2 }, { "item": "tim", "qty": 50 }, { "item": "vang", "qty": 15000 }] },
-    { "tier": 8, "name": "Quà mốc 8", "rewards": [{ "item": "kim-cuong", "qty": 10 }, { "item": "tim", "qty": 60 }, { "item": "vang", "qty": 15000 }] },
-    { "tier": 9, "name": "Quà mốc 9", "rewards": [{ "item": "kim-cuong", "qty": 20 }, { "item": "the-cong-chua", "qty": 2 }, { "item": "vang", "qty": 20000 }] },
-    { "tier": 10, "name": "Quà mốc 10", "rewards": [{ "item": "kim-cuong", "qty": 20 }, { "item": "the-cong-chua", "qty": 2 }, { "item": "ve-phong-mo", "qty": 2 }, { "item": "vang", "qty": 20000 }] }
-  ],
-  "expectedOrder": [
-    "ios:3.8", "android:3.3", "ios:4.0", "android:3.5", "ios:4.2",
-    "android:3.7", "ios:4.4", "android:4.0", "ios:4.5", "android:4.3"
+    { "tier": 1, "name": "Quà nhiệm vụ 1", "ios": 3.8, "android": 3.3, "rewards": [{ "item": "kim-cuong", "qty": 50 }] },
+    { "tier": 2, "name": "Quà nhiệm vụ 2", "ios": 4.0, "android": 3.5, "rewards": [{ "item": "tien-hoi", "qty": 50 }, { "item": "tim", "qty": 20 }, { "item": "vang", "qty": 8000 }] },
+    { "tier": 3, "name": "Quà nhiệm vụ 3", "ios": 4.2, "android": 3.7, "rewards": [{ "item": "tien-hoi", "qty": 100 }, { "item": "tim", "qty": 40 }, { "item": "vang", "qty": 15000 }] },
+    { "tier": 4, "name": "Quà nhiệm vụ 4", "ios": 4.4, "android": 4.0, "rewards": [{ "item": "kim-cuong", "qty": 10 }, { "item": "the-cong-chua", "qty": 2 }, { "item": "tim", "qty": 110 }, { "item": "vang", "qty": 30000 }] },
+    { "tier": 5, "name": "Quà nhiệm vụ 5", "ios": 4.5, "android": 4.3, "rewards": [{ "item": "kim-cuong", "qty": 40 }, { "item": "the-cong-chua", "qty": 4 }, { "item": "ve-phong-mo", "qty": 2 }, { "item": "vang", "qty": 40000 }] }
   ]
 }

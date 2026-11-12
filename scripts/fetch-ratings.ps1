@@ -8,8 +8,7 @@
 #   (iOS: averageUserRating của Apple; Android: điểm chính xác Google nhúng trong trang Play, dự phòng = trung bình theo số lượt từng mức sao)
 #   chỉ tính các lần cập nhật nằm trong thời gian chiến dịch. Lần lấy điểm bị lỗi không tính và không làm đứt chuỗi.
 # - Đã chốt thì không thu hồi.
-# - Mỗi mốc chốt mở bậc quà kế tiếp chưa mở (tối đa số bậc trong config.tiers).
-#   Nhiều mốc chốt cùng lúc: iOS trước Android, trong từng OS mốc thấp trước.
+# - Nhiệm vụ n (config.tiers[n]) hoàn thành khi cả mốc iOS và mốc Android của nhiệm vụ đó đã chốt; nhiệm vụ mở lần lượt.
 # - Đích Toả Sáng: đạt khi cả hai OS đã chốt mốc finish.
 #
 # Tham số -FakeIos / -FakeAndroid / -Now chỉ dùng để kiểm thử (bỏ qua việc gọi store).
@@ -165,19 +164,22 @@ foreach ($key in 'ios', 'android') {
     }
 }
 
-# ---------- Mở bậc quà ----------
-foreach ($n in $newly) {
-    $entry = $confirmed[$n.os][$n.k]
-    if ($tiers.Count -lt $tierTotal) {
-        $t = $tiers.Count + 1
-        $name = ($cfg.tiers | Where-Object { [int]$_.tier -eq $t } | Select-Object -First 1).name
-        [void]$tiers.Add([ordered]@{ tier = $t; openedAt = $now; os = $n.os; milestone = $n.k; confirmedAt = (Iso $entry.at); name = $name })
-        $entry['openedTier'] = $t
-        [void]$log.Add([ordered]@{ t = $now; event = 'tier'; tier = $t; os = $n.os; milestone = $n.k })
-        "  >> mở bậc $t nhờ $($n.os) $($n.k)"
-    } else {
-        [void]$log.Add([ordered]@{ t = $now; event = 'tier-full'; os = $n.os; milestone = $n.k; detail = 'Đã mở hết các bậc, mốc này không mở thêm bậc' })
+# ---------- Hoàn thành nhiệm vụ (mở quà) ----------
+# Nhiệm vụ n (config.tiers[n]) hoàn thành khi CẢ mốc iOS (tiers[n].ios) VÀ mốc Android (tiers[n].android) đã được chốt.
+# Nhiệm vụ mở lần lượt: nhiệm vụ sau chỉ được tính khi nhiệm vụ trước đã hoàn thành.
+for ($t = $tiers.Count + 1; $t -le $tierTotal; $t++) {
+    $tc = $cfg.tiers | Where-Object { [int]$_.tier -eq $t } | Select-Object -First 1
+    if (-not $tc -or $null -eq $tc.ios -or $null -eq $tc.android) { break }
+    $ki = Key1 $tc.ios; $ka = Key1 $tc.android
+    if (-not ($confirmed.ios.Contains($ki) -and $confirmed.android.Contains($ka))) { break }
+    [void]$tiers.Add([ordered]@{ tier = $t; openedAt = $now; ios = $ki; android = $ka
+        iosAt = (Iso $confirmed.ios[$ki].at); androidAt = (Iso $confirmed.android[$ka].at); name = $tc.name })
+    foreach ($e in $confirmed.ios[$ki], $confirmed.android[$ka]) {
+        if ($e -is [System.Collections.IDictionary]) { $e['openedTier'] = $t }
+        else { $e | Add-Member -NotePropertyName openedTier -NotePropertyValue $t -Force }   # mục đọc lại từ file cũ
     }
+    [void]$log.Add([ordered]@{ t = $now; event = 'tier'; tier = $t; ios = $ki; android = $ka })
+    "  >> hoàn thành nhiệm vụ $t (iOS $ki + Android $ka)"
 }
 
 # ---------- Đích Toả Sáng ----------

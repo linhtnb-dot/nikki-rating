@@ -1,7 +1,7 @@
 {
   "version": 2,
   "sample": false,
-  "updatedAt": "2026-11-16T04:11:22Z",
+  "updatedAt": "2026-11-16T06:06:51Z",
   "rule": {
     "confirmRuns": 2,
     "campaignStart": "2026-11-09T17:00:00+00:00",
@@ -14,23 +14,23 @@
       "display": 3.7,
       "count": 32171,
       "exact": true,
-      "fetchedAt": "2026-11-16T04:11:22Z",
+      "fetchedAt": "2026-11-16T06:06:51Z",
       "error": null
     },
     "android": {
       "score": 3.2194,
       "display": 3.2,
-      "count": 261253,
+      "count": 261255,
       "histogram": {
         "5": 127480,
         "4": 13221,
         "3": 9923,
-        "2": 10408,
-        "1": 100221
+        "2": 10409,
+        "1": 100222
       },
       "exact": true,
       "source": "google-precise",
-      "fetchedAt": "2026-11-16T04:11:22Z",
+      "fetchedAt": "2026-11-16T06:06:51Z",
       "error": null
     }
   },
@@ -2190,6 +2190,15 @@
       "android": 3.2194,
       "androidDisplay": 3.2,
       "androidCount": 261253
+    },
+    {
+      "t": "2026-11-16T06:06:51Z",
+      "ios": 3.6713,
+      "iosDisplay": 3.7,
+      "iosCount": 32171,
+      "android": 3.2194,
+      "androidDisplay": 3.2,
+      "androidCount": 261255
     }
   ]
 }

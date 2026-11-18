@@ -145,21 +145,19 @@ section.sec{padding:30px 14px 6px}
 .steps p{margin:0;font-size:15px;line-height:1.5;color:var(--ink)}
 .steps b{font-weight:700;color:var(--pink-deep)}
 
-/* ---------- Thư cảm ơn + nút nộp minh chứng (nền ảnh thư) ---------- */
-.letter{position:relative;margin-top:30px;aspect-ratio:4/5;background:url(assets/letter-bg.jpg) center/cover no-repeat;container-type:inline-size}
-.letter:before{content:"";position:absolute;left:0;right:0;top:0;height:40px;background:linear-gradient(180deg,var(--bg),transparent)}
-/* Chữ nằm trên tấm thiệp trắng (thiệp nghiêng -5,4°) */
-.card-text{position:absolute;left:49.6%;top:35.2%;width:50%;transform:translate(-50%,-50%) rotate(-5.4deg);text-align:center}
-.card-text h2{margin:0 0 2.4cqw;font-family:var(--title);font-weight:400;font-size:6.2cqw;line-height:1.05;white-space:nowrap;color:var(--pink-mid)}
-.card-text p{margin:0;font-size:3.9cqw;line-height:1.4;font-weight:600;color:#d94f87}
-.card-text p b{font-weight:800}
-.letter .btn{position:absolute;left:50%;top:59%;transform:translate(-50%,-50%);white-space:nowrap;
-  font-family:var(--body);font-size:max(16px,4.6cqw);font-weight:800;line-height:1;color:#fff;text-decoration:none;
-  padding:3.2cqw 8cqw 2.8cqw;border-radius:999px;background:linear-gradient(180deg,#ff9cc6,var(--pink-mid) 55%,var(--pink-deep));
+/* ---------- Cảm ơn + nút nộp minh chứng (ảnh Nikki + Mumu) ---------- */
+.proof{position:relative;overflow:hidden;background:#fff;border-radius:22px;border:1.5px solid var(--line);box-shadow:var(--shadow);padding:0 16px 20px;text-align:center}
+.proof-art{display:block;width:calc(100% + 32px);max-width:none;height:auto;margin:0 -16px -22px;
+  -webkit-mask-image:linear-gradient(180deg,#000 72%,transparent);mask-image:linear-gradient(180deg,#000 72%,transparent)}
+.proof h2{position:relative;margin:0 0 8px;font-family:var(--title);font-weight:400;font-size:30px;line-height:1.1;color:var(--pink-mid)}
+.thanks{margin:0 4px 18px;font-size:15.5px;line-height:1.6;color:var(--ink)}
+.thanks b{font-weight:700;color:var(--pink-deep)}
+.proof .btn{display:inline-block;font-family:var(--body);font-size:18px;font-weight:800;line-height:1;color:#fff;text-decoration:none;
+  padding:13px 40px 11px;border-radius:999px;background:linear-gradient(180deg,#ff9cc6,var(--pink-mid) 55%,var(--pink-deep));
   box-shadow:0 0 0 3px #fff,0 0 0 5px #ffc2dc,0 12px 22px -8px rgba(160,30,90,.6)}
-.letter .btn:active{transform:translate(-50%,-50%) scale(.97)}
-.letter .soon{position:absolute;left:50%;top:59%;transform:translate(-50%,-50%);white-space:nowrap;font-weight:700;font-size:15px;color:var(--pink-deep);
-  background:#fff;padding:8px 18px;border-radius:999px;box-shadow:0 0 0 3px #ffc2dc}
+.proof .btn:active{transform:scale(.97)}
+.proof .soon{display:inline-block;font-weight:700;font-size:15px;color:var(--pink-deep);background:#fff;padding:8px 18px;border-radius:999px;box-shadow:0 0 0 3px #ffc2dc}
+footer{margin-top:30px}
 
 footer{background:#4a2a12;color:#fff;text-align:center;padding:24px 16px 28px}
 footer img{width:150px;height:auto;margin:0 auto 12px}
@@ -203,12 +201,13 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
       </ol>
     </section>
 
-    <section class="letter" id="nop-minh-chung" aria-labelledby="thanks-h">
-      <div class="card-text">
+    <section class="sec" aria-labelledby="thanks-h">
+      <div class="proof" id="nop-minh-chung">
+        <img class="proof-art" src="assets/nikki-mumu-wow.png" alt="" width="640" height="400">
         <h2 id="thanks-h">Cảm ơn các Star!</h2>
-        <p>Mỗi bức tâm thư đều giúp<br><b>Ngôi Sao Thời Trang</b><br>thêm lấp lánh ~</p>
+        <p class="thanks">Mỗi bức tâm thư của các Star đều giúp <b>Ngôi Sao Thời Trang</b> thêm lấp lánh. Gửi xong đánh giá thì nộp minh chứng để Mumu ghi nhận nhé ~</p>
+        <div id="proof-cta"></div>
       </div>
-      <div id="proof-cta"></div>
     </section>
   </main>
 

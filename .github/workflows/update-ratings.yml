@@ -2,7 +2,7 @@ name: Update store ratings
 
 on:
   schedule:
-    - cron: "5 * * * *"   # phút 05 mỗi giờ (giờ UTC)
+    - cron: "5,35 * * * *"   # phút 05 và 35 mỗi giờ (giờ UTC); 30 phút/lần để bù các lượt GitHub bỏ qua
   workflow_dispatch: {}
 
 permissions:

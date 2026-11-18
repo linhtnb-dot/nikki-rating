@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffe3ee">
-<title>Đường Đua · Tổng đài Mumu · Nikki: Ngôi Sao Thời Trang</title>
-<meta name="description" content="Nhiệm vụ #1 của Tổng đài Mumu: theo dõi điểm đánh giá Ngôi Sao Thời Trang trên App Store và Google Play theo thời gian thực, cùng đưa game về đích.">
+<title>Đường Đua · Nhiệm vụ hệ thống của Mumu #1 · Nikki: Ngôi Sao Thời Trang</title>
+<meta name="description" content="Nhiệm vụ hệ thống của Mumu #1: theo dõi điểm đánh giá Ngôi Sao Thời Trang trên App Store và Google Play theo thời gian thực, cùng đưa game về đích.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Đường Đua · Nhiệm vụ #1 của Tổng đài Mumu">
+<meta property="og:title" content="Đường Đua · Nhiệm vụ hệ thống của Mumu #1">
 <meta property="og:description" content="Đường đua về đích: App Store 3,8★ và Google Play 3,3★. Xem tiến độ theo thời gian thực.">
 <meta property="og:image" content="https://linhtnb-dot.github.io/nikki-rating/assets/hero-bg.jpg">
 <meta property="og:url" content="https://linhtnb-dot.github.io/nikki-rating/">
@@ -82,13 +82,11 @@ main{padding:4px 12px 24px}
 .race{background:linear-gradient(180deg,#fff,#fff9fc)}
 .status{display:block;width:max-content;max-width:100%;margin:6px auto 12px;font-size:13px;font-weight:700;padding:4px 12px;border-radius:999px;background:var(--gold-soft);color:var(--gold-deep);text-align:center}
 .status.done{background:#dff6ec;color:var(--mint-deep)}
-.lane{--acc:var(--pink);--acc-deep:var(--pink-deep);--acc-soft:var(--pink-soft);margin:6px 0 16px}
-.lane.android{--acc:var(--lilac);--acc-deep:var(--lilac-deep);--acc-soft:var(--lilac-soft)}
-.lane:last-of-type{margin-bottom:4px}
+.lane{margin:14px 0 4px}
 .lane-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:14px}
 .lane-top b{font-size:16px;color:var(--acc-deep)}
-.lane-top .lead-tag{font-size:11px;font-weight:700;margin-left:6px;padding:1px 7px;border-radius:999px;background:var(--gold);color:#fff;vertical-align:2px}
-.lane-top .goal{color:var(--muted)}
+.lane-top{color:var(--muted);font-weight:600}
+.lane-top .goal{color:var(--muted);font-weight:400}
 .lane-top .goal b{font-size:15px}
 .lane-track{position:relative;height:40px;margin:26px 0 6px;border-radius:12px;background:repeating-linear-gradient(90deg,var(--acc-soft) 0 18px,#fff 18px 22px);
   box-shadow:inset 0 0 0 1.5px var(--acc-soft)}
@@ -98,7 +96,6 @@ main{padding:4px 12px 24px}
 .racer{position:absolute;bottom:4px;width:62px;height:62px;object-fit:contain;transform:translateX(-62%) scaleX(-1);pointer-events:none;
   filter:drop-shadow(0 3px 4px rgba(0,0,0,.2));transition:left 1.2s cubic-bezier(.2,.8,.2,1)}
 .lane.done .racer{transform:translateX(-80%) scaleX(-1)}
-.flag{position:absolute;right:-2px;top:-26px;font-size:11px;font-weight:700;color:var(--acc-deep);background:#fff;border:1px solid var(--acc-soft);padding:1px 7px;border-radius:8px;white-space:nowrap}
 .lane-track:before{content:"";position:absolute;left:10px;top:4px;bottom:4px;width:3px;border-radius:2px;background:#fff;box-shadow:0 0 0 1px var(--acc-soft);z-index:1}
 .lane-marks{display:flex;justify-content:space-between;margin:0 0 4px;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .lane-marks .fin{color:var(--acc-deep)}
@@ -112,34 +109,24 @@ main{padding:4px 12px 24px}
   -webkit-mask-image:linear-gradient(180deg,#000 72%,transparent);mask-image:linear-gradient(180deg,#000 72%,transparent)}
 .proof h2{position:relative}
 
-/* ---------- Thẻ từng store ---------- */
-.store{--acc:var(--pink);--acc-deep:var(--pink-deep);--acc-soft:var(--pink-soft);background:linear-gradient(180deg,#fff 0%,#fff9fc 100%)}
-.store.android{--acc:var(--lilac);--acc-deep:var(--lilac-deep);--acc-soft:var(--lilac-soft);border-color:#e3d9fb}
-.store:before{content:"";position:absolute;inset:5px;border-radius:18px;border:1px dashed var(--acc-soft);pointer-events:none}
+/* ---------- 2 tab store ---------- */
+.tabs{display:flex;gap:6px;margin:0 0 10px;padding:5px;background:#fff;border:1px solid var(--line);border-radius:999px;box-shadow:var(--shadow)}
+.tab{position:relative;flex:1;border:0;background:transparent;cursor:pointer;padding:9px 6px;border-radius:999px;font-size:15px;font-weight:700;color:var(--muted);
+  display:flex;align-items:baseline;justify-content:center;gap:6px;transition:background .2s,color .2s;-webkit-tap-highlight-color:transparent}
+.tab small{font-size:14px;font-weight:600;opacity:.9}
+.tab[aria-selected="true"]{color:#fff;background:var(--acc)}
+.tab.ios{--acc:var(--pink)} .tab.android{--acc:var(--lilac)}
+.tab:focus{outline:none}.tab:focus-visible{box-shadow:0 0 0 2px var(--acc)}
+.lead-tag{position:absolute;top:-11px;right:8px;font-size:10px;font-weight:700;padding:1px 7px;border-radius:999px;background:var(--gold);color:#fff;border:1.5px solid #fff;white-space:nowrap}
+.panel{--acc:var(--pink);--acc-deep:var(--pink-deep);--acc-soft:var(--pink-soft);position:relative;border-radius:18px;padding:14px 12px 16px;background:linear-gradient(180deg,#fff 0%,#fff9fc 100%);border:1.5px solid var(--acc-soft)}
+.panel.android{--acc:var(--lilac);--acc-deep:var(--lilac-deep);--acc-soft:var(--lilac-soft)}
+.panel[hidden]{display:none}
 .score-row{display:flex;align-items:center;gap:14px;padding:0 4px}
 .score{font-family:var(--num);font-size:58px;line-height:.85;color:var(--acc-deep)}
 .store-name{font-family:var(--deco);font-size:22px;color:var(--acc-deep);line-height:1;margin-bottom:6px}
 .stars{position:relative;display:inline-block;font-size:19px;letter-spacing:2px;line-height:1;color:#f1dbe5;font-family:Arial,sans-serif}
 .stars span{position:absolute;inset:0 auto 0 0;overflow:hidden;white-space:nowrap;color:var(--gold)}
 .count{font-size:14px;color:var(--muted);margin-top:5px}
-.deltas{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 0}
-.delta{background:var(--acc-soft);border-radius:12px;padding:8px 10px}
-.delta small{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-.delta b{font-size:17px;font-weight:700}
-.delta .up{color:var(--mint-deep)}.delta .dn{color:var(--down)}.delta .eq{color:var(--muted)}
-.delta em{display:block;font-style:normal;font-size:12px;color:var(--muted)}
-.climb{margin:10px 0 6px;background:#fff;border-radius:14px;padding:8px 10px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
-.climb-head,.climb-foot{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted)}
-.climb-head b,.climb-foot b{color:var(--acc-deep)}
-.live{display:inline-flex;align-items:center;gap:5px;font-weight:700;font-size:11px;letter-spacing:.06em;color:#e0457b}
-.live i{width:7px;height:7px;border-radius:50%;background:#e0457b;animation:livepulse 1.6s ease-out infinite}
-@keyframes livepulse{0%{box-shadow:0 0 0 0 rgba(224,69,123,.6)}100%{box-shadow:0 0 0 8px rgba(224,69,123,0)}}
-.climb-box{position:relative;margin:4px 0 2px;aspect-ratio:320/130}
-.climb-box svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.climb .pulse{position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:var(--acc);animation:dotpulse 1.8s ease-out infinite}
-@keyframes dotpulse{0%{box-shadow:0 0 0 0 rgba(143,111,234,.55)}100%{box-shadow:0 0 0 12px rgba(143,111,234,0)}}
-.note{font-size:13px;line-height:1.5;color:var(--muted);margin:6px 2px 0}
-.note b{color:var(--acc-deep)}
 .err{font-size:14px;color:var(--down);margin-top:8px}
 .cta{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:14px}
 .badge{display:inline-block;border-radius:10px;box-shadow:0 8px 18px -8px rgba(0,0,0,.45)}
@@ -186,11 +173,11 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
     <div class="brand"><img class="app-icon" src="assets/app-icon.webp" alt="Biểu tượng ứng dụng Ngôi Sao Thời Trang" width="1080" height="1080"><img class="logo" src="assets/logo-pink.png" alt="Nikki: Ngôi Sao Thời Trang"></div>
   </section>
   <div class="intro">
-    <span class="eyebrow" id="eyebrow">Tổng đài Mumu · Nhiệm vụ #1</span>
+    <span class="eyebrow" id="eyebrow">NHIỆM VỤ HỆ THỐNG CỦA MUMU #1</span>
     <h1 id="title">Đường Đua</h1>
     <div class="host">
       <img src="assets/mumu-host.png" alt="Mumu" width="360" height="678">
-      <div class="bubble"><b>Tổng đài Mumu xin nghe!</b><span id="subtitle"></span></div>
+      <div class="bubble"><b>Mumu xin nghe!</b><span id="subtitle"></span></div>
     </div>
     <span class="chip"><i></i><span id="updated">Đang tải số liệu…</span></span>
     <div class="notice" id="sample" hidden>Đang hiển thị số liệu mẫu.</div>
@@ -198,7 +185,6 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
 
   <main>
     <section class="block race" id="race" aria-labelledby="race-h"></section>
-    <div id="stores"></div>
     <section class="block proof" id="nop-minh-chung" aria-labelledby="proof-h"></section>
   </main>
 
@@ -250,29 +236,20 @@ function leg(key){
 }
 function fiveStarsNeeded(avg, n, t){ return avg >= t ? 0 : Math.ceil((t - avg) * n / (5 - t)); }
 
-// Lịch sử của 1 store; bỏ các điểm cũ chỉ có điểm làm tròn (vd 3.2 đúng) khi đã có điểm chính xác
-function series(key){
-  let pts = (DATA.history || []).map(h => ({ t: +new Date(h.t), v: h[key], n: h[key + 'Count'] })).filter(p => p.v != null);
-  const fine = pts.filter(p => Math.abs(p.v * 10 - Math.round(p.v * 10)) > 1e-6);
-  if (fine.length >= 2) pts = fine;
-  // Bỏ điểm lệch đơn lẻ (lần Google không trả điểm chính xác, script dùng điểm trung bình dự phòng): lệch > 0,01 so với cả hai điểm kề, cùng chiều
-  return pts.filter((p, i) => {
-    const a = pts[i - 1], b = pts[i + 1];
-    if (!a || !b) return true;
-    const da = p.v - a.v, db = p.v - b.v;
-    return !(Math.abs(da) > 0.01 && Math.abs(db) > 0.01 && Math.sign(da) === Math.sign(db));
-  });
+// Tab mặc định: tab người xem chọn lần trước, nếu không thì theo thiết bị
+let ACTIVE = null;
+function defaultTab(){
+  try { const t = localStorage.getItem('rc-tab'); if (KEYS.includes(t)) return t; } catch (e) {}
+  return /android/i.test(navigator.userAgent) ? 'android' : 'ios';
 }
-// Thay đổi so với ~hours giờ trước
-function change(key, hours){
-  const pts = series(key), s = (DATA.stores || {})[key] || {};
-  if (pts.length < 2 || s.score == null) return null;
-  const cut = Date.now() - hours * 3600e3;
-  let ref = null;
-  for (const p of pts) { if (p.t <= cut) ref = p; else break; }
-  const partial = !ref;
-  if (!ref) ref = pts[0];
-  return { dv: s.score - ref.v, dn: s.count != null && ref.n != null ? s.count - ref.n : null, partial, since: ref.t };
+function select(key){
+  ACTIVE = key;
+  try { localStorage.setItem('rc-tab', key); } catch (e) {}
+  for (const k of KEYS) {
+    const t = document.getElementById('tab-' + k), p = document.getElementById('panel-' + k);
+    if (t) t.setAttribute('aria-selected', k === key);
+    if (p) p.hidden = k !== key;
+  }
 }
 
 function render(){
@@ -282,113 +259,73 @@ function render(){
   document.getElementById('subtitle').textContent = c.subtitle || '';
   document.getElementById('sample').hidden = !DATA.sample;
   document.getElementById('updated').textContent = DATA.updatedAt ? `Cập nhật lần cuối ${fmtDT(DATA.updatedAt)}` : 'Chưa có số liệu';
+  if (!ACTIVE) ACTIVE = defaultTab();
   renderRace();
-  const box = document.getElementById('stores');
-  box.innerHTML = KEYS.filter(k => CFG.stores[k]).map(storeCard).join('');
   renderProof();
 }
 
+// Đường đua: 2 tab App Store / Google Play, mỗi tab = điểm + làn đua + link store
 function renderRace(){
-  const legs = KEYS.map(k => [k, leg(k)]).filter(([, l]) => l);
-  const done = missionDone(), doneKeys = legs.filter(([, l]) => l.done).map(([k]) => k);
-  let status, cls = '';
+  const keys = KEYS.filter(k => CFG.stores[k]);
+  const legs = Object.fromEntries(keys.map(k => [k, leg(k)]));
+  const done = missionDone(), doneKeys = keys.filter(k => legs[k] && legs[k].done);
+  let status, cls = '', leader = null;
   if (done) { status = `Đã về đích · ${fmtDT(done.openedAt)}`; cls = 'done'; }
-  else if (doneKeys.length === 1) { const o = KEYS.find(k => k !== doneKeys[0]); status = `${OS_NAME[doneKeys[0]]} đã về đích · chờ ${OS_NAME[o]}`; }
-  else if (legs.length === 2 && legs[0][1].score != null && legs[1][1].score != null) {
-    const [a, b] = legs, diff = Math.round((a[1].frac - b[1].frac) * 100);
-    status = diff === 0 ? 'Hai làn đang ngang nhau' : `${OS_NAME[(diff > 0 ? a : b)[0]]} đang dẫn trước ${Math.abs(diff)}% chặng`;
+  else if (doneKeys.length === 1) { const o = keys.find(k => k !== doneKeys[0]); status = `${OS_NAME[doneKeys[0]]} đã về đích · chờ ${OS_NAME[o]}`; }
+  else if (keys.length === 2 && legs.ios && legs.android && legs.ios.score != null && legs.android.score != null) {
+    const diff = Math.round((legs.ios.frac - legs.android.frac) * 100);
+    leader = diff === 0 ? null : diff > 0 ? 'ios' : 'android';
+    status = leader ? `${OS_NAME[leader]} đang dẫn trước ${Math.abs(diff)}% chặng` : 'Hai làn đang ngang nhau';
   } else status = 'Đang cập nhật';
-  const leader = !done && doneKeys.length === 0 && legs.length === 2 ? (legs[0][1].frac === legs[1][1].frac ? null : legs[0][1].frac > legs[1][1].frac ? legs[0][0] : legs[1][0]) : null;
-  const lane = ([key, l]) => {
-    const pct = l.frac * 100, pos = Math.max(6, Math.min(97, pct));
-    const foot = l.done ? `<b>Đã về đích ✓</b>`
-      : l.pend ? `Đang xác nhận <b>${l.pend.hits}/${needRuns()}</b> lần cập nhật`
-      : `<span>Hiện tại <b>${l.score != null ? vn3(l.score) : '—'}</b></span>`;
-    return `<div class="lane ${key} ${l.done ? 'done' : ''}">
-      <div class="lane-top"><span><b>${esc(CFG.stores[key].label)}</b>${leader === key ? '<span class="lead-tag">Dẫn đầu</span>' : ''}</span>
-        <span class="goal"><b>${Math.floor(pct)}%</b> chặng</span></div>
-      <div class="lane-track" role="img" aria-label="${esc(CFG.stores[key].label)}: ${Math.floor(pct)}% chặng tới ${vn1(l.to)} sao">
-        <i class="lane-fill" style="width:${pct}%"></i>
-        <img class="racer" src="assets/loading.gif" alt="" style="left:${pos}%">
+
+  const tabs = keys.map(k => {
+    const s = (DATA.stores || {})[k] || {};
+    return `<button class="tab ${k}" role="tab" id="tab-${k}" aria-controls="panel-${k}" aria-selected="${k === ACTIVE}">${esc(CFG.stores[k].label)}<small>${s.display != null ? vn1(s.display) + '★' : ''}</small>${leader === k ? '<span class="lead-tag">Dẫn đầu</span>' : ''}</button>`;
+  }).join('');
+
+  const panel = k => {
+    const cfg = CFG.stores[k], s = (DATA.stores || {})[k] || {}, l = legs[k];
+    const disp = s.display, starPct = s.score != null ? s.score / 5 * 100 : disp != null ? disp / 5 * 100 : 0;
+    const badge = k === 'ios' ? 'assets/badge-appstore.png' : 'assets/badge-googleplay.png';
+    let lane = '';
+    if (l) {
+      const pct = l.frac * 100, pos = Math.max(6, Math.min(97, pct));
+      const foot = l.done ? `<b>Đã về đích ✓</b>`
+        : l.pend ? `<span>Đang xác nhận <b>${l.pend.hits}/${needRuns()}</b> lần cập nhật</span>`
+        : `<span>Hiện tại <b>${l.score != null ? vn3(l.score) : '—'}</b></span>`;
+      lane = `<div class="lane ${l.done ? 'done' : ''}">
+        <div class="lane-top"><span>Tiến độ về đích</span><span class="goal"><b>${Math.floor(pct)}%</b> chặng</span></div>
+        <div class="lane-track" role="img" aria-label="${esc(cfg.label)}: ${Math.floor(pct)}% chặng tới ${vn1(l.to)} sao">
+          <i class="lane-fill" style="width:${pct}%"></i>
+          <img class="racer" src="assets/loading.gif" alt="" style="left:${pos}%">
+        </div>
+        <div class="lane-marks"><span>Xuất phát ${vn2(l.from)}</span><span class="fin">Đích ${vn2(l.to)}★</span></div>
+        <div class="lane-foot">${foot}<span>${l.done ? '' : `Còn <b>${l.score != null ? vn3(Math.max(0, l.to - l.score)) : '—'}</b> điểm`}</span></div>
+      </div>`;
+    }
+    return `<section class="panel ${k}" role="tabpanel" id="panel-${k}" aria-labelledby="tab-${k}" ${k === ACTIVE ? '' : 'hidden'}>
+      <div class="score-row">
+        <div class="score">${disp != null ? vn1(disp) : '—'}</div>
+        <div><div class="store-name">${esc(cfg.label)}</div>
+          <div class="stars">★★★★★<span style="width:${starPct}%">★★★★★</span></div>
+          <div class="count">${s.count ? fmt.format(s.count) + ' lượt đánh giá' : ''}</div></div>
       </div>
-      <div class="lane-marks"><span>Xuất phát ${vn2(l.from)}</span><span class="fin">Đích ${vn2(l.to)}★</span></div>
-      <div class="lane-foot">${foot}<span>${l.done ? '' : `Còn <b>${l.score != null ? vn3(Math.max(0, l.to - l.score)) : '—'}</b> điểm`}</span></div>
-    </div>`;
+      ${lane}
+      ${s.error ? `<div class="err">Lần cập nhật gần nhất bị lỗi, đang hiện số cũ.</div>` : ''}
+      <div class="cta">
+        <a class="badge" href="${esc(cfg.reviewUrl || cfg.url)}" target="_blank" rel="noopener"><img src="${badge}" alt="Tải và đánh giá trên ${esc(cfg.label)}" width="150" height="47"></a>
+        <a class="btn-ghost" href="${esc(cfg.url)}" target="_blank" rel="noopener">Xem đánh giá</a>
+      </div>
+    </section>`;
   };
-  document.getElementById('race').innerHTML = `<h2 id="race-h">Tiến độ về đích</h2>
+
+  const el = document.getElementById('race');
+  el.innerHTML = `<h2 id="race-h">Đường đua về đích</h2>
     <span class="status ${cls}">${esc(status)}</span>
-    ${legs.map(lane).join('')}
+    <div class="tabs" role="tablist">${tabs}</div>
+    ${keys.map(panel).join('')}
     <a class="jump" href="#nop-minh-chung">Nộp minh chứng</a>`;
-}
-
-function storeCard(key){
-  const cfg = CFG.stores[key], s = (DATA.stores || {})[key] || {}, l = leg(key);
-  const disp = s.display, starPct = s.score != null ? s.score / 5 * 100 : disp != null ? disp / 5 * 100 : 0;
-  const badge = key === 'ios' ? 'assets/badge-appstore.png' : 'assets/badge-googleplay.png';
-  const dcell = (label, ch) => {
-    if (!ch) return `<div class="delta"><small>${label}</small><b class="eq">—</b><em>Chưa đủ số liệu</em></div>`;
-    const c = Math.abs(ch.dv) < 0.0005 ? 'eq' : ch.dv > 0 ? 'up' : 'dn';
-    const sign = c === 'eq' ? '±' : ch.dv > 0 ? '+' : '−';
-    const n = ch.dn != null ? `${ch.dn >= 0 ? '+' : '−'}${fmt.format(Math.abs(ch.dn))} lượt đánh giá` : '';
-    return `<div class="delta"><small>${label}${ch.partial ? '*' : ''}</small><b class="${c}">${sign}${vn3(Math.abs(ch.dv))}</b><em>${n}</em></div>`;
-  };
-  const c24 = change(key, 24), c7 = change(key, 24 * 7);
-  let note = '';
-  if (l && !l.done && s.score != null && s.count) {
-    const need = fiveStarsNeeded(s.score, s.count, l.to);
-    if (need) note = `Ước tính cần thêm khoảng <b>${fmt.format(need)}</b> lượt đánh giá 5★ để chạm ${vn2(l.to)}★.`;
-  }
-  const partial = (c24 && c24.partial) || (c7 && c7.partial) ? `<p class="note">* Tính từ lần cập nhật đầu tiên có số liệu (${fmtDT(((c7 && c7.partial) ? c7 : c24).since)}).</p>` : '';
-  return `<section class="block store ${key}" aria-label="${esc(cfg.label)}">
-    <div class="score-row">
-      <div class="score">${disp != null ? vn1(disp) : '—'}</div>
-      <div><div class="store-name">${esc(cfg.label)}</div>
-        <div class="stars">★★★★★<span style="width:${starPct}%">★★★★★</span></div>
-        <div class="count">${s.count ? fmt.format(s.count) + ' lượt đánh giá' : ''}</div></div>
-    </div>
-    <div class="deltas">${dcell('24 giờ qua', c24)}${dcell('7 ngày qua', c7)}</div>
-    ${l ? climbChart(key, l) : ''}
-    ${note ? `<p class="note">${note}</p>` : ''}${partial}
-    ${s.error ? `<div class="err">Lần cập nhật gần nhất bị lỗi, đang hiện số cũ.</div>` : ''}
-    <div class="cta">
-      <a class="badge" href="${esc(cfg.reviewUrl || cfg.url)}" target="_blank" rel="noopener"><img src="${badge}" alt="Đánh giá trên ${esc(cfg.label)}" width="150" height="47"></a>
-      <a class="btn-ghost" href="${esc(cfg.url)}" target="_blank" rel="noopener">Xem đánh giá</a>
-    </div>
-  </section>`;
-}
-
-// Biểu đồ điểm chính xác theo thời gian, đường nét đứt = vạch đích
-function climbChart(key, l){
-  if (l.score == null) return '';
-  const W = 320, H = 130, top = 22, bot = 10, sx = W - 30;
-  let pts = series(key).slice(-168);
-  const s = (DATA.stores || {})[key] || {};
-  if (!pts.length || pts[pts.length - 1].v !== l.score) pts.push({ t: Date.now(), v: l.score });
-  if (pts.length < 2) pts.unshift({ t: pts[0].t - 3600e3, v: pts[0].v });
-  const vs = pts.map(p => p.v);
-  const lo = Math.min(l.from, ...vs) - 0.01, hi = Math.max(l.to, ...vs) + 0.01;
-  const y = v => top + (1 - (Math.max(lo, Math.min(hi, v)) - lo) / (hi - lo)) * (H - top - bot);
-  const endX = l.done ? sx : Math.max(70, Math.min(sx - 36, 70 + l.frac * (sx - 106)));
-  const t0 = pts[0].t, t1 = pts[pts.length - 1].t;
-  const x = tt => 6 + (tt - t0) / Math.max(1, t1 - t0) * (endX - 6);
-  const line = pts.map((p, i) => `${i ? 'L' : 'M'}${x(p.t).toFixed(1)},${y(p.v).toFixed(1)}`).join('');
-  const cx = endX, cy = y(l.score), py = y(l.to), mid = (cx + sx) / 2;
-  const left = (cx / W * 100).toFixed(2), topPct = (cy / H * 100).toFixed(2);
-  return `<div class="climb">
-    <div class="climb-head"><span class="live"><i></i>LIVE</span><span>Vạch đích <b>${vn2(l.to)}★</b></span></div>
-    <div class="climb-box">
-      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Điểm ${esc(CFG.stores[key].label)} theo thời gian, vạch đích ${vn2(l.to)} sao">
-        <defs><linearGradient id="g-${key}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--acc)" stop-opacity=".4"/><stop offset="1" stop-color="var(--acc)" stop-opacity=".03"/></linearGradient></defs>
-        <line x1="0" x2="${W}" y1="${py}" y2="${py}" stroke="var(--acc)" stroke-dasharray="3 4" stroke-width="1" opacity=".6"/>
-        <path d="${line} L${cx},${H} L6,${H} Z" fill="url(#g-${key})"/>
-        <path d="${line}" fill="none" stroke="var(--acc)" stroke-width="2.4" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
-        ${l.done ? '' : `<path d="M${cx},${cy} Q${mid},${(cy + py) / 2 + 6} ${sx},${py}" fill="none" stroke="var(--acc)" stroke-width="1.6" stroke-dasharray="2 5" stroke-linecap="round" opacity=".8" vector-effect="non-scaling-stroke"/>`}
-        <g transform="translate(${sx},${py})"><line x1="0" y1="0" x2="0" y2="-20" stroke="var(--acc-deep)" stroke-width="1.6"/><path d="M0,-20 L15,-15 L0,-10 Z" fill="var(--gold)"/><circle r="3.5" fill="var(--acc-deep)"/></g>
-      </svg>
-      <span class="pulse" style="left:${left}%;top:${topPct}%"></span>
-    </div>
-    <div class="climb-foot"><span>Hiện tại <b>${vn3(l.score)}</b></span><span>${pts.length > 2 ? `Từ ${fmtDT(t0)}` : ''}</span></div>
-  </div>`;
+  el.querySelectorAll('.tab').forEach(b => b.onclick = () => select(b.id.slice(4)));
 }
 
 let PROOF_SIG = null;

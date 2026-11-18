@@ -152,18 +152,17 @@ main > section.sec:first-child{padding-top:0}
 .steps .kc{font-weight:800;color:var(--pink-mid)}
 
 /* ---------- Cảm ơn + nút nộp minh chứng (ảnh Nikki + Mumu) ---------- */
-.proof{position:relative;overflow:hidden;background:#fff;border-radius:22px;border:1.5px solid var(--line);box-shadow:var(--shadow);padding:0 16px 20px;text-align:center}
-.proof-art{display:block;width:calc(100% + 32px);max-width:none;height:auto;margin:0 -16px -22px;
-  -webkit-mask-image:linear-gradient(180deg,#000 72%,transparent);mask-image:linear-gradient(180deg,#000 72%,transparent)}
-.proof h2{position:relative;margin:0 0 8px;font-family:var(--title);font-weight:400;font-size:30px;line-height:1.1;color:var(--pink-mid)}
-.thanks{margin:0 4px 18px;font-size:15.5px;line-height:1.6;color:var(--ink)}
+.proof{text-align:center;padding-top:34px}
+/* Tiêu đề "Cảm ơn các Star!" dạng ruy băng như dòng "Gửi tâm thư cho Ngôi Sao Thời Trang" */
+.proof h2.ribbon.big{margin:0 auto 14px;padding:6px 34px 5px;font-family:var(--body);font-size:19px;font-weight:700;line-height:1.3}
+.thanks{margin:0 8px 20px;font-size:15.5px;line-height:1.6;color:var(--ink)}
 .thanks b{font-weight:700;color:var(--pink-deep)}
 .proof .btn{display:inline-block;font-family:var(--body);font-size:18px;font-weight:800;line-height:1;color:#fff;text-decoration:none;
   padding:13px 40px 11px;border-radius:999px;background:linear-gradient(180deg,#ff9cc6,var(--pink-mid) 55%,var(--pink-deep));
   box-shadow:0 0 0 3px #fff,0 0 0 5px #ffc2dc,0 12px 22px -8px rgba(160,30,90,.6)}
 .proof .btn:active{transform:scale(.97)}
 .proof .soon{display:inline-block;font-weight:700;font-size:15px;color:var(--pink-deep);background:#fff;padding:8px 18px;border-radius:999px;box-shadow:0 0 0 3px #ffc2dc}
-footer{margin-top:30px}
+.footer-art{display:block;width:100%;height:auto;margin:22px 0 -1px;position:relative;z-index:1;pointer-events:none}
 
 footer{background:#4a2a12;color:#fff;text-align:center;padding:24px 16px 28px}
 footer img{width:150px;height:auto;margin:0 auto 12px}
@@ -207,15 +206,15 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
       </ol>
     </section>
 
-    <section class="sec" aria-labelledby="thanks-h">
-      <div class="proof" id="nop-minh-chung">
-        <img class="proof-art" src="assets/nikki-mumu-wow.png" alt="" width="640" height="400">
-        <h2 id="thanks-h">Cảm ơn các Star!</h2>
-        <p class="thanks">Mỗi bức tâm thư của các Star đều giúp <b>Ngôi Sao Thời Trang</b> thêm lấp lánh. Gửi xong đánh giá thì nộp minh chứng để Mumu ghi nhận nhé ~</p>
-        <div id="proof-cta"></div>
-      </div>
+    <section class="sec proof" id="nop-minh-chung" aria-labelledby="thanks-h">
+      <h2 id="thanks-h" class="ribbon big">Cảm ơn các Star!</h2>
+      <p class="thanks">Mỗi bức tâm thư của các Star đều giúp <b>Ngôi Sao Thời Trang</b> thêm lấp lánh. Gửi xong đánh giá thì nộp minh chứng để Mumu ghi nhận nhé ~</p>
+      <div id="proof-cta"></div>
     </section>
   </main>
+
+  <!-- Nikki + Mumu (đã tách nền) ngồi trên mép footer -->
+  <img class="footer-art" src="assets/nikki-mumu-wow.png" alt="" width="640" height="400">
 
   <footer>
     <img src="assets/vnggames-logo.png" alt="VNGGames" width="184" height="40">

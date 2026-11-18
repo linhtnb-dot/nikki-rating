@@ -134,7 +134,8 @@ main{padding:14px 12px 24px}
 
 /* ---------- Nộp minh chứng ---------- */
 .proof h2{color:var(--pink-deep)}
-.proof h2{margin-bottom:12px}
+.proof h2{margin-bottom:8px}
+.thanks{margin:0 4px 14px;text-align:center;font-size:15px;line-height:1.6;color:var(--ink)}
 .form-box{border-radius:16px;overflow:hidden;border:1.5px solid var(--line);background:#fff}
 .form-box iframe{display:block;width:100%;height:1100px;border:0}
 .form-soon{text-align:center;padding:22px 14px;border-radius:16px;border:1.5px dashed var(--line);background:#fffafc;color:var(--muted);font-size:14px;line-height:1.5}
@@ -300,7 +301,7 @@ function renderRace(){
   };
 
   const el = document.getElementById('race');
-  el.innerHTML = `<h2 id="race-h">Đường đua về đích</h2>
+  el.innerHTML = `<h2 id="race-h">Cập nhật đường đua</h2>
     ${done ? `<span class="status done">Đã về đích · ${fmtDT(done.openedAt)}</span>` : ''}
     <div class="tabs" role="tablist">${tabs}</div>
     ${keys.map(panel).join('')}`;
@@ -317,9 +318,10 @@ function renderProof(){
   let form;
   if (f.embedUrl) form = `<div class="form-box"><iframe src="${esc(f.embedUrl)}" title="Form nộp minh chứng" loading="lazy">Đang tải form…</iframe></div>
     ${f.url ? `<a class="btn" href="${esc(f.url)}" target="_blank" rel="noopener">Mở form trong tab mới</a>` : ''}`;
-  else if (f.url) form = `<a class="btn" href="${esc(f.url)}" target="_blank" rel="noopener">Đi tới form nộp minh chứng</a>`;
+  else if (f.url) form = `<a class="btn" href="${esc(f.url)}" target="_blank" rel="noopener">Nộp minh chứng</a>`;
   else form = `<div class="form-soon"><b>Form sắp mở</b>Theo dõi fanpage để nhận thông báo khi form nộp minh chứng mở nhé.</div>`;
-  document.getElementById('nop-minh-chung').innerHTML = `<img class="proof-art" src="assets/nikki-mumu-wow.png" alt="" width="640" height="400"><h2 id="proof-h">Nộp minh chứng</h2>
+  document.getElementById('nop-minh-chung').innerHTML = `<img class="proof-art" src="assets/nikki-mumu-wow.png" alt="" width="640" height="400"><h2 id="proof-h">Cảm ơn các Star!</h2>
+    <p class="thanks">Mỗi bức tâm thư của các Star đều giúp Ngôi Sao Thời Trang thêm lấp lánh. Gửi xong đánh giá thì nộp minh chứng để Mumu ghi nhận tấm lòng của các Star nhé!</p>
     ${form}`;
 }
 

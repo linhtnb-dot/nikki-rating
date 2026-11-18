@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffe3ee">
 <title>Đường Đua · Tổng đài Mumu · Nikki: Ngôi Sao Thời Trang</title>
-<meta name="description" content="Nhiệm vụ #1 của Tổng đài Mumu: theo dõi điểm đánh giá Ngôi Sao Thời Trang trên App Store và Google Play theo thời gian thực. Cả hai cùng về đích thì mở quỹ quà 5.000 slot.">
+<meta name="description" content="Nhiệm vụ #1 của Tổng đài Mumu: theo dõi điểm đánh giá Ngôi Sao Thời Trang trên App Store và Google Play theo thời gian thực, cùng đưa game về đích.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Đường Đua · Nhiệm vụ #1 của Tổng đài Mumu">
-<meta property="og:description" content="App Store 3,8★ và Google Play 3,3★: cả hai cùng về đích thì mở quỹ quà 5.000 slot. Xem tiến độ theo thời gian thực.">
+<meta property="og:description" content="Đường đua về đích: App Store 3,8★ và Google Play 3,3★. Xem tiến độ theo thời gian thực.">
 <meta property="og:image" content="https://linhtnb-dot.github.io/nikki-rating/assets/hero-bg.jpg">
 <meta property="og:url" content="https://linhtnb-dot.github.io/nikki-rating/">
 <meta name="twitter:card" content="summary_large_image">
@@ -106,19 +106,11 @@ main{padding:4px 12px 24px}
 .lane-foot b{color:var(--acc-deep)}
 .lane.done .lane-foot b{color:var(--mint-deep)}
 
-/* ---------- Quỹ quà ---------- */
-.prize{border-color:#f6e2b8;background:linear-gradient(180deg,#fff 0,#fffaf0 100%);text-align:center;overflow:hidden;padding-top:0}
-.prize-art{display:block;width:calc(100% + 28px);max-width:none;height:auto;margin:0 -14px -18px;
+/* Ảnh Nikki + Mumu đầu khu nộp minh chứng */
+.proof{overflow:hidden;padding-top:0}
+.proof-art{display:block;width:calc(100% + 28px);max-width:none;height:auto;margin:0 -14px -18px;
   -webkit-mask-image:linear-gradient(180deg,#000 72%,transparent);mask-image:linear-gradient(180deg,#000 72%,transparent)}
-.prize h2{position:relative}
-.prize h2{color:var(--gold-deep)}
-.prize .big{font-family:var(--num);font-size:56px;line-height:1;color:var(--gold-deep);margin:6px 0 0}
-.prize .big small{font-family:"Beaufort",Georgia,serif;font-size:18px;font-weight:700;margin-left:4px}
-.prize .by{font-size:13px;font-weight:600;color:var(--muted);margin:4px 0 10px}
-.lock{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;padding:4px 12px;border-radius:999px;background:#f5efe4;color:var(--muted)}
-.lock svg{width:13px;height:13px}
-.lock.open{background:#dff6ec;color:var(--mint-deep)}
-.prize p{margin:10px 0 0;font-size:13px;line-height:1.5;color:var(--muted)}
+.proof h2{position:relative}
 
 /* ---------- Thẻ từng store ---------- */
 .store{--acc:var(--pink);--acc-deep:var(--pink-deep);--acc-soft:var(--pink-soft);background:linear-gradient(180deg,#fff 0%,#fff9fc 100%)}
@@ -172,8 +164,6 @@ main{padding:4px 12px 24px}
 .btn:active{transform:scale(.98)}
 .jump{display:block;width:max-content;margin:14px auto 0;font-size:14px;font-weight:700;color:#fff;text-decoration:none;padding:10px 20px;border-radius:999px;background:linear-gradient(180deg,var(--pink),var(--pink-deep));box-shadow:0 10px 20px -10px rgba(214,63,126,.8)}
 
-.rules{margin:14px 4px 0;font-size:12px;line-height:1.55;color:var(--muted)}
-.rules b{color:var(--ink)}
 
 footer{margin-top:28px;background:#4a2a12;color:#fff;text-align:center;padding:24px 16px 28px}
 footer img{width:150px;height:auto;margin:0 auto 12px}
@@ -208,10 +198,8 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
 
   <main>
     <section class="block race" id="race" aria-labelledby="race-h"></section>
-    <section class="block prize" id="prize"></section>
     <div id="stores"></div>
     <section class="block proof" id="nop-minh-chung" aria-labelledby="proof-h"></section>
-    <p class="rules" id="rules"></p>
   </main>
 
   <footer>
@@ -295,11 +283,9 @@ function render(){
   document.getElementById('sample').hidden = !DATA.sample;
   document.getElementById('updated').textContent = DATA.updatedAt ? `Cập nhật lần cuối ${fmtDT(DATA.updatedAt)}` : 'Chưa có số liệu';
   renderRace();
-  renderPrize();
   const box = document.getElementById('stores');
   box.innerHTML = KEYS.filter(k => CFG.stores[k]).map(storeCard).join('');
   renderProof();
-  document.getElementById('rules').innerHTML = `<b>Cách tính:</b> Điểm lấy tự động mỗi giờ từ App Store (Việt Nam) và Google Play. Một làn được tính là <b>về đích</b> khi điểm chính xác (chưa làm tròn) đạt từ vạch đích trở lên trong ${needRuns()} lần cập nhật liên tiếp. Nhiệm vụ #1 hoàn thành khi cả hai làn đã về đích.`;
 }
 
 function renderRace(){
@@ -333,19 +319,6 @@ function renderRace(){
     <span class="status ${cls}">${esc(status)}</span>
     ${legs.map(lane).join('')}
     <a class="jump" href="#nop-minh-chung">Nộp minh chứng</a>`;
-}
-
-function renderPrize(){
-  const r = CFG.reward || {}, done = missionDone();
-  const lockIcon = done
-    ? '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5" fill="currentColor"/><path d="M8 11V8a4 4 0 0 1 7.6-1.7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>'
-    : '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5" fill="currentColor"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>';
-  const m = mission();
-  document.getElementById('prize').innerHTML = `<img class="prize-art" src="assets/nikki-mumu-wow.png" alt="" width="640" height="400"><h2>${esc(r.title || 'Quỹ quà')}</h2>
-    <div class="big">${r.slots ? fmt.format(r.slots) : '—'}<small>slot</small></div>
-    <div class="by">${esc(r.sponsor || '')}</div>
-    <span class="lock ${done ? 'open' : ''}">${lockIcon}${done ? 'Đã mở' : `Mở khi App Store ${vn1(m.ios)}★ + Google Play ${vn1(m.android)}★`}</span>
-    ${r.note ? `<p>${esc(r.note)}</p>` : ''}`;
 }
 
 function storeCard(key){
@@ -431,8 +404,8 @@ function renderProof(){
     ${f.url ? `<a class="btn" href="${esc(f.url)}" target="_blank" rel="noopener">Mở form trong tab mới</a>` : ''}`;
   else if (f.url) form = `<a class="btn" href="${esc(f.url)}" target="_blank" rel="noopener">Mở form nộp minh chứng</a>`;
   else form = `<div class="form-soon"><b>Form sắp mở</b>Theo dõi fanpage để nhận thông báo khi form nộp minh chứng mở nhé.</div>`;
-  document.getElementById('nop-minh-chung').innerHTML = `<h2 id="proof-h">Nộp minh chứng</h2>
-    <p class="lead">Ba bước để góp sức cho Đường Đua và có tên trong danh sách nhận quà.</p>
+  document.getElementById('nop-minh-chung').innerHTML = `<img class="proof-art" src="assets/nikki-mumu-wow.png" alt="" width="640" height="400"><h2 id="proof-h">Nộp minh chứng</h2>
+    <p class="lead">Ba bước để góp sức đưa Ngôi Sao Thời Trang về đích.</p>
     <ol class="steps">
       <li><div>Cập nhật bản mới, chơi thử rồi <b>để lại đánh giá và cảm nhận thật</b> về patch mới trên store.<div class="store-links">${links}</div></div></li>
       <li><div><b>Chụp màn hình</b> đánh giá đã đăng, thấy rõ tên tài khoản và nội dung.</div></li>

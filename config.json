@@ -2,17 +2,11 @@
   "campaign": {
     "eyebrow": "Tổng đài Mumu · Nhiệm vụ #1",
     "name": "Đường Đua",
-    "subtitle": "Nhiệm vụ #1: đưa Ngôi Sao Thời Trang về đích trên cả App Store và Google Play. Hai làn cùng về đích là quỹ quà 5.000 slot mở cho các vợ!"
+    "subtitle": "Nhiệm vụ #1: đưa Ngôi Sao Thời Trang về đích trên cả App Store và Google Play. Cùng góp sức nào các vợ ơi!"
   },
   "rule": {
     "confirmRuns": 2,
     "note": "Không có thời hạn. Một store được tính là về đích khi điểm chính xác >= đúng vạch đích trong confirmRuns lần cập nhật liên tiếp. Nhiệm vụ #1 hoàn thành khi cả App Store và Google Play đã về đích."
-  },
-  "reward": {
-    "title": "Quỹ quà về đích",
-    "slots": 5000,
-    "sponsor": "Do đối tác tài trợ",
-    "note": "Mở khi cả App Store và Google Play cùng về đích. Quà dành cho các vợ đã nộp minh chứng hợp lệ."
   },
   "proofForm": {
     "url": "",

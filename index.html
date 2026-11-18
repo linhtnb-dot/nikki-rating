@@ -60,21 +60,21 @@ a{color:inherit}
 .intro{position:relative;z-index:2;margin-top:-34px;padding:0 16px 4px;text-align:center}
 .eyebrow{display:inline-flex;align-items:center;gap:6px;font-family:var(--deco);font-size:16px;line-height:1;color:var(--gold-deep);
   background:linear-gradient(180deg,#fffdf6,#fff4dc);border:1.5px solid #f3d998;border-radius:999px;padding:6px 14px;box-shadow:0 8px 18px -10px rgba(183,128,26,.55),inset 0 0 0 2px #fff}
-h1{font-family:var(--title);font-weight:400;font-size:40px;line-height:1.05;margin:8px 0 4px;color:var(--pink-deep);text-shadow:0 2px 0 #fff}
-/* Mumu trực tổng đài + bong bóng thoại */
-.host{display:flex;align-items:flex-end;gap:4px;margin:6px -4px 8px;text-align:left}
-.host img{flex:none;width:92px;height:auto;margin:0 0 -2px -2px;filter:drop-shadow(0 6px 8px rgba(120,60,20,.18))}
-.bubble{position:relative;flex:1;margin-bottom:30px;background:#fff;border:1.5px solid var(--line);border-radius:18px 18px 18px 4px;padding:10px 12px;font-size:14px;line-height:1.5;color:var(--muted);box-shadow:var(--shadow)}
+h1{font-family:var(--title);font-weight:400;font-size:42px;line-height:1.05;margin:14px 0 18px;color:var(--pink-deep);text-shadow:0 2px 0 #fff}
+/* Mumu + bong bóng thoại */
+.host{display:flex;align-items:flex-end;gap:10px;margin:0 0 22px;text-align:left}
+.host img{flex:none;width:100px;height:auto;margin:0 0 -2px -4px;filter:drop-shadow(0 6px 8px rgba(120,60,20,.18))}
+.bubble{position:relative;flex:1;margin-bottom:40px;background:#fff;border:1.5px solid var(--line);border-radius:20px 20px 20px 4px;padding:14px 16px;font-size:15px;line-height:1.6;color:var(--ink);box-shadow:var(--shadow)}
 .bubble:before{content:"";position:absolute;left:-9px;bottom:10px;width:14px;height:14px;background:#fff;border-left:1.5px solid var(--line);border-bottom:1.5px solid var(--line);transform:skewY(-35deg) rotate(10deg)}
-.bubble b{display:block;font-family:var(--deco);font-weight:400;font-size:18px;line-height:1.2;color:var(--pink-deep);margin-bottom:2px}
+.bubble b{display:block;font-family:var(--deco);font-weight:400;font-size:20px;line-height:1.2;color:var(--pink-deep);margin-bottom:8px}
 .chip{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--pink-deep);
   background:#fff;border:1px solid var(--line);padding:5px 14px;border-radius:999px;box-shadow:var(--shadow)}
 .chip i{width:8px;height:8px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 4px rgba(47,184,137,.18);animation:blink 2s ease-in-out infinite}
 @keyframes blink{50%{opacity:.35}}
 .notice{margin:10px 0 0;text-align:center;font-size:14px;color:var(--muted);background:#fff;border:1px dashed var(--line);border-radius:12px;padding:8px 12px}
 
-main{padding:4px 12px 24px}
-.block{position:relative;margin-top:14px;background:#fff;border-radius:22px;padding:16px 14px;box-shadow:var(--shadow);border:1.5px solid var(--line)}
+main{padding:14px 12px 24px}
+.block{position:relative;margin-top:20px;background:#fff;border-radius:22px;padding:16px 14px;box-shadow:var(--shadow);border:1.5px solid var(--line)}
 .block h2{font-family:var(--title);font-weight:400;font-size:26px;margin:0;color:var(--pink-deep);text-align:center;line-height:1.1}
 .block .lead{text-align:center;font-size:13px;color:var(--muted);margin:2px 0 12px;line-height:1.45}
 
@@ -110,10 +110,9 @@ main{padding:4px 12px 24px}
 .proof h2{position:relative}
 
 /* ---------- 2 tab store ---------- */
-.tabs{display:flex;gap:6px;margin:0 0 10px;padding:5px;background:#fff;border:1px solid var(--line);border-radius:999px;box-shadow:var(--shadow)}
-.tab{position:relative;flex:1;border:0;background:transparent;cursor:pointer;padding:9px 6px;border-radius:999px;font-size:15px;font-weight:700;color:var(--muted);
+.tabs{display:flex;gap:6px;margin:14px 0 14px;padding:5px;background:#fff;border:1px solid var(--line);border-radius:999px;box-shadow:var(--shadow)}
+.tab{position:relative;flex:1;border:0;background:transparent;cursor:pointer;padding:11px 6px;border-radius:999px;font-size:16px;font-weight:700;color:var(--muted);
   display:flex;align-items:baseline;justify-content:center;gap:6px;transition:background .2s,color .2s;-webkit-tap-highlight-color:transparent}
-.tab small{font-size:14px;font-weight:600;opacity:.9}
 .tab[aria-selected="true"]{color:#fff;background:var(--acc)}
 .tab.ios{--acc:var(--pink)} .tab.android{--acc:var(--lilac)}
 .tab:focus{outline:none}.tab:focus-visible{box-shadow:0 0 0 2px var(--acc)}
@@ -262,10 +261,7 @@ function renderRace(){
   const legs = Object.fromEntries(keys.map(k => [k, leg(k)]));
   const done = missionDone();
 
-  const tabs = keys.map(k => {
-    const s = (DATA.stores || {})[k] || {};
-    return `<button class="tab ${k}" role="tab" id="tab-${k}" aria-controls="panel-${k}" aria-selected="${k === ACTIVE}">${esc(CFG.stores[k].label)}<small>${s.display != null ? vn1(s.display) + '★' : ''}</small></button>`;
-  }).join('');
+  const tabs = keys.map(k => `<button class="tab ${k}" role="tab" id="tab-${k}" aria-controls="panel-${k}" aria-selected="${k === ACTIVE}">${esc(CFG.stores[k].label)}</button>`).join('');
 
   const panel = k => {
     const cfg = CFG.stores[k], s = (DATA.stores || {})[k] || {}, l = legs[k];
@@ -321,7 +317,7 @@ function renderProof(){
   let form;
   if (f.embedUrl) form = `<div class="form-box"><iframe src="${esc(f.embedUrl)}" title="Form nộp minh chứng" loading="lazy">Đang tải form…</iframe></div>
     ${f.url ? `<a class="btn" href="${esc(f.url)}" target="_blank" rel="noopener">Mở form trong tab mới</a>` : ''}`;
-  else if (f.url) form = `<a class="btn" href="${esc(f.url)}" target="_blank" rel="noopener">Mở form nộp minh chứng</a>`;
+  else if (f.url) form = `<a class="btn" href="${esc(f.url)}" target="_blank" rel="noopener">Đi tới form nộp minh chứng</a>`;
   else form = `<div class="form-soon"><b>Form sắp mở</b>Theo dõi fanpage để nhận thông báo khi form nộp minh chứng mở nhé.</div>`;
   document.getElementById('nop-minh-chung').innerHTML = `<img class="proof-art" src="assets/nikki-mumu-wow.png" alt="" width="640" height="400"><h2 id="proof-h">Nộp minh chứng</h2>
     ${form}`;

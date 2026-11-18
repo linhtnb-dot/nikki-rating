@@ -9,7 +9,7 @@
     "note": "Không có thời hạn. Một store được tính là về đích khi điểm chính xác >= đúng vạch đích trong confirmRuns lần cập nhật liên tiếp. Nhiệm vụ #1 hoàn thành khi cả App Store và Google Play đã về đích."
   },
   "proofForm": {
-    "url": "",
+    "url": "https://forms.gle/rfD9BsJjJM8cUSAv8",
     "embedUrl": "",
     "note": "Điền link form vào url (link mở tab mới) và embedUrl (link nhúng, ví dụ Google Form có ?embedded=true). Để trống thì trang hiện 'Form sắp mở'."
   },

@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#ffe3ee">
-<title>Đường Đua · Nhiệm vụ hệ thống của Mumu #1 · Nikki: Ngôi Sao Thời Trang</title>
+<title>Đường Đua Lấp Lánh · Nhiệm vụ hệ thống của Mumu #1 · Nikki: Ngôi Sao Thời Trang</title>
 <meta name="description" content="Nhiệm vụ hệ thống của Mumu #1: theo dõi điểm đánh giá Ngôi Sao Thời Trang trên App Store và Google Play theo thời gian thực, cùng đưa game về đích.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Đường Đua · Nhiệm vụ hệ thống của Mumu #1">
+<meta property="og:title" content="Đường Đua Lấp Lánh · Nhiệm vụ hệ thống của Mumu #1">
 <meta property="og:description" content="Đường đua về đích: App Store 3,8★ và Google Play 3,3★. Xem tiến độ theo thời gian thực.">
 <meta property="og:image" content="https://linhtnb-dot.github.io/nikki-rating/assets/hero-bg.jpg">
 <meta property="og:url" content="https://linhtnb-dot.github.io/nikki-rating/">
@@ -60,7 +60,7 @@ a{color:inherit}
 .intro{position:relative;z-index:2;margin-top:-34px;padding:0 16px 4px;text-align:center}
 .eyebrow{display:inline-flex;align-items:center;gap:6px;font-family:var(--deco);font-size:16px;line-height:1;color:var(--gold-deep);
   background:linear-gradient(180deg,#fffdf6,#fff4dc);border:1.5px solid #f3d998;border-radius:999px;padding:6px 14px;box-shadow:0 8px 18px -10px rgba(183,128,26,.55),inset 0 0 0 2px #fff}
-h1{font-family:var(--title);font-weight:400;font-size:42px;line-height:1.05;margin:14px 0 18px;color:var(--pink-deep);text-shadow:0 2px 0 #fff}
+h1{font-family:var(--title);font-weight:400;font-size:42px;line-height:1.05;margin:14px 0 18px;color:var(--pink-deep);text-shadow:0 2px 0 #fff;text-wrap:balance}
 /* Mumu + bong bóng thoại */
 .host{display:flex;align-items:flex-end;gap:10px;margin:0 0 22px;text-align:left}
 .host img{flex:none;width:100px;height:auto;margin:0 0 -2px -4px;filter:drop-shadow(0 6px 8px rgba(120,60,20,.18))}
@@ -165,7 +165,7 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
   </section>
   <div class="intro">
     <span class="eyebrow" id="eyebrow">NHIỆM VỤ HỆ THỐNG CỦA MUMU #1</span>
-    <h1 id="title">Đường Đua</h1>
+    <h1 id="title">Đường Đua Lấp Lánh</h1>
     <div class="host">
       <img src="assets/mumu-host.png" alt="Mumu" width="360" height="678">
       <div class="bubble"><b>Mumu xin nghe!</b><span id="subtitle"></span></div>
@@ -246,7 +246,7 @@ function select(key){
 function render(){
   const c = CFG.campaign || {};
   document.getElementById('eyebrow').textContent = c.eyebrow || '';
-  document.getElementById('title').textContent = c.name || 'Đường Đua';
+  document.getElementById('title').textContent = c.name || 'Đường Đua Lấp Lánh';
   document.getElementById('subtitle').textContent = c.subtitle || '';
   document.getElementById('sample').hidden = !DATA.sample;
   document.getElementById('updated').textContent = DATA.updatedAt ? `Cập nhật lần cuối ${fmtDT(DATA.updatedAt)}` : 'Chưa có số liệu';

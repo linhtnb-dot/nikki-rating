@@ -6,7 +6,7 @@
 # Rule (cấu hình trong config.json):
 # - Mốc được chốt khi điểm CHÍNH XÁC (score, không làm tròn) >= đúng số mốc, ví dụ >= 3.80, trong rule.confirmRuns lần cập nhật liên tiếp,
 #   (iOS: averageUserRating của Apple; Android: điểm chính xác Google nhúng trong trang Play, dự phòng = trung bình theo số lượt từng mức sao)
-#   chỉ tính các lần cập nhật nằm trong thời gian chiến dịch. Lần lấy điểm bị lỗi không tính và không làm đứt chuỗi.
+#   chỉ tính các lần cập nhật nằm trong thời gian chiến dịch (không khai báo start/end = không giới hạn). Lần lấy điểm bị lỗi không tính và không làm đứt chuỗi.
 # - Đã chốt thì không thu hồi.
 # - Nhiệm vụ n (config.tiers[n]) hoàn thành khi cả mốc iOS và mốc Android của nhiệm vụ đó đã chốt; nhiệm vụ mở lần lượt.
 # - Đích Toả Sáng: đạt khi cả hai OS đã chốt mốc finish.
@@ -100,8 +100,9 @@ foreach ($key in 'ios', 'android') {
 }
 
 # ---------- Trạng thái chốt mốc (đọc lại từ file cũ) ----------
-$start = [DateTimeOffset]::Parse($cfg.campaign.start, $inv)
-$end = [DateTimeOffset]::Parse($cfg.campaign.end, $inv)
+# Không khai báo campaign.start / campaign.end = không giới hạn thời gian (landing evergreen)
+$start = if ($cfg.campaign.start) { [DateTimeOffset]::Parse($cfg.campaign.start, $inv) } else { [DateTimeOffset]::MinValue }
+$end = if ($cfg.campaign.end) { [DateTimeOffset]::Parse($cfg.campaign.end, $inv) } else { [DateTimeOffset]::MaxValue }
 $inWindow = ($nowDto -ge $start) -and ($nowDto -le $end)
 $needRuns = if ($cfg.rule -and $cfg.rule.confirmRuns) { [int]$cfg.rule.confirmRuns } else { 2 }
 $tierTotal = @($cfg.tiers).Count

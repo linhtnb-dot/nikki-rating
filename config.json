@@ -1,40 +1,23 @@
 {
   "campaign": {
-    "name": "Hành Trình Toả Sáng",
-    "subtitle": "Theo dõi điểm đánh giá của Ngôi Sao Thời Trang trên App Store và Google Play. Mỗi mốc điểm được chốt sẽ mở thêm một bậc trong thang quà chung của toàn server.",
-    "start": "2026-11-10T00:00:00+07:00",
-    "end": "2026-12-31T23:59:59+07:00"
-  },
-  "system": {
-    "name": "Nhiệm vụ hệ thống của Mumu",
-    "note": "Mỗi nhiệm vụ (tiers) cần CẢ iOS đạt tiers[n].ios VÀ Android đạt tiers[n].android; xong thì cả server nhận quà của nhiệm vụ đó. Nhiệm vụ mở lần lượt."
+    "eyebrow": "Tổng đài Mumu · Nhiệm vụ #1",
+    "name": "Đường Đua",
+    "subtitle": "Nhiệm vụ #1: đưa Ngôi Sao Thời Trang về đích trên cả App Store và Google Play. Hai làn cùng về đích là quỹ quà 5.000 slot mở cho các vợ!"
   },
   "rule": {
     "confirmRuns": 2,
-    "note": "Mốc của từng store được chốt khi điểm chính xác >= đúng số mốc trong confirmRuns lần cập nhật liên tiếp, trong thời gian chiến dịch. Nhiệm vụ hoàn thành khi cả mốc iOS và mốc Android của nó đã chốt."
+    "note": "Không có thời hạn. Một store được tính là về đích khi điểm chính xác >= đúng vạch đích trong confirmRuns lần cập nhật liên tiếp. Nhiệm vụ #1 hoàn thành khi cả App Store và Google Play đã về đích."
   },
-  "planning": {
-    "note": "Bảng mốc do team chốt ngày 06/11/2026. Số lượt cần thêm là ước tính của team, chỉ để tham khảo.",
-    "effort": {
-      "ios:3.8": "1.300 lượt",
-      "android:3.3": "8.500 lượt",
-      "ios:4.0": "7.600 lượt",
-      "android:3.5": "48.000 lượt",
-      "ios:4.2": "17.000 lượt",
-      "android:3.7": "99.000 lượt",
-      "ios:4.4": "32.000 lượt",
-      "android:4.0": "168.000 lượt",
-      "ios:4.5": "44.000 lượt",
-      "android:4.3": "332.000 lượt"
-    }
+  "reward": {
+    "title": "Quỹ quà về đích",
+    "slots": 5000,
+    "sponsor": "Do đối tác tài trợ",
+    "note": "Mở khi cả App Store và Google Play cùng về đích. Quà dành cho các vợ đã nộp minh chứng hợp lệ."
   },
-  "items": {
-    "kim-cuong": { "name": "Kim Cương", "img": "assets/rewards/kim-cuong.png" },
-    "vang": { "name": "Vàng", "img": "assets/rewards/vang.png" },
-    "tim": { "name": "Tim", "img": "assets/rewards/tim.png" },
-    "tien-hoi": { "name": "Tiền Hội", "img": "assets/rewards/tien-hoi.png" },
-    "ve-phong-mo": { "name": "Vé Phòng Mộng Mơ", "img": "assets/rewards/ve-lau-mo.png" },
-    "the-cong-chua": { "name": "Thẻ Công Chúa", "img": "assets/rewards/ve-reset-cong-chua.png" }
+  "proofForm": {
+    "url": "",
+    "embedUrl": "",
+    "note": "Điền link form vào url (link mở tab mới) và embedUrl (link nhúng, ví dụ Google Form có ?embedded=true). Để trống thì trang hiện 'Form sắp mở'."
   },
   "stores": {
     "ios": {
@@ -42,22 +25,22 @@
       "appId": "1051206681",
       "country": "vn",
       "url": "https://apps.apple.com/vn/app/id1051206681?see-all=reviews",
+      "reviewUrl": "https://apps.apple.com/vn/app/id1051206681?action=write-review",
       "baseline": 3.7,
-      "milestones": [3.8, 4.0, 4.2, 4.4, 4.5]
+      "progressFrom": 3.6,
+      "milestones": [3.8]
     },
     "android": {
       "label": "Google Play",
       "package": "com.vng.ngoisaothoitrang",
       "url": "https://play.google.com/store/apps/details?id=com.vng.ngoisaothoitrang&hl=vi",
+      "reviewUrl": "https://play.google.com/store/apps/details?id=com.vng.ngoisaothoitrang&hl=vi",
       "baseline": 3.2,
-      "milestones": [3.3, 3.5, 3.7, 4.0, 4.3]
+      "progressFrom": 3.1,
+      "milestones": [3.3]
     }
   },
   "tiers": [
-    { "tier": 1, "name": "Quà nhiệm vụ 1", "ios": 3.8, "android": 3.3, "rewards": [{ "item": "kim-cuong", "qty": 50 }] },
-    { "tier": 2, "name": "Quà nhiệm vụ 2", "ios": 4.0, "android": 3.5, "rewards": [{ "item": "tien-hoi", "qty": 50 }, { "item": "tim", "qty": 20 }, { "item": "vang", "qty": 8000 }] },
-    { "tier": 3, "name": "Quà nhiệm vụ 3", "ios": 4.2, "android": 3.7, "rewards": [{ "item": "tien-hoi", "qty": 100 }, { "item": "tim", "qty": 40 }, { "item": "vang", "qty": 15000 }] },
-    { "tier": 4, "name": "Quà nhiệm vụ 4", "ios": 4.4, "android": 4.0, "rewards": [{ "item": "kim-cuong", "qty": 10 }, { "item": "the-cong-chua", "qty": 2 }, { "item": "tim", "qty": 110 }, { "item": "vang", "qty": 30000 }] },
-    { "tier": 5, "name": "Quà nhiệm vụ 5", "ios": 4.5, "android": 4.3, "rewards": [{ "item": "kim-cuong", "qty": 40 }, { "item": "the-cong-chua", "qty": 4 }, { "item": "ve-phong-mo", "qty": 2 }, { "item": "vang", "qty": 40000 }] }
+    { "tier": 1, "name": "Nhiệm vụ #1 · Đường Đua", "ios": 3.8, "android": 3.3, "rewards": [] }
   ]
 }

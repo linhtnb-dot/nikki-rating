@@ -117,7 +117,6 @@ main{padding:4px 12px 24px}
 .tab[aria-selected="true"]{color:#fff;background:var(--acc)}
 .tab.ios{--acc:var(--pink)} .tab.android{--acc:var(--lilac)}
 .tab:focus{outline:none}.tab:focus-visible{box-shadow:0 0 0 2px var(--acc)}
-.lead-tag{position:absolute;top:-11px;right:8px;font-size:10px;font-weight:700;padding:1px 7px;border-radius:999px;background:var(--gold);color:#fff;border:1.5px solid #fff;white-space:nowrap}
 .panel{--acc:var(--pink);--acc-deep:var(--pink-deep);--acc-soft:var(--pink-soft);position:relative;border-radius:18px;padding:14px 12px 16px;background:linear-gradient(180deg,#fff 0%,#fff9fc 100%);border:1.5px solid var(--acc-soft)}
 .panel.android{--acc:var(--lilac);--acc-deep:var(--lilac-deep);--acc-soft:var(--lilac-soft)}
 .panel[hidden]{display:none}
@@ -136,20 +135,13 @@ main{padding:4px 12px 24px}
 
 /* ---------- Nộp minh chứng ---------- */
 .proof h2{color:var(--pink-deep)}
-.steps{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:8px;counter-reset:s}
-.steps li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:14px;background:#fffafc;border:1px solid #f1e0e8;font-size:14px;line-height:1.45;counter-increment:s}
-.steps li:before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;background:var(--pink);color:#fff}
-.steps b{color:var(--pink-deep)}
-.store-links{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-.store-links a{font-size:12px;font-weight:700;text-decoration:none;padding:3px 10px;border-radius:999px;background:var(--pink-soft);color:var(--pink-deep)}
-.store-links a.android{background:var(--lilac-soft);color:var(--lilac-deep)}
+.proof h2{margin-bottom:12px}
 .form-box{border-radius:16px;overflow:hidden;border:1.5px solid var(--line);background:#fff}
 .form-box iframe{display:block;width:100%;height:1100px;border:0}
 .form-soon{text-align:center;padding:22px 14px;border-radius:16px;border:1.5px dashed var(--line);background:#fffafc;color:var(--muted);font-size:14px;line-height:1.5}
 .form-soon b{display:block;font-family:var(--deco);font-size:20px;color:var(--pink-deep);margin-bottom:2px}
 .btn{display:block;text-align:center;margin-top:10px;padding:12px 16px;border-radius:999px;background:linear-gradient(180deg,var(--pink),var(--pink-deep));color:#fff;font-weight:700;text-decoration:none;box-shadow:0 10px 20px -10px rgba(214,63,126,.8)}
 .btn:active{transform:scale(.98)}
-.jump{display:block;width:max-content;margin:14px auto 0;font-size:14px;font-weight:700;color:#fff;text-decoration:none;padding:10px 20px;border-radius:999px;background:linear-gradient(180deg,var(--pink),var(--pink-deep));box-shadow:0 10px 20px -10px rgba(214,63,126,.8)}
 
 
 footer{margin-top:28px;background:#4a2a12;color:#fff;text-align:center;padding:24px 16px 28px}
@@ -268,19 +260,11 @@ function render(){
 function renderRace(){
   const keys = KEYS.filter(k => CFG.stores[k]);
   const legs = Object.fromEntries(keys.map(k => [k, leg(k)]));
-  const done = missionDone(), doneKeys = keys.filter(k => legs[k] && legs[k].done);
-  let status, cls = '', leader = null;
-  if (done) { status = `Đã về đích · ${fmtDT(done.openedAt)}`; cls = 'done'; }
-  else if (doneKeys.length === 1) { const o = keys.find(k => k !== doneKeys[0]); status = `${OS_NAME[doneKeys[0]]} đã về đích · chờ ${OS_NAME[o]}`; }
-  else if (keys.length === 2 && legs.ios && legs.android && legs.ios.score != null && legs.android.score != null) {
-    const diff = Math.round((legs.ios.frac - legs.android.frac) * 100);
-    leader = diff === 0 ? null : diff > 0 ? 'ios' : 'android';
-    status = leader ? `${OS_NAME[leader]} đang dẫn trước ${Math.abs(diff)}% chặng` : 'Hai làn đang ngang nhau';
-  } else status = 'Đang cập nhật';
+  const done = missionDone();
 
   const tabs = keys.map(k => {
     const s = (DATA.stores || {})[k] || {};
-    return `<button class="tab ${k}" role="tab" id="tab-${k}" aria-controls="panel-${k}" aria-selected="${k === ACTIVE}">${esc(CFG.stores[k].label)}<small>${s.display != null ? vn1(s.display) + '★' : ''}</small>${leader === k ? '<span class="lead-tag">Dẫn đầu</span>' : ''}</button>`;
+    return `<button class="tab ${k}" role="tab" id="tab-${k}" aria-controls="panel-${k}" aria-selected="${k === ACTIVE}">${esc(CFG.stores[k].label)}<small>${s.display != null ? vn1(s.display) + '★' : ''}</small></button>`;
   }).join('');
 
   const panel = k => {
@@ -321,10 +305,9 @@ function renderRace(){
 
   const el = document.getElementById('race');
   el.innerHTML = `<h2 id="race-h">Đường đua về đích</h2>
-    <span class="status ${cls}">${esc(status)}</span>
+    ${done ? `<span class="status done">Đã về đích · ${fmtDT(done.openedAt)}</span>` : ''}
     <div class="tabs" role="tablist">${tabs}</div>
-    ${keys.map(panel).join('')}
-    <a class="jump" href="#nop-minh-chung">Nộp minh chứng</a>`;
+    ${keys.map(panel).join('')}`;
   el.querySelectorAll('.tab').forEach(b => b.onclick = () => select(b.id.slice(4)));
 }
 
@@ -332,22 +315,15 @@ let PROOF_SIG = null;
 function renderProof(){
   const f = CFG.proofForm || {}, st = CFG.stores;
   // Chỉ dựng lại khi link form đổi, để không xoá form người dùng đang điền dở mỗi lần tự cập nhật số liệu
-  const sig = JSON.stringify([f.url, f.embedUrl, KEYS.map(k => st[k].reviewUrl || st[k].url)]);
+  const sig = JSON.stringify([f.url, f.embedUrl]);
   if (sig === PROOF_SIG) return;
   PROOF_SIG = sig;
-  const links = KEYS.map(k => `<a class="${k}" href="${esc(st[k].reviewUrl || st[k].url)}" target="_blank" rel="noopener">${esc(st[k].label)}</a>`).join('');
   let form;
   if (f.embedUrl) form = `<div class="form-box"><iframe src="${esc(f.embedUrl)}" title="Form nộp minh chứng" loading="lazy">Đang tải form…</iframe></div>
     ${f.url ? `<a class="btn" href="${esc(f.url)}" target="_blank" rel="noopener">Mở form trong tab mới</a>` : ''}`;
   else if (f.url) form = `<a class="btn" href="${esc(f.url)}" target="_blank" rel="noopener">Mở form nộp minh chứng</a>`;
   else form = `<div class="form-soon"><b>Form sắp mở</b>Theo dõi fanpage để nhận thông báo khi form nộp minh chứng mở nhé.</div>`;
   document.getElementById('nop-minh-chung').innerHTML = `<img class="proof-art" src="assets/nikki-mumu-wow.png" alt="" width="640" height="400"><h2 id="proof-h">Nộp minh chứng</h2>
-    <p class="lead">Ba bước để góp sức đưa Ngôi Sao Thời Trang về đích.</p>
-    <ol class="steps">
-      <li><div>Cập nhật bản mới, chơi thử rồi <b>để lại đánh giá và cảm nhận thật</b> về patch mới trên store.<div class="store-links">${links}</div></div></li>
-      <li><div><b>Chụp màn hình</b> đánh giá đã đăng, thấy rõ tên tài khoản và nội dung.</div></li>
-      <li><div><b>Điền form bên dưới</b> kèm ảnh chụp và ID nhân vật.</div></li>
-    </ol>
     ${form}`;
 }
 

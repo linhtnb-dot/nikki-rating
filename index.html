@@ -236,12 +236,12 @@ const vn2 = x => Number(x).toFixed(2).replace('.', ',');
 const vn3 = x => Number(x).toFixed(3).replace('.', ',');
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
+// Số liệu lấy từ config.dataUrl nếu có (vd khi trang chạy trên mainsite, đọc file do GitHub Action cập nhật), không thì đọc file cùng thư mục
 async function load(){
-  const bust = '?t=' + Date.now();
-  const [c, d] = await Promise.all([
-    fetch('config.json' + bust).then(r => r.json()),
-    fetch('data/ratings.json' + bust).then(r => r.json())
-  ]);
+  const bust = 't=' + Date.now();
+  const c = await fetch('config.json?' + bust).then(r => r.json());
+  const url = c.dataUrl || 'data/ratings.json';
+  const d = await fetch(url + (url.includes('?') ? '&' : '?') + bust).then(r => r.json());
   CFG = c; DATA = d; render();
 }
 

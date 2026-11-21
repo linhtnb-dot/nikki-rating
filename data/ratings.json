@@ -1,7 +1,7 @@
 {
   "version": 2,
   "sample": false,
-  "updatedAt": "2026-11-21T14:21:37Z",
+  "updatedAt": "2026-11-21T15:15:50Z",
   "rule": {
     "confirmRuns": 2,
     "campaignStart": null,
@@ -14,7 +14,7 @@
       "display": 3.7,
       "count": 32166,
       "exact": true,
-      "fetchedAt": "2026-11-21T14:21:37Z",
+      "fetchedAt": "2026-11-21T15:15:50Z",
       "error": null
     },
     "android": {
@@ -30,7 +30,7 @@
       },
       "exact": false,
       "source": "histogram-mean",
-      "fetchedAt": "2026-11-21T14:21:37Z",
+      "fetchedAt": "2026-11-21T15:15:50Z",
       "error": null
     }
   },
@@ -3183,6 +3183,15 @@
     },
     {
       "t": "2026-11-21T14:21:37Z",
+      "ios": 3.6712,
+      "iosDisplay": 3.7,
+      "iosCount": 32166,
+      "android": 3.2546,
+      "androidDisplay": 3.2,
+      "androidCount": 261217
+    },
+    {
+      "t": "2026-11-21T15:15:50Z",
       "ios": 3.6712,
       "iosDisplay": 3.7,
       "iosCount": 32166,

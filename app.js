@@ -80,8 +80,9 @@ function renderRace(){
     const disp = s.display, starPct = s.score != null ? s.score / 5 * 100 : disp != null ? disp / 5 * 100 : 0;
     const badge = k === 'ios' ? 'assets/badge-appstore.png' : 'assets/badge-googleplay.png';
     // Chặng tiếp theo: các mốc ở stores.*.future (đang khoá), đích cuối CFG.finalGoal
-    const future = (Array.isArray(cfg.future) ? cfg.future : []).map(Number).filter(Number.isFinite);
     const finalGoal = Number(CFG.finalGoal);
+    // Mốc sau: lấy stores.*.future nếu có, không thì tự sinh cách đều CFG.milestoneStep (vd 0,5) từ sau mốc 1 tới trước đích
+    const future = (Array.isArray(cfg.future) ? cfg.future : (l ? stepMilestones(l.to, finalGoal, Number(CFG.milestoneStep)) : [])).map(Number).filter(Number.isFinite);
     let lane = '';
     if (l) {
       const pct = l.frac * 100;
@@ -89,7 +90,7 @@ function renderRace(){
         : l.pend ? `<span>Đang xác nhận <b>${int(l.pend.hits)}/${int(needRuns())}</b> lần cập nhật</span>`
         : `<span>Hiện tại <b>${l.score != null ? vn3(l.score) : '—'}</b></span>`;
       lane = `<div class="lane ${l.done ? 'done' : ''}">
-        <div class="lane-top"><span>Tiến độ về đích mốc 1</span><span class="goal"><b>${Math.floor(pct)}%</b> chặng</span></div>
+        <div class="lane-top"><span>Tiến độ về đích - Mốc 1</span><span class="goal"><b>${Math.floor(pct)}%</b> chặng</span></div>
         ${raceScene(k, cfg, l, future, finalGoal)}
         <div class="lane-foot">${foot}<span>${l.done ? '' : `Còn <b>${l.score != null ? vn3(Math.max(0, l.to - l.score)) : '—'}</b> điểm`}</span></div>
       </div>`;
@@ -134,93 +135,124 @@ function renderRace(){
   });
 }
 
-// ---------- Cảnh đường đua: đồi cỏ, đường đất gập ghềnh; rộng hơn khung để vuốt ngang xem các chặng sau ----------
-const SW = 1000, SH = 230;                                     // kích thước cảnh (px)
-const SPOT = { start: 30, goal: 262, next: [470, 660], final: 850, nikki: 932 };   // mốc 1 nằm trọn trong màn đầu (~330px); 5 sao là đích cuối
-const roadY = x => 160 - 22 * Math.sin(x / SW * Math.PI * 5.2 + 0.5) - 8 * Math.sin(x / SW * Math.PI * 14.6 + 1.2);
-const ptsFrom = (a, b, step = 8) => { const p = []; for (let x = a; x < b; x += step) p.push([x, roadY(x)]); p.push([b, roadY(b)]); return p; };
-const pathOf = pts => pts.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join('');
-const hillY = (x, base, amp, f, ph) => base - amp * Math.sin(x / SW * Math.PI * f + ph);
-const hillPath = (base, amp, f, ph) => { let d = `M-10,${SH}`; for (let x = -10; x <= SW + 10; x += 12) d += ` L${x},${hillY(x, base, amp, f, ph).toFixed(1)}`; return d + ` L${SW + 10},${SH} Z`; };
-const prand = i => { const v = Math.sin(i * 12.9898 + 4.1) * 43758.5453; return v - Math.floor(v); };   // "ngẫu nhiên" cố định, cảnh không đổi giữa các lần tải
+// ---------- Cảnh đường đua kiểu pixel: trời xanh, mây hồng, núi, rặng thông, đồng cỏ hoa; đường đất bậc thang lên xuống ----------
+// Vẽ trên lưới ô vuông PX px, rộng hơn khung để vuốt ngang xem các mốc sau
+const SW = 1000, SH = 230, PX = 5, HORIZON = 135;
+const SPOT = { start: 30, goal: 262, final: 850, nikki: 932 };                 // mốc 1 nằm trọn trong màn đầu (~330px); 5 sao là đích cuối
+const q = v => Math.round(v / PX) * PX;
+const roadC = x => q(174 - 17 * Math.sin(x / SW * Math.PI * 5.2 + 0.5) - 6 * Math.sin(x / SW * Math.PI * 14.6 + 1.2));   // hàng ô giữa đường
+const prand = i => { const v = Math.sin(i * 12.9898 + 4.1) * 43758.5453; return v - Math.floor(v); };    // "ngẫu nhiên" cố định
+const R = (x, y, w, h, f, cls) => `<rect x="${x}" y="${y}" width="${w}" height="${h}"${cls ? ` class="${cls}"` : ` fill="${f}"`}/>`;
+// Vẽ ảnh pixel từ mảng chuỗi (mỗi ký tự = 1 ô, '.' = trống), gộp các ô cùng màu liền nhau trên một hàng
+function bmp(x0, y0, rows, pal, s = PX){
+  let out = '';
+  rows.forEach((r, j) => {
+    for (let i = 0; i < r.length;) {
+      const c = r[i]; if (!pal[c]) { i++; continue; }
+      let k = i; while (k < r.length && r[k] === c) k++;
+      out += R(x0 + i * s, y0 + j * s, (k - i) * s, s, pal[c]);
+      i = k;
+    }
+  });
+  return out;
+}
+// Mốc tự sinh cách đều step, từ sau mốc 1 tới trước đích
+function stepMilestones(from, goal, step){
+  if (!(step > 0) || !Number.isFinite(goal)) return [];
+  const out = []; let v = Math.floor(from / step + 1e-9) * step + step;
+  while (v < goal - 1e-9 && out.length < 6) { out.push(Math.round(v * 100) / 100); v += step; }
+  return out;
+}
 const STAR = '<tspan class="st">★</tspan>';
+const CLOUD = ['.....WWWW.......', '...WWPPPPWW.....', '..WPPPPPPPPWWW..', '.WPPPPPPPPPPPPW.', 'WPPPPPPPPPPPPPPW', 'PPPPPPPPPPPPPPPP', '.DDDDDDDDDDDDDD.'];
+const TREE = ['...T...', '..TTT..', '.LTTTT.', '..TTT..', '.LTTTT.', 'LTTTTTT', '...B...'];
+const BUSH = ['..FG.F..', '.GFGGGF.', 'GGGGFGGG', 'GGGGGGGG'];
+const LOCKBMP = ['.LLL.', 'L...L', 'LLLLL', 'LLLLL', 'LLLLL'];
+const GOLDFLAG = ['YY....', 'YYYY..', 'YYYYYY', 'YYYY..', 'YY....'];
+const FLOWER = ['.F.', 'FCF', '.F.'];
 
-// Biển gỗ cắm bên đường: rise = khoảng cách từ mặt đường tới mép trên tấm biển
-function sign(x, html, { w = 58, h = 22, rise = 56, lock = false, lines = null, fill = '#c99257' } = {}){
-  const y = roadY(x), top = y - rise;
-  const lockIcon = lock ? `<g transform="translate(${x - w / 2 + 11},${top + h / 2 - 1})" fill="#fff3dc"><rect x="-4.5" y="-1.5" width="9" height="7" rx="1.6"/><path d="M-2.6-1.5v-2a2.6 2.6 0 0 1 5.2 0v2" fill="none" stroke="#fff3dc" stroke-width="1.6"/></g>` : '';
-  const text = lines
-    ? lines.map((t, i) => `<text x="${x}" y="${top + 14 + i * 12.5}" class="sg-t sm">${t}</text>`).join('')
-    : `<text x="${x + (lock ? 6 : 0)}" y="${top + h / 2 + 4.5}" class="sg-t">${html}</text>`;
-  return `<rect x="${x - 2}" y="${top + h - 2}" width="4" height="${rise - h + 4}" rx="1.5" fill="#94643a"/>
-    <rect x="${x - w / 2}" y="${top}" width="${w}" height="${h}" rx="4.5" fill="${fill}" stroke="#86562a" stroke-width="1.5"/>
-    <rect x="${x - w / 2 + 3}" y="${top + 2.5}" width="${w - 6}" height="2" rx="1" fill="#fff" opacity=".18"/>${lockIcon}${text}`;
+// Biển gỗ kiểu pixel: rise = khoảng cách từ tâm đường tới mép trên tấm biển
+function sign(x, html, { w = 60, h = 20, rise = 55, lock = false, fill = '#c99257' } = {}){
+  const c = roadC(x), top = c - rise, bx = q(x - w / 2);
+  const lockIcon = lock ? bmp(bx + 6, top + 5, LOCKBMP, { L: '#fff3dc' }, 2) : '';
+  return R(q(x) - 2, top + h, 5, rise - h - 10, '#8a5a32')
+    + R(bx, top, w, h, '#86562a') + R(bx + 2, top + 2, w - 4, h - 4, fill) + R(bx + 2, top + 2, w - 4, 2, '#e0b07a')
+    + lockIcon + `<text x="${x + (lock ? 5 : 0)}" y="${top + h / 2 + 4.5}" class="sg-t">${html}</text>`;
 }
 
 function raceScene(k, cfg, l, future, finalGoal){
-  const S = SPOT;
-  const mx = l.done ? S.goal : S.start + l.frac * (S.goal - S.start), my = roadY(mx);
-  const ground = `M-10,${SH} ` + ptsFrom(-10, SW + 10, 10).map(p => `L${p[0]},${(p[1] + 6).toFixed(1)}`).join(' ') + ` L${SW + 10},${SH} Z`;
-  const road = pathOf(ptsFrom(-10, SW + 10));
-  const trail = mx > S.start + 3 ? `<path class="trail" d="${pathOf(ptsFrom(S.start, mx, 6))}"/>` : '';
-  // Trang trí: mây, cây trên đồi giữa, cỏ ven đường, hoa trên bãi cỏ
-  const clouds = [[90, 34, 1], [330, 22, .8], [560, 40, 1.1], [820, 26, .9]].map(([x, y, s]) =>
-    `<g transform="translate(${x},${y}) scale(${s})" fill="#fff" opacity=".9"><ellipse cx="0" cy="6" rx="26" ry="9"/><ellipse cx="-10" cy="1" rx="12" ry="9"/><ellipse cx="9" cy="-1" rx="14" ry="11"/></g>`).join('');
-  const trees = [64, 186, 392, 540, 700, 905].map((x, i) => {
-    const yb = hillY(x, 138, 24, 3.1, .9) + 4, s = .8 + prand(i + 7) * .45;
-    return `<g transform="translate(${x},${yb.toFixed(1)}) scale(${s.toFixed(2)})"><rect x="-2.5" y="-16" width="5" height="17" rx="2" fill="#a07448"/><circle cx="0" cy="-24" r="13" fill="#86c96f"/><circle cx="-8" cy="-17" r="9" fill="#77bd62"/><circle cx="8" cy="-18" r="9.5" fill="#93d27b"/></g>`;
-  }).join('');
-  let tufts = '';
-  for (let x = 14; x < SW; x += 38) { const y = roadY(x) - 12; tufts += `M${x},${y.toFixed(1)}l2.5-6 2.5 6 2.5-5 2.5 5`; }
-  let flowers = '';
-  for (let i = 0; i < 46; i++) {
-    const x = prand(i) * SW, y = roadY(x) + 19 + prand(i + 91) * (SH - roadY(x) - 26);
-    flowers += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(1.8 + prand(i + 37) * 1.4).toFixed(1)}" fill="${['#ff8fb8', '#ffd36a', '#ffffff', '#ffb0cf'][i % 4]}"/>`;
+  const S = SPOT, out = [];
+  // Trời: các dải xanh nhạt dần về phía chân trời
+  ['#9ccdee', '#a6d3f0', '#b1d9f2', '#bde0f4', '#cbe7f6', '#d8edf8'].forEach((c, i) => out.push(R(0, i * 25, SW, 25, c)));
+  // Mây hồng viền trắng + vệt mây trắng nhỏ
+  [[40, 12], [320, 32], [600, 8], [835, 26]].forEach(([x, y]) => out.push(bmp(x, y, CLOUD, { W: '#ffffff', P: '#f6cdee', D: '#e8b5e2' })));
+  [[230, 20, 6], [500, 52, 4], [760, 62, 5], [960, 14, 3]].forEach(([x, y, n]) => out.push(R(x, y, n * PX, PX, '#ffffff')));
+  // Núi xa (nhạt) rồi núi gần (đậm, sườn trái sáng như tuyết)
+  const range = (peaks, slope) => x => Math.min(...peaks.map(([px, py]) => py + Math.abs(x - px) * slope));
+  const far = range([[200, 78], [430, 70], [650, 82], [880, 72]], .6), near = range([[100, 66], [310, 76], [530, 60], [740, 72], [950, 64]], .85);
+  for (let x = 0; x < SW; x += PX) {
+    const tf = q(far(x + PX / 2)); if (tf < HORIZON) out.push(R(x, tf, PX, HORIZON + 5 - tf, '#b9c8f1'));
   }
-  // Mốc: vạch xuất phát, cờ ca-rô tại mốc 1, biển khoá các chặng sau, cờ vàng tại đích 5 sao (Nikki đứng cạnh)
-  const sy = roadY(S.start), gy = roadY(S.goal), fy = roadY(S.final);
-  const startLine = `<line x1="${S.start}" y1="${(sy - 10).toFixed(1)}" x2="${S.start}" y2="${(sy + 10).toFixed(1)}" stroke="#fff" stroke-width="4" stroke-linecap="round"/>`;
-  const goalFlag = `<rect x="${S.goal - 1.5}" y="${(gy - 84).toFixed(1)}" width="3" height="84" rx="1.5" fill="#6b4a2b"/>
-    <rect x="${S.goal + 1.5}" y="${(gy - 84).toFixed(1)}" width="28" height="17" fill="url(#chk-${k})" stroke="#4a2a3f" stroke-width=".8"/>
-    ${sign(S.goal, `Mốc 1 · ${vn2(l.to)}${STAR}`, { w: 98, rise: 54, fill: l.done ? '#5fb47a' : '#c99257' })}`;
-  const nextSigns = future.slice(0, S.next.length).map((v, i) => sign(S.next[i], `${vn1(v)}${STAR}`, { w: 62, lock: true })).join('');
+  const nearPeaks = [100, 310, 530, 740, 950];
+  for (let x = 0; x < SW; x += PX) {
+    const tn = q(near(x + PX / 2)); if (tn >= HORIZON) continue;
+    out.push(R(x, tn, PX, HORIZON + 5 - tn, '#8ea7e6'));
+    const pk = nearPeaks.reduce((a, b) => Math.abs(b - x) < Math.abs(a - x) ? b : a);
+    out.push(R(x, tn, PX, PX * 2, x < pk ? '#c4d3f7' : '#7a93d8'));
+  }
+  // Rặng thông dưới chân núi
+  [0, 28, 56, 395, 425, 455, 700, 730, 760, 790, 960].forEach((x, i) => out.push(bmp(x, HORIZON - 30 + (i % 2) * PX, TREE, { T: '#2b6a6e', L: '#3f8a83', B: '#5a3f2a' })));
+  // Đồng cỏ: các dải xanh đậm dần về phía trước, mép cỏ răng cưa ở chân trời
+  [[HORIZON, 15, '#b3dc6b'], [HORIZON + 15, 25, '#a4d35e'], [HORIZON + 40, 30, '#94ca52'], [HORIZON + 70, SH - HORIZON - 70, '#85c047']].forEach(([y, h, c]) => out.push(R(0, y, SW, h, c)));
+  for (let x = 0; x < SW; x += PX * 2) out.push(R(x + (prand(x) > .5 ? PX : 0), HORIZON - PX, PX, PX, '#b3dc6b'));
+  // Hoa nhỏ rải trên cỏ
+  for (let i = 0; i < 40; i++) {
+    const x = q(prand(i) * SW), c = roadC(x), y = prand(i + 50) > .35 ? q(c + 22 + prand(i + 91) * (SH - c - 46)) : q(HORIZON + 6 + prand(i + 17) * Math.max(0, c - HORIZON - 26));
+    out.push(bmp(x, y, FLOWER, { F: i % 3 ? '#f4a6da' : '#ffffff', C: '#ffe27a' }, 3));
+  }
+  // Đường đất: mỗi cột 5 ô (viền trên, 3 ô giữa, viền dưới), vạch trắng đứt quãng ở hàng giữa
+  const mx = l.done ? S.goal : S.start + l.frac * (S.goal - S.start);
+  for (let x = 0, i = 0; x < SW; x += PX, i++) {
+    const c = roadC(x + PX / 2);
+    out.push(R(x, c - 10, PX, PX, '#b5894f'), R(x, c - 5, PX, 15, '#ecd39c'), R(x, c + 10, PX, PX, '#c99c5f'));
+    if (x >= S.start && x + PX <= mx) out.push(R(x, c, PX, PX, '', 'px-trail'));            // quãng đã đi
+    else if (i % 7 < 3) out.push(R(x, c, PX, PX, '#fff7e3'));
+  }
+  // Cỏ mọc ven mép đường
+  for (let x = 10; x < SW; x += 45) { const c = roadC(x); out.push(R(q(x), c - 15, PX, PX, '#6fb64a'), R(q(x) + PX * 2, c - 15, PX, PX, '#6fb64a')); }
+  // Bụi cây hoa ở tiền cảnh
+  for (let x = -10, i = 0; x < SW; x += 58 + q(prand(i + 3) * 30), i++) out.push(bmp(q(x), SH - 20, BUSH, { G: '#2f6e46', F: i % 2 ? '#f4a6da' : '#ffc6e8' }));
+  // Mốc: vạch xuất phát, cờ ca-rô tại mốc 1, biển khoá các mốc sau, cờ vàng ở đích 5 sao (Nikki đứng cạnh)
+  const sc = roadC(S.start), gc = roadC(S.goal), fc = roadC(S.final);
+  out.push(R(q(S.start), sc - 5, PX, 15, '#ffffff'));
+  out.push(R(q(S.goal) - 2, gc - 90, 5, 80, '#6b4a2b'), `<rect x="${q(S.goal) + 3}" y="${gc - 90}" width="30" height="20" fill="url(#chk-${k})"/>`);
+  out.push(sign(S.goal, `Mốc 1 · ${vn2(l.to)}${STAR}`, { w: 100, rise: 60, fill: l.done ? '#5fb47a' : '#c99257' }));
+  const n = future.length;
+  future.forEach((v, j) => out.push(sign(S.goal + (S.final - S.goal) * (j + 1) / (n + 1), `${vn1(v)}${STAR}`, { w: 60, lock: true })));
   const hasFinal = Number.isFinite(finalGoal);
-  const finalFlag = hasFinal ? `<rect x="${S.final - 1.5}" y="${(fy - 82).toFixed(1)}" width="3" height="82" rx="1.5" fill="#6b4a2b"/>
-    <path d="M${S.final + 1.5},${(fy - 82).toFixed(1)} l30,9 -30,9z" fill="#f2b33d" stroke="#c98a1a" stroke-width=".8"/>
-    ${sign(S.final, `Đích ${String(finalGoal).replace('.', ',')}${STAR}`, { w: 74, rise: 52, lock: true })}` : '';
-  const fogX = S.goal + 30;
-  const aria = `${esc(cfg.label)}: ${Math.floor(l.frac * 100)}% chặng tới ${vn1(l.to)} sao. Chặng tiếp theo: ${future.map(vn1).join(', ')}${hasFinal ? ', đích cuối ' + finalGoal + ' sao' : ''}.`;
-  const ny = roadY(S.nikki);
+  if (hasFinal) {
+    out.push(R(q(S.final) - 2, fc - 90, 5, 80, '#6b4a2b'), bmp(q(S.final) + 3, fc - 90, GOLDFLAG, { Y: '#f2b33d' }));
+    out.push(sign(S.final, `Đích ${String(finalGoal).replace('.', ',')}${STAR}`, { w: 75, rise: 55, lock: true }));
+  }
+  const fogX = S.goal + 40;
+  const aria = `${esc(cfg.label)}: ${Math.floor(l.frac * 100)}% chặng tới mốc 1 (${vn1(l.to)} sao). Các mốc sau: ${future.map(vn1).join(', ')}${hasFinal ? '. Đích ' + finalGoal + ' sao' : ''}.`;
+  const my = roadC(mx), ny = roadC(S.nikki);
   return `<div class="scene-box" data-k="${k}">
-    <div class="scene-wrap" tabindex="0" aria-label="Đường đua, vuốt ngang để xem các chặng tiếp theo">
+    <div class="scene-wrap" tabindex="0" aria-label="Đường đua, vuốt ngang để xem các mốc tiếp theo">
       <div class="scene">
-        <svg width="${SW}" height="${SH}" viewBox="0 0 ${SW} ${SH}" role="img" aria-label="${aria}">
+        <svg width="${SW}" height="${SH}" viewBox="0 0 ${SW} ${SH}" shape-rendering="crispEdges" role="img" aria-label="${aria}">
           <defs>
-            <linearGradient id="sky-${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9f2"/><stop offset=".7" stop-color="#fff6ea"/></linearGradient>
-            <linearGradient id="grass-${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a9db8b"/><stop offset="1" stop-color="#83c46b"/></linearGradient>
-            <linearGradient id="fog-${k}" gradientUnits="userSpaceOnUse" x1="${fogX}" y1="0" x2="${fogX + 140}" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".38"/></linearGradient>
-            <pattern id="chk-${k}" width="7" height="7" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="#fff"/><rect width="3.5" height="3.5" fill="#4a2a3f"/><rect x="3.5" y="3.5" width="3.5" height="3.5" fill="#4a2a3f"/></pattern>
+            <linearGradient id="fog-${k}" gradientUnits="userSpaceOnUse" x1="${fogX}" y1="0" x2="${fogX + 140}" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".34"/></linearGradient>
+            <pattern id="chk-${k}" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="#fff"/><rect width="5" height="5" fill="#3b2a35"/><rect x="5" y="5" width="5" height="5" fill="#3b2a35"/></pattern>
           </defs>
-          <rect width="${SW}" height="${SH}" fill="url(#sky-${k})"/>
-          ${clouds}
-          <path d="${hillPath(112, 20, 2.2, 2.1)}" fill="#d7efc6"/>
-          <path d="${hillPath(138, 24, 3.1, .9)}" fill="#bfe4a7"/>
-          ${trees}
-          <path d="${ground}" fill="url(#grass-${k})"/>
-          ${flowers}
-          <path d="${road}" fill="none" stroke="#c39c63" stroke-width="27" stroke-linejoin="round"/>
-          <path d="${road}" fill="none" stroke="#efd9a8" stroke-width="21" stroke-linejoin="round"/>
-          <path d="${road}" fill="none" stroke="#fff" stroke-width="2.4" stroke-dasharray="9 13" opacity=".75"/>
-          ${trail}
-          <path d="${tufts}" fill="none" stroke="#5fa84c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          ${startLine}${goalFlag}${nextSigns}${finalFlag}
+          ${out.join('')}
           <rect x="${fogX}" y="0" width="${SW - fogX}" height="${SH}" fill="url(#fog-${k})"/>
         </svg>
-        <img class="runner" src="assets/loading.gif" alt="" width="62" height="62" style="left:${(mx - 34).toFixed(1)}px;top:${(my - 47).toFixed(1)}px">
-        ${hasFinal ? `<img class="scene-nikki" src="assets/nikki-goal.png" alt="" width="84" height="96" style="left:${S.nikki - 42}px;top:${(ny - 88).toFixed(1)}px">` : ''}
+        <img class="runner" src="assets/loading.gif" alt="" width="62" height="62" style="left:${(mx - 34).toFixed(1)}px;top:${my - 46}px">
+        ${hasFinal ? `<img class="scene-nikki" src="assets/nikki-goal.png" alt="" width="84" height="96" style="left:${S.nikki - 42}px;top:${ny - 86}px">` : ''}
       </div>
     </div>
-    <button class="swipe-hint" type="button"><span class="a">Vuốt sang xem chặng tiếp theo <i>›</i></span><span class="b">‹ Quay lại chặng hiện tại</span></button>
+    <button class="swipe-hint" type="button"><span class="a">Vuốt sang xem mốc tiếp theo <i>›</i></span><span class="b">‹ Quay lại mốc 1</span></button>
   </div>`;
 }
 

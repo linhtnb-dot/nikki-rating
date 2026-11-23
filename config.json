@@ -14,6 +14,7 @@
     "note": "Điền link form vào url (link mở tab mới) và embedUrl (link nhúng, ví dụ Google Form có ?embedded=true). Để trống thì trang hiện 'Form sắp mở'."
   },
   "finalGoal": 5,
+  "milestoneStep": 0.5,
   "stores": {
     "ios": {
       "label": "App Store",
@@ -23,8 +24,7 @@
       "reviewUrl": "https://apps.apple.com/vn/app/id1051206681?action=write-review",
       "baseline": 3.7,
       "progressFrom": 3.6,
-      "milestones": [3.8],
-      "future": [4.0, 4.5]
+      "milestones": [3.8]
     },
     "android": {
       "label": "Google Play",
@@ -33,8 +33,7 @@
       "reviewUrl": "https://play.google.com/store/apps/details?id=com.vng.ngoisaothoitrang&hl=vi",
       "baseline": 3.2,
       "progressFrom": 3.1,
-      "milestones": [3.3],
-      "future": [3.5, 4.0]
+      "milestones": [3.3]
     }
   },
   "tiers": [

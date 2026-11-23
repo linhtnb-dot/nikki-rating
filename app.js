@@ -233,7 +233,7 @@ function raceScene(k, cfg, l, future, finalGoal){
   out.push(R(q(S.goal) - 2, gc - 90, 5, 80, '#6b4a2b'), `<rect x="${q(S.goal) + 3}" y="${gc - 90}" width="30" height="20" fill="url(#chk-${k})"/>`);
   out.push(sign(S.goal, `Mốc 1 · ${vn2(l.to)}${STAR}`, { rise: 60, fill: l.done ? '#5fb47a' : '#c99257' }));
   const n = future.length;
-  future.forEach((v, j) => out.push(sign(S.goal + (S.final - S.goal) * (j + 1) / (n + 1), `${vn1(v)}${STAR}`, { lock: true })));
+  future.forEach((v, j) => out.push(sign(S.goal + (S.final - S.goal) * (j + 1) / (n + 1), `Mốc ${j + 2} · ${vn1(v)}${STAR}`, { lock: true })));
   const hasFinal = Number.isFinite(finalGoal);
   if (hasFinal) {
     out.push(R(q(S.final) - 2, fc - 90, 5, 80, '#6b4a2b'), bmp(q(S.final) + 3, fc - 90, GOLDFLAG, { Y: '#f2b33d', O: '#9a6a12' }));

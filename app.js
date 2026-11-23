@@ -235,7 +235,12 @@ function raceScene(k, cfg, l, future, finalGoal){
   out.push(R(q(S.goal) - 2, gc - 90, 5, 80, '#6b4a2b'), `<rect x="${q(S.goal) + 3}" y="${gc - 90}" width="30" height="20" fill="url(#chk-${k})"/>`);
   out.push(sign(S.goal, `Mốc 1 · ${vn2(l.to)}${STAR}`, { rise: 60, fill: l.done ? '#5fb47a' : '#c99257' }));
   const n = future.length;
-  future.forEach((v, j) => out.push(sign(S.goal + (S.final - S.goal) * (j + 1) / (n + 1), `Mốc ${j + 2} · ${vn1(v)}${STAR}`, { lock: true })));
+  future.forEach((v, j) => {
+    const x = S.goal + (S.final - S.goal) * (j + 1) / (n + 1), c = roadC(x);
+    // Cờ ca-rô giống mốc 1 nhưng xám (mốc chưa mở)
+    out.push(R(q(x) - 2, c - 90, 5, 80, GRAY.edge), `<rect x="${q(x) + 3}" y="${c - 90}" width="30" height="20" fill="url(#chkg-${k})"/>`);
+    out.push(sign(x, `Mốc ${j + 2} · ${vn1(v)}${STAR}`, { rise: 60, lock: true }));
+  });
   const hasFinal = Number.isFinite(finalGoal);
   if (hasFinal) {
     out.push(R(q(S.final) - 2, fc - 90, 5, 80, GRAY.edge), bmp(q(S.final) + 3, fc - 90, GOLDFLAG, { Y: '#c2c2c8', O: '#77777e' }));   // đích chưa mở: cờ xám
@@ -249,13 +254,14 @@ function raceScene(k, cfg, l, future, finalGoal){
         <svg width="${SW}" height="${SH}" viewBox="0 0 ${SW} ${SH}" shape-rendering="crispEdges" role="img" aria-label="${aria}">
           <defs>
             <pattern id="chk-${k}" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="#fff"/><rect width="5" height="5" fill="#3b2a35"/><rect x="5" y="5" width="5" height="5" fill="#3b2a35"/></pattern>
+            <pattern id="chkg-${k}" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="#e4e4e8"/><rect width="5" height="5" fill="#8d8d93"/><rect x="5" y="5" width="5" height="5" fill="#8d8d93"/></pattern>
           </defs>
           ${out.join('')}
         </svg>
         <i class="runner" style="left:${Math.round(mx - 40)}px;top:${my - 47}px"></i>
       </div>
     </div>
-    <button class="swipe-hint" type="button"><span class="a">Vuốt sang xem mốc tiếp theo <i>›</i></span><span class="b">‹ Quay lại mốc 1</span></button>
+    <button class="swipe-hint" type="button"><span class="a">Vuốt sang xem mốc tiếp theo <i>›</i></span><span class="b">‹ Quay lại mốc hiện tại</span></button>
   </div>`;
 }
 

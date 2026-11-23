@@ -174,14 +174,16 @@ const FLOWER = ['.F.', 'FCF', '.F.'];
 // Ước lượng bề rộng chữ trên biển (Baloo 2 đậm 12,5px), có dư một chút để chữ không chạm viền
 const textW = s => [...s].reduce((a, ch) => a + (ch === '★' ? 12.5 : ',.· '.includes(ch) ? 4.5 : /[0-9]/.test(ch) ? 7.6 : 8), 0);
 // Biển gỗ kiểu pixel, rộng theo chữ: rise = khoảng cách từ tâm đường tới mép trên tấm biển
+// Bảng màu biển: gỗ (mốc đang chạy) và xám (mốc chưa mở, có ổ khoá)
+const WOOD = { post: '#8a5a32', edge: '#86562a', hi: '#e0b07a' }, GRAY = { post: '#8d8d93', edge: '#6e6e75', hi: '#c9c9cf', fill: '#a3a3aa' };
 function sign(x, html, { h = 20, rise = 55, lock = false, fill = '#c99257' } = {}){
   const plain = html.replace(/<[^>]+>/g, '');
   const w = Math.ceil((textW(plain) + (lock ? 30 : 18)) / PX) * PX;
-  const c = roadC(x), top = c - rise, bx = q(x - w / 2);
+  const c = roadC(x), top = c - rise, bx = q(x - w / 2), P = lock ? GRAY : WOOD, f = lock ? GRAY.fill : fill;
   const tx = lock ? bx + 21 + (w - 25) / 2 : bx + w / 2;          // có ổ khoá: chữ căn giữa phần còn lại bên phải ổ khoá
-  const lockIcon = lock ? bmp(bx + 7, top + 5, LOCKBMP, { L: '#fff3dc' }, 2) : '';
-  return `<g class="sign">` + R(q(x) - 2, top + h, 5, rise - h - 10, '#8a5a32')
-    + R(bx, top, w, h, '#86562a') + R(bx + 2, top + 2, w - 4, h - 4, fill) + R(bx + 2, top + 2, w - 4, 2, '#e0b07a')
+  const lockIcon = lock ? bmp(bx + 7, top + 5, LOCKBMP, { L: '#f4f4f6' }, 2) : '';
+  return `<g class="sign${lock ? ' locked' : ''}">` + R(q(x) - 2, top + h, 5, rise - h - 10, P.post)
+    + R(bx, top, w, h, P.edge) + R(bx + 2, top + 2, w - 4, h - 4, f) + R(bx + 2, top + 2, w - 4, 2, P.hi)
     + lockIcon + `<text x="${tx}" y="${top + h / 2 + 4.5}" class="sg-t">${html}</text></g>`;
 }
 
@@ -236,10 +238,9 @@ function raceScene(k, cfg, l, future, finalGoal){
   future.forEach((v, j) => out.push(sign(S.goal + (S.final - S.goal) * (j + 1) / (n + 1), `Mốc ${j + 2} · ${vn1(v)}${STAR}`, { lock: true })));
   const hasFinal = Number.isFinite(finalGoal);
   if (hasFinal) {
-    out.push(R(q(S.final) - 2, fc - 90, 5, 80, '#6b4a2b'), bmp(q(S.final) + 3, fc - 90, GOLDFLAG, { Y: '#f2b33d', O: '#9a6a12' }));
+    out.push(R(q(S.final) - 2, fc - 90, 5, 80, GRAY.edge), bmp(q(S.final) + 3, fc - 90, GOLDFLAG, { Y: '#c2c2c8', O: '#77777e' }));   // đích chưa mở: cờ xám
     out.push(sign(S.final, `Đích ${String(finalGoal).replace('.', ',')}${STAR}`, { rise: 55, lock: true }));
   }
-  const fogX = S.goal + 58;                                   // mốc 1 (cả biển) giữ màu; từ đây trở đi chuyển xám
   const aria = `${esc(cfg.label)}: ${Math.floor(l.frac * 100)}% chặng tới mốc 1 (${vn1(l.to)} sao). Các mốc sau: ${future.map(vn1).join(', ')}${hasFinal ? '. Đích ' + finalGoal + ' sao' : ''}.`;
   const my = roadC(mx);
   return `<div class="scene-box" data-k="${k}">
@@ -247,15 +248,9 @@ function raceScene(k, cfg, l, future, finalGoal){
       <div class="scene">
         <svg width="${SW}" height="${SH}" viewBox="0 0 ${SW} ${SH}" shape-rendering="crispEdges" role="img" aria-label="${aria}">
           <defs>
-            <filter id="gray-${k}" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"/>
-              <feComponentTransfer><feFuncR type="linear" slope=".82" intercept=".14"/><feFuncG type="linear" slope=".82" intercept=".14"/><feFuncB type="linear" slope=".82" intercept=".14"/></feComponentTransfer></filter>
-            <linearGradient id="gm-${k}" gradientUnits="userSpaceOnUse" x1="${fogX}" y1="0" x2="${fogX + 45}" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff"/></linearGradient>
-            <mask id="m-${k}" maskUnits="userSpaceOnUse" x="0" y="0" width="${SW}" height="${SH}"><rect x="${fogX}" y="0" width="${SW - fogX}" height="${SH}" fill="url(#gm-${k})"/></mask>
             <pattern id="chk-${k}" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="#fff"/><rect width="5" height="5" fill="#3b2a35"/><rect x="5" y="5" width="5" height="5" fill="#3b2a35"/></pattern>
           </defs>
-          <g id="art-${k}">${out.join('')}</g>
-          <!-- Sau mốc 1: vẽ lại cùng cảnh nhưng xám (chưa mở), chuyển dần từ màu sang xám -->
-          <use href="#art-${k}" filter="url(#gray-${k})" mask="url(#m-${k})"/>
+          ${out.join('')}
         </svg>
         <i class="runner" style="left:${Math.round(mx - 40)}px;top:${my - 47}px"></i>
       </div>

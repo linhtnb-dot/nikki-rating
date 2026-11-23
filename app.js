@@ -92,6 +92,17 @@ function renderRace(){
         <div class="lane-foot">${foot}<span>${l.done ? '' : `Còn <b>${l.score != null ? vn3(Math.max(0, l.to - l.score)) : '—'}</b> điểm`}</span></div>
       </div>`;
     }
+    // Chặng tiếp theo (teaser "to be continued"): các mốc cấu hình ở stores.*.future, đích cuối CFG.finalGoal
+    const future = (Array.isArray(cfg.future) ? cfg.future : []).map(Number).filter(Number.isFinite);
+    const finalGoal = Number(CFG.finalGoal);
+    const lock = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5" fill="currentColor"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>';
+    const more = (future.length || Number.isFinite(finalGoal)) ? `<div class="more">
+        <div class="more-head"><span>Chặng tiếp theo</span><em>To be continued…</em></div>
+        <div class="more-track"><i class="more-line"></i>
+          ${future.map(v => `<span class="mnode"><i class="dot">${lock}</i><b>${vn1(v)}<i class="star">★</i></b></span>`).join('')}
+          ${Number.isFinite(finalGoal) ? `<span class="mgoal"><img src="assets/nikki-goal.png" alt="" width="220" height="252"><b>${vn1(finalGoal).replace(',0', '')}<i class="star">★</i></b></span>` : ''}
+        </div>
+      </div>` : '';
     return `<div class="panel ${k}" role="tabpanel" id="panel-${k}" aria-labelledby="tab-${k}" ${k === ACTIVE ? '' : 'hidden'}>
       <div class="score-row">
         <div class="score">${disp != null ? vn1(disp) : '—'}</div>
@@ -100,6 +111,7 @@ function renderRace(){
           <div class="count">${s.count ? fmt.format(s.count) + ' lượt đánh giá' : ''}</div></div>
       </div>
       ${lane}
+      ${more}
       ${s.error ? `<div class="err">Lần cập nhật gần nhất bị lỗi, đang hiện số cũ.</div>` : ''}
       <div class="cta">
         <a class="badge" href="${safeUrl(cfg.reviewUrl || cfg.url)}" target="_blank" rel="noopener noreferrer"><img src="${badge}" alt="Tải và đánh giá trên ${esc(cfg.label)}" width="150" height="47"></a>

@@ -136,6 +136,18 @@ main > section.sec:first-child{padding-top:0}
 .lane-foot{display:flex;justify-content:space-between;font-size:13.5px;color:var(--muted)}
 .lane-foot b{font-weight:700;color:var(--acc-deep)}
 .lane.done .lane-foot b{color:var(--mint-deep)}
+/* Chặng tiếp theo: các mốc sau đang khoá, đích cuối là 5 sao có Nikki */
+.more{margin-top:14px;padding-top:12px;border-top:1.5px dashed var(--acc-soft)}
+.more-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px;font-size:15px;font-weight:600;color:var(--muted)}
+.more-head em{font-style:normal;font-family:var(--title);font-size:17px;color:var(--acc-deep)}
+.more-track{position:relative;display:flex;align-items:flex-end;justify-content:space-between;padding:0 6px}
+.more-line{position:absolute;left:24px;right:50px;bottom:41px;border-top:2.5px dotted var(--acc);opacity:.45}
+.mnode,.mgoal{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:14px;font-weight:800;line-height:1}
+.mnode .dot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#b9a3b1;box-shadow:inset 0 0 0 2px var(--acc-soft),0 4px 8px -4px rgba(0,0,0,.2)}
+.mnode b,.mgoal b{color:var(--muted);font-weight:800}
+.mgoal img{width:86px;height:auto;filter:drop-shadow(0 4px 5px rgba(120,60,20,.2))}
+.mgoal b{color:var(--acc-deep);font-size:16px}
+.more .star{font-style:normal;color:#f2b33d;font-family:Arial,sans-serif}
 .cta{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:16px}
 .badge{display:inline-block;border-radius:10px;box-shadow:0 8px 18px -8px rgba(0,0,0,.45)}
 .badge:active{transform:scale(.97)}
@@ -152,8 +164,8 @@ main > section.sec:first-child{padding-top:0}
   box-shadow:0 0 0 3px #fff,0 4px 10px -3px rgba(214,63,126,.6)}
 .steps p{margin:0;font-size:15px;line-height:1.5;color:var(--ink)}
 .steps b{font-weight:700;color:var(--pink-deep)}
-.steps .fp{color:var(--pink-deep);text-decoration:underline;text-decoration-color:#ffb3d3;text-underline-offset:3px}
-.steps .kc{font-weight:800;color:var(--pink-mid)}
+.how-intro{margin:0 8px 18px;text-align:center;font-size:15.5px;line-height:1.6;color:var(--ink)}
+.how-intro b{font-weight:700;color:var(--pink-deep)}
 
 /* ---------- Cảm ơn + nút nộp minh chứng (ảnh Nikki + Mumu) ---------- */
 .proof{text-align:center;padding-top:34px}
@@ -166,7 +178,7 @@ main > section.sec:first-child{padding-top:0}
   box-shadow:0 0 0 3px #fff,0 0 0 5px #ffc2dc,0 12px 22px -8px rgba(160,30,90,.6)}
 .proof .btn:active{transform:scale(.97)}
 .proof .soon{display:inline-block;font-weight:700;font-size:15px;color:var(--pink-deep);background:#fff;padding:8px 18px;border-radius:999px;box-shadow:0 0 0 3px #ffc2dc}
-.footer-art{display:block;width:120px;height:auto;margin:18px auto 4px;position:relative;z-index:1;pointer-events:none}
+.footer-art{display:block;width:230px;height:auto;margin:18px auto 4px;position:relative;z-index:1;pointer-events:none}
 
 footer{background:#4a2a12;color:#fff;text-align:center;padding:24px 16px 28px}
 footer img{width:150px;height:auto;margin:0 auto 12px}
@@ -201,12 +213,12 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
     </section>
 
     <section class="sec" aria-labelledby="how-h">
-      <div class="sec-head"><div class="orn">✦</div><h2 id="how-h">Cách thức tham gia</h2><span class="ribbon">Gửi tâm thư cho Ngôi Sao Thời Trang</span></div>
+      <div class="sec-head"><div class="orn">✦</div><h2 id="how-h">Đường Đua Lấp Lánh</h2><span class="ribbon">Cách thức tham gia</span></div>
+      <p class="how-intro">Mỗi lời chia sẻ chân thành của STAR là một bước chạy giúp <b>Ngôi Sao Thời Trang</b> ngày càng lấp lánh trên đường đua!</p>
       <ol class="steps">
         <li><p><b>Trải nghiệm phiên bản mới</b> và chia sẻ đánh giá, cảm nhận chân thực trên App Store hoặc Google Play.</p></li>
         <li><p><b>Chụp màn hình đánh giá</b> đã đăng, đảm bảo hiển thị rõ tên tài khoản và nội dung đánh giá.</p></li>
         <li><p><b>Điền form nộp minh chứng</b>, đính kèm ảnh chụp đánh giá và UID để hoàn tất tham gia.</p></li>
-        <li><p><b>Theo dõi <a class="fp" href="https://www.facebook.com/ngoisaothoitrang.vnggames/" target="_blank" rel="noopener noreferrer">fanpage Ngôi Sao Thời Trang</a></b> để cập nhật tiến độ đường đua và đón chờ cơ hội nhận thưởng <b class="kc">50 Kim Cương</b>.</p></li>
       </ol>
     </section>
 
@@ -217,8 +229,8 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
     </section>
   </main>
 
-  <!-- Nikki mini (đã tách nền) đứng trên mép footer -->
-  <img class="footer-art" src="assets/nikki-cheer.png" alt="" width="300" height="335">
+  <!-- Nikki + Mumu (đã tách nền) đứng trên mép footer -->
+  <img class="footer-art" src="assets/nikki-mumu-party.png" alt="" width="480" height="344">
 
   <footer>
     <img src="assets/vnggames-logo.png" alt="VNGGames" width="184" height="40">

@@ -13,12 +13,12 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Đường Đua Lấp Lánh · Nhiệm vụ hệ thống của Mumu #1">
 <meta property="og:description" content="Đường đua về đích: App Store 3,8★ và Google Play 3,3★. Xem tiến độ theo thời gian thực.">
-<meta property="og:image" content="https://linhtnb-dot.github.io/nikki-rating/assets/hero-bg.jpg">
+<meta property="og:image" content="https://linhtnb-dot.github.io/nikki-rating/assets/hero-nikki.jpg">
 <meta property="og:url" content="https://linhtnb-dot.github.io/nikki-rating/">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/logo-pink.png">
 <link rel="preload" as="image" href="assets/loading.gif">
-<link rel="preload" as="image" href="assets/hero-bg.jpg">
+<link rel="preload" as="image" href="assets/hero-nikki.jpg">
 <!-- Baloo 2: font chữ thường của mainsite ngoisao.vnggames.com -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,7 +63,7 @@ a{color:inherit}
 
 /* ---------- Hero ---------- */
 .hero{position:relative}
-.hero-img{width:100%;height:190px;object-fit:cover;object-position:58% 28%}
+.hero-img{width:100%;height:250px;object-fit:cover;object-position:50% 30%}
 .hero:after{content:"";position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(180deg,transparent,var(--bg))}
 .brand{position:absolute;top:10px;left:10px;z-index:2;display:flex;align-items:center;gap:6px}
 .app-icon{width:42px;height:42px;border-radius:11px;box-shadow:0 3px 10px -3px rgba(120,30,70,.45),0 0 0 2px #fff}
@@ -164,6 +164,11 @@ main > section.sec:first-child{padding-top:0}
   box-shadow:0 0 0 3px #fff,0 4px 10px -3px rgba(214,63,126,.6)}
 .steps p{margin:0;font-size:15px;line-height:1.5;color:var(--ink)}
 .steps b{font-weight:700;color:var(--pink-deep)}
+/* Thời gian mốc 1 */
+.period{display:flex;align-items:center;justify-content:center;gap:10px;width:max-content;max-width:100%;margin:-4px auto 18px;padding:6px 16px 5px 6px;
+  border-radius:999px;background:#fff;border:1.5px solid #f3d998;box-shadow:0 8px 18px -12px rgba(183,128,26,.6);font-size:15px;color:var(--ink)}
+.period-k{flex:none;padding:3px 12px 2px;border-radius:999px;background:linear-gradient(180deg,#fffaea,#ffe5a3);box-shadow:inset 0 0 0 1.5px #f0c766;font-weight:800;font-size:14px;color:#9a5b05}
+.period b{font-weight:800;color:var(--pink-deep)}
 .how-intro{margin:0 8px 18px;text-align:center;font-size:15.5px;line-height:1.6;color:var(--ink)}
 .how-intro b{font-weight:700;color:var(--pink-deep)}
 
@@ -197,7 +202,7 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
 <div id="loader" role="status" aria-live="polite"><img src="assets/loading.gif" alt="" width="1000" height="1000"><p>Đang tải</p></div>
 <div class="app">
   <section class="hero">
-    <img class="hero-img" src="assets/hero-bg.jpg" alt="" width="1200" height="675">
+    <img class="hero-img" src="assets/hero-nikki.jpg" alt="" width="880" height="500">
     <div class="brand"><img class="app-icon" src="assets/app-icon.webp" alt="Biểu tượng ứng dụng Ngôi Sao Thời Trang" width="1080" height="1080"><img class="logo" src="assets/logo-pink.png" alt="Nikki: Ngôi Sao Thời Trang"></div>
   </section>
   <div class="intro">
@@ -215,6 +220,7 @@ footer p{margin:0 0 4px;font-size:13px;line-height:1.6}
     <section class="sec" aria-labelledby="how-h">
       <div class="sec-head"><div class="orn">✦</div><h2 id="how-h">Đường Đua Lấp Lánh</h2><span class="ribbon">Cách thức tham gia</span></div>
       <p class="how-intro">Mỗi lời chia sẻ chân thành của STAR là một bước chạy giúp <b>Ngôi Sao Thời Trang</b> ngày càng lấp lánh trên đường đua!</p>
+      <p class="period"><span class="period-k">Mốc 1</span><span>Tính từ ngày <b>24/11</b> đến ngày <b>04/12</b></span></p>
       <ol class="steps">
         <li><p><b>Trải nghiệm phiên bản mới</b> và chia sẻ đánh giá, cảm nhận chân thực trên App Store hoặc Google Play.</p></li>
         <li><p><b>Chụp màn hình đánh giá</b> đã đăng, đảm bảo hiển thị rõ tên tài khoản và nội dung đánh giá.</p></li>

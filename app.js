@@ -138,7 +138,7 @@ function renderRace(){
 // ---------- Cảnh đường đua kiểu pixel: trời xanh, mây hồng, núi, rặng thông, đồng cỏ hoa; đường đất bậc thang lên xuống ----------
 // Vẽ trên lưới ô vuông PX px, rộng hơn khung để vuốt ngang xem các mốc sau
 const SW = 1000, SH = 230, PX = 5, HORIZON = 135;
-const SPOT = { start: 30, goal: 262, final: 850, nikki: 932 };                 // mốc 1 nằm trọn trong màn đầu (~330px); 5 sao là đích cuối
+const SPOT = { start: 30, goal: 262, final: 918 };                 // mốc 1 nằm trọn trong màn đầu (~330px); 5 sao là đích cuối, sát cuối đường
 const q = v => Math.round(v / PX) * PX;
 const roadC = x => q(174 - 17 * Math.sin(x / SW * Math.PI * 5.2 + 0.5) - 6 * Math.sin(x / SW * Math.PI * 14.6 + 1.2));   // hàng ô giữa đường
 const prand = i => { const v = Math.sin(i * 12.9898 + 4.1) * 43758.5453; return v - Math.floor(v); };    // "ngẫu nhiên" cố định
@@ -168,16 +168,21 @@ const CLOUD = ['.....WWWW.......', '...WWPPPPWW.....', '..WPPPPPPPPWWW..', '.WPP
 const TREE = ['...T...', '..TTT..', '.LTTTT.', '..TTT..', '.LTTTT.', 'LTTTTTT', '...B...'];
 const BUSH = ['..FG.F..', '.GFGGGF.', 'GGGGFGGG', 'GGGGGGGG'];
 const LOCKBMP = ['.LLL.', 'L...L', 'LLLLL', 'LLLLL', 'LLLLL'];
-const GOLDFLAG = ['YY....', 'YYYY..', 'YYYYYY', 'YYYY..', 'YY....'];
+const GOLDFLAG = ['OO.....', 'OYOO...', 'OYYYOO.', 'OYYYYYO', 'OYYYOO.', 'OYOO...', 'OO.....'];   // có viền để vẫn thấy rõ khi bị tô xám
 const FLOWER = ['.F.', 'FCF', '.F.'];
 
-// Biển gỗ kiểu pixel: rise = khoảng cách từ tâm đường tới mép trên tấm biển
-function sign(x, html, { w = 60, h = 20, rise = 55, lock = false, fill = '#c99257' } = {}){
+// Ước lượng bề rộng chữ trên biển (Baloo 2 đậm 12,5px), có dư một chút để chữ không chạm viền
+const textW = s => [...s].reduce((a, ch) => a + (ch === '★' ? 12.5 : ',.· '.includes(ch) ? 4.5 : /[0-9]/.test(ch) ? 7.6 : 8), 0);
+// Biển gỗ kiểu pixel, rộng theo chữ: rise = khoảng cách từ tâm đường tới mép trên tấm biển
+function sign(x, html, { h = 20, rise = 55, lock = false, fill = '#c99257' } = {}){
+  const plain = html.replace(/<[^>]+>/g, '');
+  const w = Math.ceil((textW(plain) + (lock ? 30 : 18)) / PX) * PX;
   const c = roadC(x), top = c - rise, bx = q(x - w / 2);
-  const lockIcon = lock ? bmp(bx + 6, top + 5, LOCKBMP, { L: '#fff3dc' }, 2) : '';
-  return R(q(x) - 2, top + h, 5, rise - h - 10, '#8a5a32')
+  const tx = lock ? bx + 21 + (w - 25) / 2 : bx + w / 2;          // có ổ khoá: chữ căn giữa phần còn lại bên phải ổ khoá
+  const lockIcon = lock ? bmp(bx + 7, top + 5, LOCKBMP, { L: '#fff3dc' }, 2) : '';
+  return `<g class="sign">` + R(q(x) - 2, top + h, 5, rise - h - 10, '#8a5a32')
     + R(bx, top, w, h, '#86562a') + R(bx + 2, top + 2, w - 4, h - 4, fill) + R(bx + 2, top + 2, w - 4, 2, '#e0b07a')
-    + lockIcon + `<text x="${x + (lock ? 5 : 0)}" y="${top + h / 2 + 4.5}" class="sg-t">${html}</text>`;
+    + lockIcon + `<text x="${tx}" y="${top + h / 2 + 4.5}" class="sg-t">${html}</text></g>`;
 }
 
 function raceScene(k, cfg, l, future, finalGoal){
@@ -222,21 +227,21 @@ function raceScene(k, cfg, l, future, finalGoal){
   for (let x = 10; x < SW; x += 45) { const c = roadC(x); out.push(R(q(x), c - 15, PX, PX, '#6fb64a'), R(q(x) + PX * 2, c - 15, PX, PX, '#6fb64a')); }
   // Bụi cây hoa ở tiền cảnh
   for (let x = -10, i = 0; x < SW; x += 58 + q(prand(i + 3) * 30), i++) out.push(bmp(q(x), SH - 20, BUSH, { G: '#2f6e46', F: i % 2 ? '#f4a6da' : '#ffc6e8' }));
-  // Mốc: vạch xuất phát, cờ ca-rô tại mốc 1, biển khoá các mốc sau, cờ vàng ở đích 5 sao (Nikki đứng cạnh)
+  // Mốc: vạch xuất phát, cờ ca-rô tại mốc 1, biển khoá các mốc sau, cờ vàng ở đích 5 sao
   const sc = roadC(S.start), gc = roadC(S.goal), fc = roadC(S.final);
   out.push(R(q(S.start), sc - 5, PX, 15, '#ffffff'));
   out.push(R(q(S.goal) - 2, gc - 90, 5, 80, '#6b4a2b'), `<rect x="${q(S.goal) + 3}" y="${gc - 90}" width="30" height="20" fill="url(#chk-${k})"/>`);
-  out.push(sign(S.goal, `Mốc 1 · ${vn2(l.to)}${STAR}`, { w: 100, rise: 60, fill: l.done ? '#5fb47a' : '#c99257' }));
+  out.push(sign(S.goal, `Mốc 1 · ${vn2(l.to)}${STAR}`, { rise: 60, fill: l.done ? '#5fb47a' : '#c99257' }));
   const n = future.length;
-  future.forEach((v, j) => out.push(sign(S.goal + (S.final - S.goal) * (j + 1) / (n + 1), `${vn1(v)}${STAR}`, { w: 60, lock: true })));
+  future.forEach((v, j) => out.push(sign(S.goal + (S.final - S.goal) * (j + 1) / (n + 1), `${vn1(v)}${STAR}`, { lock: true })));
   const hasFinal = Number.isFinite(finalGoal);
   if (hasFinal) {
-    out.push(R(q(S.final) - 2, fc - 90, 5, 80, '#6b4a2b'), bmp(q(S.final) + 3, fc - 90, GOLDFLAG, { Y: '#f2b33d' }));
-    out.push(sign(S.final, `Đích ${String(finalGoal).replace('.', ',')}${STAR}`, { w: 75, rise: 55, lock: true }));
+    out.push(R(q(S.final) - 2, fc - 90, 5, 80, '#6b4a2b'), bmp(q(S.final) + 3, fc - 90, GOLDFLAG, { Y: '#f2b33d', O: '#9a6a12' }));
+    out.push(sign(S.final, `Đích ${String(finalGoal).replace('.', ',')}${STAR}`, { rise: 55, lock: true }));
   }
   const fogX = S.goal + 58;                                   // mốc 1 (cả biển) giữ màu; từ đây trở đi chuyển xám
   const aria = `${esc(cfg.label)}: ${Math.floor(l.frac * 100)}% chặng tới mốc 1 (${vn1(l.to)} sao). Các mốc sau: ${future.map(vn1).join(', ')}${hasFinal ? '. Đích ' + finalGoal + ' sao' : ''}.`;
-  const my = roadC(mx), ny = roadC(S.nikki);
+  const my = roadC(mx);
   return `<div class="scene-box" data-k="${k}">
     <div class="scene-wrap" tabindex="0" aria-label="Đường đua, vuốt ngang để xem các mốc tiếp theo">
       <div class="scene">
@@ -253,7 +258,6 @@ function raceScene(k, cfg, l, future, finalGoal){
           <use href="#art-${k}" filter="url(#gray-${k})" mask="url(#m-${k})"/>
         </svg>
         <i class="runner" style="left:${Math.round(mx - 40)}px;top:${my - 47}px"></i>
-        ${hasFinal ? `<img class="scene-nikki" src="assets/nikki-px.png" alt="" width="84" height="96" style="left:${S.nikki - 42}px;top:${ny - 86}px">` : ''}
       </div>
     </div>
     <button class="swipe-hint" type="button"><span class="a">Vuốt sang xem mốc tiếp theo <i>›</i></span><span class="b">‹ Quay lại mốc 1</span></button>

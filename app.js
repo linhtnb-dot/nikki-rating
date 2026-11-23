@@ -248,8 +248,8 @@ function raceScene(k, cfg, l, future, finalGoal){
           ${out.join('')}
           <rect x="${fogX}" y="0" width="${SW - fogX}" height="${SH}" fill="url(#fog-${k})"/>
         </svg>
-        <img class="runner" src="assets/loading.gif" alt="" width="62" height="62" style="left:${(mx - 34).toFixed(1)}px;top:${my - 46}px">
-        ${hasFinal ? `<img class="scene-nikki" src="assets/nikki-goal.png" alt="" width="84" height="96" style="left:${S.nikki - 42}px;top:${ny - 86}px">` : ''}
+        <i class="runner" style="left:${Math.round(mx - 40)}px;top:${my - 47}px"></i>
+        ${hasFinal ? `<img class="scene-nikki" src="assets/nikki-px.png" alt="" width="84" height="96" style="left:${S.nikki - 42}px;top:${ny - 86}px">` : ''}
       </div>
     </div>
     <button class="swipe-hint" type="button"><span class="a">Vuốt sang xem mốc tiếp theo <i>›</i></span><span class="b">‹ Quay lại mốc 1</span></button>

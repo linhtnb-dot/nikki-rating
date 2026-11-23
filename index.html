@@ -131,8 +131,11 @@ main > section.sec:first-child{padding-top:0}
 .scene-wrap:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 .scene{position:relative;width:1000px;height:230px}
 .scene svg{position:absolute;left:0;top:0;display:block}
-.scene .runner{position:absolute;width:62px;height:62px;transform:scaleX(-1);pointer-events:none;filter:drop-shadow(0 3px 3px rgba(0,0,0,.22))}
-.scene .scene-nikki{position:absolute;width:84px;height:auto;pointer-events:none;filter:drop-shadow(0 4px 4px rgba(90,60,20,.22))}
+/* Mumu pixel: dải 7 khung (40x27 ô) phóng to 2 lần, chạy bằng steps(); quay mặt về phía đích */
+.scene .runner{position:absolute;width:80px;height:54px;background:url(assets/mumu-px.png) 0 0/560px 54px no-repeat;image-rendering:pixelated;
+  transform:scaleX(-1);animation:mumu-run .87s steps(7) infinite;pointer-events:none;filter:drop-shadow(0 2px 0 rgba(60,40,20,.25))}
+@keyframes mumu-run{to{background-position:-560px 0}}
+.scene .scene-nikki{position:absolute;width:84px;height:96px;image-rendering:pixelated;pointer-events:none;filter:drop-shadow(0 2px 0 rgba(60,40,20,.25))}
 .scene-box:after{content:"";position:absolute;top:0;right:0;width:34px;height:230px;border-radius:0 16px 16px 0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.8));pointer-events:none;transition:opacity .2s}
 .scene-box.at-end:after{opacity:0}
 .sg-t{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:12.5px;fill:#fff8ec;text-anchor:middle}

@@ -89,7 +89,7 @@ function renderRace(){
         : l.pend ? `<span>Đang xác nhận <b>${int(l.pend.hits)}/${int(needRuns())}</b> lần cập nhật</span>`
         : `<span>Hiện tại <b>${l.score != null ? vn3(l.score) : '—'}</b></span>`;
       lane = `<div class="lane ${l.done ? 'done' : ''}">
-        <div class="lane-top"><span>Tiến độ về đích</span><span class="goal"><b>${Math.floor(pct)}%</b> chặng</span></div>
+        <div class="lane-top"><span>Tiến độ về đích mốc 1</span><span class="goal"><b>${Math.floor(pct)}%</b> chặng</span></div>
         ${raceScene(k, cfg, l, future, finalGoal)}
         <div class="lane-foot">${foot}<span>${l.done ? '' : `Còn <b>${l.score != null ? vn3(Math.max(0, l.to - l.score)) : '—'}</b> điểm`}</span></div>
       </div>`;
@@ -136,7 +136,7 @@ function renderRace(){
 
 // ---------- Cảnh đường đua: đồi cỏ, đường đất gập ghềnh; rộng hơn khung để vuốt ngang xem các chặng sau ----------
 const SW = 1000, SH = 230;                                     // kích thước cảnh (px)
-const SPOT = { start: 30, goal: 262, next: [455, 620], final: 782, nikki: 856, tbc: 948 };   // goal nằm trọn trong màn đầu (~330px)
+const SPOT = { start: 30, goal: 262, next: [470, 660], final: 850, nikki: 932 };   // mốc 1 nằm trọn trong màn đầu (~330px); 5 sao là đích cuối
 const roadY = x => 160 - 22 * Math.sin(x / SW * Math.PI * 5.2 + 0.5) - 8 * Math.sin(x / SW * Math.PI * 14.6 + 1.2);
 const ptsFrom = (a, b, step = 8) => { const p = []; for (let x = a; x < b; x += step) p.push([x, roadY(x)]); p.push([b, roadY(b)]); return p; };
 const pathOf = pts => pts.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join('');
@@ -177,18 +177,17 @@ function raceScene(k, cfg, l, future, finalGoal){
     const x = prand(i) * SW, y = roadY(x) + 19 + prand(i + 91) * (SH - roadY(x) - 26);
     flowers += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(1.8 + prand(i + 37) * 1.4).toFixed(1)}" fill="${['#ff8fb8', '#ffd36a', '#ffffff', '#ffb0cf'][i % 4]}"/>`;
   }
-  // Mốc: vạch xuất phát, cờ ca-rô tại đích hiện tại, biển khoá các chặng sau, cờ vàng 5 sao, biển "To be continued"
+  // Mốc: vạch xuất phát, cờ ca-rô tại mốc 1, biển khoá các chặng sau, cờ vàng tại đích 5 sao (Nikki đứng cạnh)
   const sy = roadY(S.start), gy = roadY(S.goal), fy = roadY(S.final);
   const startLine = `<line x1="${S.start}" y1="${(sy - 10).toFixed(1)}" x2="${S.start}" y2="${(sy + 10).toFixed(1)}" stroke="#fff" stroke-width="4" stroke-linecap="round"/>`;
   const goalFlag = `<rect x="${S.goal - 1.5}" y="${(gy - 84).toFixed(1)}" width="3" height="84" rx="1.5" fill="#6b4a2b"/>
     <rect x="${S.goal + 1.5}" y="${(gy - 84).toFixed(1)}" width="28" height="17" fill="url(#chk-${k})" stroke="#4a2a3f" stroke-width=".8"/>
-    ${sign(S.goal, `Đích ${vn2(l.to)}${STAR}`, { w: 82, rise: 54, fill: l.done ? '#5fb47a' : '#c99257' })}`;
+    ${sign(S.goal, `Mốc 1 · ${vn2(l.to)}${STAR}`, { w: 98, rise: 54, fill: l.done ? '#5fb47a' : '#c99257' })}`;
   const nextSigns = future.slice(0, S.next.length).map((v, i) => sign(S.next[i], `${vn1(v)}${STAR}`, { w: 62, lock: true })).join('');
   const hasFinal = Number.isFinite(finalGoal);
   const finalFlag = hasFinal ? `<rect x="${S.final - 1.5}" y="${(fy - 82).toFixed(1)}" width="3" height="82" rx="1.5" fill="#6b4a2b"/>
     <path d="M${S.final + 1.5},${(fy - 82).toFixed(1)} l30,9 -30,9z" fill="#f2b33d" stroke="#c98a1a" stroke-width=".8"/>
-    ${sign(S.final, `${String(finalGoal).replace('.', ',')}${STAR}`, { w: 46, rise: 52, lock: true })}` : '';
-  const tbc = sign(S.tbc, '', { w: 92, h: 34, rise: 64, lines: ['To be', 'continued…'] });
+    ${sign(S.final, `Đích ${String(finalGoal).replace('.', ',')}${STAR}`, { w: 74, rise: 52, lock: true })}` : '';
   const fogX = S.goal + 30;
   const aria = `${esc(cfg.label)}: ${Math.floor(l.frac * 100)}% chặng tới ${vn1(l.to)} sao. Chặng tiếp theo: ${future.map(vn1).join(', ')}${hasFinal ? ', đích cuối ' + finalGoal + ' sao' : ''}.`;
   const ny = roadY(S.nikki);
@@ -214,7 +213,7 @@ function raceScene(k, cfg, l, future, finalGoal){
           <path d="${road}" fill="none" stroke="#fff" stroke-width="2.4" stroke-dasharray="9 13" opacity=".75"/>
           ${trail}
           <path d="${tufts}" fill="none" stroke="#5fa84c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          ${startLine}${goalFlag}${nextSigns}${finalFlag}${tbc}
+          ${startLine}${goalFlag}${nextSigns}${finalFlag}
           <rect x="${fogX}" y="0" width="${SW - fogX}" height="${SH}" fill="url(#fog-${k})"/>
         </svg>
         <img class="runner" src="assets/loading.gif" alt="" width="62" height="62" style="left:${(mx - 34).toFixed(1)}px;top:${(my - 47).toFixed(1)}px">

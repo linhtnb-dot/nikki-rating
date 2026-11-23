@@ -234,7 +234,7 @@ function raceScene(k, cfg, l, future, finalGoal){
     out.push(R(q(S.final) - 2, fc - 90, 5, 80, '#6b4a2b'), bmp(q(S.final) + 3, fc - 90, GOLDFLAG, { Y: '#f2b33d' }));
     out.push(sign(S.final, `Đích ${String(finalGoal).replace('.', ',')}${STAR}`, { w: 75, rise: 55, lock: true }));
   }
-  const fogX = S.goal + 40;
+  const fogX = S.goal + 58;                                   // mốc 1 (cả biển) giữ màu; từ đây trở đi chuyển xám
   const aria = `${esc(cfg.label)}: ${Math.floor(l.frac * 100)}% chặng tới mốc 1 (${vn1(l.to)} sao). Các mốc sau: ${future.map(vn1).join(', ')}${hasFinal ? '. Đích ' + finalGoal + ' sao' : ''}.`;
   const my = roadC(mx), ny = roadC(S.nikki);
   return `<div class="scene-box" data-k="${k}">
@@ -242,11 +242,15 @@ function raceScene(k, cfg, l, future, finalGoal){
       <div class="scene">
         <svg width="${SW}" height="${SH}" viewBox="0 0 ${SW} ${SH}" shape-rendering="crispEdges" role="img" aria-label="${aria}">
           <defs>
-            <linearGradient id="fog-${k}" gradientUnits="userSpaceOnUse" x1="${fogX}" y1="0" x2="${fogX + 140}" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".34"/></linearGradient>
+            <filter id="gray-${k}" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"/>
+              <feComponentTransfer><feFuncR type="linear" slope=".82" intercept=".14"/><feFuncG type="linear" slope=".82" intercept=".14"/><feFuncB type="linear" slope=".82" intercept=".14"/></feComponentTransfer></filter>
+            <linearGradient id="gm-${k}" gradientUnits="userSpaceOnUse" x1="${fogX}" y1="0" x2="${fogX + 45}" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff"/></linearGradient>
+            <mask id="m-${k}" maskUnits="userSpaceOnUse" x="0" y="0" width="${SW}" height="${SH}"><rect x="${fogX}" y="0" width="${SW - fogX}" height="${SH}" fill="url(#gm-${k})"/></mask>
             <pattern id="chk-${k}" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="#fff"/><rect width="5" height="5" fill="#3b2a35"/><rect x="5" y="5" width="5" height="5" fill="#3b2a35"/></pattern>
           </defs>
-          ${out.join('')}
-          <rect x="${fogX}" y="0" width="${SW - fogX}" height="${SH}" fill="url(#fog-${k})"/>
+          <g id="art-${k}">${out.join('')}</g>
+          <!-- Sau mốc 1: vẽ lại cùng cảnh nhưng xám (chưa mở), chuyển dần từ màu sang xám -->
+          <use href="#art-${k}" filter="url(#gray-${k})" mask="url(#m-${k})"/>
         </svg>
         <i class="runner" style="left:${Math.round(mx - 40)}px;top:${my - 47}px"></i>
         ${hasFinal ? `<img class="scene-nikki" src="assets/nikki-px.png" alt="" width="84" height="96" style="left:${S.nikki - 42}px;top:${ny - 86}px">` : ''}
